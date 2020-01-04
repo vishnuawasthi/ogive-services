@@ -1,11 +1,15 @@
 package com.app.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 public class UserDetailsDTO {
 
 	private Long userId;
 
+	@NotEmpty
 	private String username;
 
+	@NotEmpty
 	private String password;
 
 	private String email;
