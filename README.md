@@ -34,7 +34,11 @@
   HakariCP configuration properties 
   
   https://github.com/brettwooldridge/HikariCP
-  
+# Gmail email settings
+	https://support.google.com/mail/answer/7126229?p=BadCredentials&visit_id=637138139811097939-2332721584&rd=2#cantsignin  
+	
+# Email Template ref https://www.netkiller.cn/java/spring/boot/velocity.html
+	
 ###################################################################################################  
 # Question 1 .  How to check active connection in porstgress ?
     Answer . To check active connection execute below command in post gress 
