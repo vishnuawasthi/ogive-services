@@ -35,7 +35,7 @@
   
   https://github.com/brettwooldridge/HikariCP
 # Gmail email settings
-	https://support.google.com/mail/answer/7126229?p=BadCredentials&visit_id=637138139811097939-2332721584&rd=2#cantsignin  
+	https://support.google.com/mail/answer/7126229?p=BadCredentials&visit_id=637138139811097939-    2332721584&rd=2#cantsignin  
 	
 # Email Template ref https://www.netkiller.cn/java/spring/boot/velocity.html
 	

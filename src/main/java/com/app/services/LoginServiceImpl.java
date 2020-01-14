@@ -23,18 +23,11 @@ public class LoginServiceImpl implements LoginService {
 	public UserDetailsDTO getUserById(Long id) {
 		UserDetailsDTO userDetailsDTO = null;
 		PortalUserDetails portalUserDetails = portalUserRepository.findById(id).orElse(null);
-		entityToDTO(userDetailsDTO, portalUserDetails);
+		//entityToDTO(userDetailsDTO, portalUserDetails);
 		return userDetailsDTO;
 	}
 
-	private void entityToDTO(UserDetailsDTO userDetailsDTO, PortalUserDetails portalUserDetails) {
-		if (Objects.nonNull(portalUserDetails)) {
-			userDetailsDTO = new UserDetailsDTO();
-			userDetailsDTO.setPassword(portalUserDetails.getPassword());
-			userDetailsDTO.setUsername(portalUserDetails.getUsername());
-			userDetailsDTO.setUserId(portalUserDetails.getId());
-		}
-	}
+	
 
 	private PortalUserDetails dtoToEntity(UserDetailsDTO userDetailsDTO) {
 		PortalUserDetails portalUserDetails = new PortalUserDetails();

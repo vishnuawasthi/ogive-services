@@ -1,49 +1,78 @@
 package com.app.dto;
 
-import javax.validation.constraints.NotEmpty;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class UserDetailsDTO {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
 
-	private Long userId;
+import com.app.entities.PortalUserDetails;
 
-	@NotEmpty
-	private String username;
+public class UserDetailsDTO implements UserDetails {
 
-	@NotEmpty
-	private String password;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	private String email;
+	private PortalUserDetails portalUserDetails;
 
-	public Long getUserId() {
-		return userId;
+	public UserDetailsDTO(PortalUserDetails portalUserDetails) {
+		this.portalUserDetails = portalUserDetails;
+
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		if (Objects.isNull(portalUserDetails)) {
+			return null;
+		}
+
+		List<String> authoritiesNames = portalUserDetails.getAuthorities().stream().map(auth -> {
+			return auth.getAuthority().name();
+		}).collect(Collectors.toList());
+
+		List<GrantedAuthority> authorities = AuthorityUtils
+				.createAuthorityList(authoritiesNames.toArray(new String[authoritiesNames.size()]));
+		return authorities;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
+	@Override
 	public String getPassword() {
-		return password;
+		return portalUserDetails.getPassword();
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	@Override
+	public String getUsername() {
+		return portalUserDetails.getUsername();
 	}
 
-	public String getEmail() {
-		return email;
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	@Override
+	public boolean isAccountNonLocked() {
+		return "N".equalsIgnoreCase(portalUserDetails.getIsAcccountLocked());
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return "Y".equalsIgnoreCase(portalUserDetails.getIsEnabled());
+	}
+
+	@Override
+	public String toString() {
+		return "UserDetailsDTO [portalUserDetails=" + portalUserDetails + "]";
 	}
 
 }

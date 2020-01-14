@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  *
  */
 
-@SpringBootApplication()
+@SpringBootApplication
 @EnableJpaRepositories
 public class Application extends SpringBootServletInitializer {
 
