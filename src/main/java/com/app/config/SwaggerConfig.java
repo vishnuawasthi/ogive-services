@@ -17,16 +17,30 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
 	@Bean
-	public Docket productApi() {
-		return new Docket(DocumentationType.SWAGGER_2).select()
+	public Docket userApi() {
+		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("User Api")
+				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.app.controller"))
 				.paths(regex("/api.*"))
 				.build().apiInfo(metaData());
 	}
+	
+	@Bean
+    public Docket adminApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("Admin Api")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.app.controller"))
+                .paths(regex("/admin-api.*"))
+                .build().apiInfo(metaData());
+              
+    }
+	
 
 	private ApiInfo metaData() {
 		//String name, String url, String email
-		 Contact contact= new Contact("Vishnu Awasthi", null, "Vishnuawasthi121@gmail.com");
+		 Contact contact= new Contact("Vishnu Awasthi", "https://www.linkedin.com/in/vishnu-awasthi-36099b77/", "Vishnuawasthi121@gmail.com");
 		
 		 /**
 	  String title,

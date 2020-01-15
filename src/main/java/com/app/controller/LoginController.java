@@ -80,7 +80,7 @@ public class LoginController {
 
 	}
 
-	@ApiOperation(value = "Creates user in the system", response = Long.class)
+	@ApiOperation(value = "Creates user in the system", tags="User operations",response = Long.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Resource created successfully"),
 			@ApiResponse(code = 401, message = "You are not authorized to perform the operation"),
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
