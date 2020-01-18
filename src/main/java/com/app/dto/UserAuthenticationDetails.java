@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.app.entities.PortalUserDetails;
 
-public class UserDetailsDTO implements UserDetails {
+public class UserAuthenticationDetails implements UserDetails {
 
 	/**
 	 * 
@@ -20,7 +20,7 @@ public class UserDetailsDTO implements UserDetails {
 
 	private PortalUserDetails portalUserDetails;
 
-	public UserDetailsDTO(PortalUserDetails portalUserDetails) {
+	public UserAuthenticationDetails(PortalUserDetails portalUserDetails) {
 		this.portalUserDetails = portalUserDetails;
 
 	}

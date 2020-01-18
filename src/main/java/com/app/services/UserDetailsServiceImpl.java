@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.app.dto.UserDetailsDTO;
+import com.app.dto.UserAuthenticationDetails;
 import com.app.entities.PortalUserDetails;
 import com.app.exception.UserNotFoundException;
 import com.app.repositories.PortalUserRepository;
@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new UserNotFoundException("Incorrect username or password");
 		}
 
-		UserDetails userDetails = new UserDetailsDTO(appUser);
+		UserDetails userDetails = new UserAuthenticationDetails(appUser);
 
 		return userDetails;
 	}

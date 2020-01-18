@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.EmailDetailDTO;
-import com.app.dto.UserDetailsDTO;
+import com.app.dto.UserAuthenticationDetails;
 import com.app.services.EmailService;
 import com.app.services.LoginService;
 
@@ -87,7 +87,7 @@ public class LoginController {
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 
 	@PostMapping(value = "/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object saveUserDetails(@RequestBody @Valid UserDetailsDTO userDetailsDTO) {
+	public Object saveUserDetails(@RequestBody @Valid UserAuthenticationDetails userDetailsDTO) {
 		log.info("Request Body :  {} " + userDetailsDTO);
 		Long Id = loginService.saveUser(userDetailsDTO);
 		return new ResponseEntity<Long>(Id, HttpStatus.OK);

@@ -1,13 +1,13 @@
 package com.app.services;
 
-import com.app.dto.UserDetailsDTO;
+import com.app.dto.UserAuthenticationDetails;
 
 public interface LoginService {
 
-	UserDetailsDTO getUserById(Long id);
+	UserAuthenticationDetails getUserById(Long id);
 
-	Long saveUser(UserDetailsDTO userDetailsDTO);
+	Long saveUser(UserAuthenticationDetails userDetailsDTO);
 
-	UserDetailsDTO updateUserDetails(UserDetailsDTO userDetailsDTO);
+	UserAuthenticationDetails updateUserDetails(UserAuthenticationDetails userDetailsDTO);
 
 }

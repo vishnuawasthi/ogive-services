@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.dto.UserDetailsDTO;
+import com.app.dto.UserAuthenticationDetails;
 import com.app.entities.PortalUserDetails;
 import com.app.repositories.PortalUserRepository;
 
@@ -20,8 +20,8 @@ public class LoginServiceImpl implements LoginService {
 	private PortalUserRepository portalUserRepository;
 
 	@Override
-	public UserDetailsDTO getUserById(Long id) {
-		UserDetailsDTO userDetailsDTO = null;
+	public UserAuthenticationDetails getUserById(Long id) {
+		UserAuthenticationDetails userDetailsDTO = null;
 		PortalUserDetails portalUserDetails = portalUserRepository.findById(id).orElse(null);
 		//entityToDTO(userDetailsDTO, portalUserDetails);
 		return userDetailsDTO;
@@ -29,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
 
 	
 
-	private PortalUserDetails dtoToEntity(UserDetailsDTO userDetailsDTO) {
+	private PortalUserDetails dtoToEntity(UserAuthenticationDetails userDetailsDTO) {
 		PortalUserDetails portalUserDetails = new PortalUserDetails();
 		portalUserDetails.setUsername(userDetailsDTO.getUsername());
 		portalUserDetails.setPassword(userDetailsDTO.getPassword());
@@ -40,12 +40,12 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public Long saveUser(UserDetailsDTO userDetailsDTO) {
+	public Long saveUser(UserAuthenticationDetails userDetailsDTO) {
 		return portalUserRepository.save(dtoToEntity(userDetailsDTO)).getId();
 	}
 
 	@Override
-	public UserDetailsDTO updateUserDetails(UserDetailsDTO userDetailsDTO) {
+	public UserAuthenticationDetails updateUserDetails(UserAuthenticationDetails userDetailsDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}
