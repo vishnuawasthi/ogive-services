@@ -1,0 +1,15 @@
+package com.app.rules;
+
+import com.app.dto.OrderDetailsData;
+
+
+rule "BasicRuleOne"
+	when
+		
+		$orderDetailsData : OrderDetailsData()
+		
+	then
+		
+		$orderDetailsData.setOrderType("Rule Executed successfully");
+		System.out.println("In Rules ");
+end

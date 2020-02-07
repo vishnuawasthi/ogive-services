@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.EmailDetailDTO;
+import com.app.dto.OrderDetailsData;
 import com.app.dto.UserAuthenticationDetails;
 import com.app.services.EmailService;
 import com.app.services.LoginService;
+import com.app.services.RuleService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,6 +39,9 @@ public class LoginController {
 
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private RuleService ruleService;
 
 	@GetMapping(value = "/")
 	public Object hellowWorld() {
@@ -93,5 +98,18 @@ public class LoginController {
 		return new ResponseEntity<Long>(Id, HttpStatus.OK);
 
 	}
+	
+	
+	//@ApiOperation(value = "Validate Order details against drools rule", tags="Drools rule",response = Long.class)
+	@PostMapping(value = "/v1/rules", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object validateRules(@RequestBody @Valid OrderDetailsData orderDetailsData) {
+		log.info("Request Body :  {} " + orderDetailsData);
+		ruleService.fileRules(orderDetailsData);
+		log.info("Request Body after rules execution :  {} " + orderDetailsData);
+		return new ResponseEntity<OrderDetailsData>(orderDetailsData, HttpStatus.OK);
+	}
+	
+	
+	
 
 }
