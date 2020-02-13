@@ -41,8 +41,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 			authorizeRequests.antMatchers("/api/**").hasAnyAuthority("USER", "ADMIN");
 			authorizeRequests.antMatchers("/admin-api/**").hasAnyAuthority("ADMIN");
 		})
+		
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
+		.csrf().disable()
 		.httpBasic();
 	}
 

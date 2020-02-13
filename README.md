@@ -55,4 +55,47 @@
 	  -- don't kill the connections to other databases 
 	  AND datname = 'POC_SCHEMA';
   
+# Deploying app in external tomcat server 
 
+1. Go to tomcat installation directory and look  below location 
+	D:\java softwares\apache-tomcat-8.0.32\conf 
+	
+2. Open server.xml file under /conf folder and add the below configuration under the <GlobalNamingResources> tag.
+
+<Resource       	      auth="Container"        
+						   name="jdbc/ogiveServicesDev"
+						   driverClassName="org.postgresql.Driver"
+                           maxActive="10"
+                           maxIdle="0"
+                           maxWait="10000"
+                           password="login@123"
+                           username="POC_ADMIN"
+                           type="javax.sql.DataSource"
+                           url="jdbc:postgresql://localhost:5432/POC_SCHEMA" />	
+
+3. open contaxt.xml from same location and add below tag entry
+
+
+ <ResourceLink 
+					name="jdbc/ogiveServices"
+					global="jdbc/ogiveServicesDev" 
+					auth="Container" 
+		            type="javax.sql.DataSource" />
+		            
+		            
+4. Point jndi-location from your application.properties file bu putting below entry 
+spring.datasource.jndi-name=java:comp/env/jdbc/ogiveServices
+
+5. Build the application and deploy it into external tomcat as war project and once application is up
+it will be running at http://localhost:1100/ogive-services-0.0.1-SNAPSHOT/swagger-ui.html#/
+
+# Transaction Management 
+
+1. Transaction management  example.
+   https://dzone.com/articles/spring-boot-transactions-tutorial-understanding-tr
+   
+2. Hakari CP DataSource Config 
+
+   https://github.com/brettwooldridge/HikariCP#configuration-knobs-baby    
+
+ 		            

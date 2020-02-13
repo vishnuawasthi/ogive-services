@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.app.entities.PortalUserDetails;
 
-@Repository
+//@Repository
 public interface PortalUserRepository extends PagingAndSortingRepository<PortalUserDetails, Long> {
 
 	PortalUserDetails findByUsername(String username);

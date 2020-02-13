@@ -58,4 +58,12 @@ public class UserAuthority {
 		this.description = description;
 	}
 
+	public PortalUserDetails getPortalUserDetails() {
+		return portalUserDetails;
+	}
+
+	public void setPortalUserDetails(PortalUserDetails portalUserDetails) {
+		this.portalUserDetails = portalUserDetails;
+	}
+
 }
