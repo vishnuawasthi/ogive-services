@@ -1,5 +1,7 @@
 package com.app.controller;
 
+import java.util.Objects;
+
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -7,13 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dto.ErrorResponseEntity;
 import com.app.dto.UserDetailsDTO;
 import com.app.services.EmailService;
 import com.app.services.LoginService;
@@ -54,6 +59,18 @@ public class LoginController {
 		log.info("Path id  :  {} " + id);
 		UserDetailsDTO  	userDetailsDTO = loginService.getUserById(id);
 		return new ResponseEntity<UserDetailsDTO>(userDetailsDTO, HttpStatus.OK);
+	}
+	
+	//@ApiOperation(value = "Get user by id", tags="User Operations",response = UserDetailsDTO.class)
+	@GetMapping(value = "/v1/users/accessDenied", produces = MediaType.APPLICATION_JSON_VALUE)
+	public  Object accessDeniedHandler(@RequestParam ("authentication") Authentication authentication) {
+		ErrorResponseEntity errorEntity = new ErrorResponseEntity();
+		if(Objects.nonNull(authentication)) {
+			errorEntity.setDescription(authentication.getName()  +" is not allowed to access the resource");
+			errorEntity.setStatus("403- Access Denied");
+		}
+		
+		return new ResponseEntity<ErrorResponseEntity>(errorEntity, HttpStatus.OK);
 	}
 
 

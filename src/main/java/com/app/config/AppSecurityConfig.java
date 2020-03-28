@@ -24,6 +24,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private UnauthorizedUserAccessDeniedHandler unauthorizedUserAccessDeniedHandler;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -41,7 +44,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 			authorizeRequests.antMatchers("/api/**").hasAnyAuthority("USER", "ADMIN");
 			authorizeRequests.antMatchers("/admin-api/**").hasAnyAuthority("ADMIN");
 		})
-		
+		.exceptionHandling().accessDeniedHandler(unauthorizedUserAccessDeniedHandler)
+		.and()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.csrf().disable()
