@@ -9,12 +9,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @JsonInclude(value = Include.NON_NULL)
 public class MemberRegistrationRequest {
 
 	private String initial;
 	
 	@NotEmpty
+	@ApiModelProperty( required = true)
 	private String firstName;
 
 	private String middleName;
@@ -22,11 +25,14 @@ public class MemberRegistrationRequest {
 	private String familyName;
 
 	@NotEmpty
+	@ApiModelProperty( required = true)
 	private String displayName;
 	
 	@NotEmpty
+	@ApiModelProperty( required = true)
 	private String fullName;
 
+	@ApiModelProperty( allowableValues="yyyy-MM-dd",required = true)
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date dateOfBirth;
 	
@@ -36,6 +42,7 @@ public class MemberRegistrationRequest {
 	private String bloodGroup;
 	private String email;
 
+	@ApiModelProperty( required = true)
 	@Pattern(regexp="\\d{10}")
 	private String mobileNumber;
 	private Integer height;
@@ -43,6 +50,7 @@ public class MemberRegistrationRequest {
 	private String referenceNumber;
 	private String membershipNumber;
 
+	@ApiModelProperty( required = true)
 	@NotEmpty
 	private String idNumber;
 	private String passportNumber;
