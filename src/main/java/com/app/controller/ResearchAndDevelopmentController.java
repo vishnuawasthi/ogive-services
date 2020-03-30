@@ -35,7 +35,7 @@ public class ResearchAndDevelopmentController {
 		return "Hello world!!!!!!!!!!!!!!!";
 	}
 
-	@GetMapping(value = "/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/v1/users/xxxxx", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getUserDetails() {
 
 		EmailDetailDTO emailDetailDTO = new EmailDetailDTO();

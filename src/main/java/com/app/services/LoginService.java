@@ -1,16 +1,18 @@
 package com.app.services;
 
-import com.app.dto.UserDetailsDTO;
+import java.util.List;
+
+import com.app.dto.MemberDetailsResponse;
+import com.app.dto.MemberRegistrationRequest;
 
 public interface LoginService {
 
-	UserDetailsDTO getUserById(Long id);
-	
-	
-	Long saveUserDetails(UserDetailsDTO userDetailsDTO);
-	
-	
-	
-	
+	MemberRegistrationRequest getUserById(Long id);
+
+	Long saveUserDetails(MemberRegistrationRequest userDetailsDTO);
+
+	Long saveMembershipDetails(MemberRegistrationRequest memberRegistrationRequest);
+
+	List<MemberDetailsResponse> getAllMemberShips();
 
 }
