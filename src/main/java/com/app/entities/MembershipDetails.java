@@ -1,49 +1,46 @@
-package com.app.dto;
+package com.app.entities;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+@Entity
+@Table(name = "MEMBERSHIP_DETAILS")
+@SequenceGenerator(sequenceName = "SEQ_MEMBERSHIP_DETAILS", initialValue = 1, allocationSize = 1, name = "SEQ_MEMBERSHIP_DETAILS")
+public class MembershipDetails {
 
-@JsonInclude(value = Include.NON_NULL)
-public class MemberRegistrationRequest {
+	@Id
+	@GeneratedValue(generator = "SEQ_MEMBERSHIP_DETAILS", strategy = GenerationType.SEQUENCE)
+	private Long id;
 
 	private String initial;
-	
-	@NotEmpty
+
 	private String firstName;
 
 	private String middleName;
 	private String lastName;
 	private String familyName;
 
-	@NotEmpty
 	private String displayName;
-	
-	@NotEmpty
 	private String fullName;
 
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date dateOfBirth;
-	
 	private String gender;
-	
 	private String maritalStatus;
 	private String bloodGroup;
 	private String email;
 
-	@Pattern(regexp="\\d{10}")
 	private String mobileNumber;
 	private Integer height;
 	private float weight;
 	private String referenceNumber;
 	private String membershipNumber;
 
-	@NotEmpty
 	private String idNumber;
 	private String passportNumber;
 	private String nationality;
@@ -55,6 +52,56 @@ public class MemberRegistrationRequest {
 	private String location;
 	private String companyName;
 	private String designation;
+
+	public MembershipDetails() {
+		super();
+	}
+
+	public MembershipDetails(Long id, String initial, String firstName, String middleName, String lastName,
+			String familyName, String displayName, String fullName, Date dateOfBirth, String gender,
+			String maritalStatus, String bloodGroup, String email, String mobileNumber, Integer height, float weight,
+			String referenceNumber, String membershipNumber, String idNumber, String passportNumber, String nationality,
+			String poBoxNumber, String companyOrBusinessUnit, String apartmentNumber, String street, String building,
+			String location, String companyName, String designation) {
+		super();
+		this.id = id;
+		this.initial = initial;
+		this.firstName = firstName;
+		this.middleName = middleName;
+		this.lastName = lastName;
+		this.familyName = familyName;
+		this.displayName = displayName;
+		this.fullName = fullName;
+		this.dateOfBirth = dateOfBirth;
+		this.gender = gender;
+		this.maritalStatus = maritalStatus;
+		this.bloodGroup = bloodGroup;
+		this.email = email;
+		this.mobileNumber = mobileNumber;
+		this.height = height;
+		this.weight = weight;
+		this.referenceNumber = referenceNumber;
+		this.membershipNumber = membershipNumber;
+		this.idNumber = idNumber;
+		this.passportNumber = passportNumber;
+		this.nationality = nationality;
+		this.poBoxNumber = poBoxNumber;
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
+		this.apartmentNumber = apartmentNumber;
+		this.street = street;
+		this.building = building;
+		this.location = location;
+		this.companyName = companyName;
+		this.designation = designation;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getInitial() {
 		return initial;
@@ -282,7 +329,7 @@ public class MemberRegistrationRequest {
 
 	@Override
 	public String toString() {
-		return "MemberRegistrationRequest [initial=" + initial + ", firstName=" + firstName + ", middleName="
+		return "MembershipDetails [id=" + id + ", initial=" + initial + ", firstName=" + firstName + ", middleName="
 				+ middleName + ", lastName=" + lastName + ", familyName=" + familyName + ", displayName=" + displayName
 				+ ", fullName=" + fullName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + ", maritalStatus="
 				+ maritalStatus + ", bloodGroup=" + bloodGroup + ", email=" + email + ", mobileNumber=" + mobileNumber
@@ -293,7 +340,5 @@ public class MemberRegistrationRequest {
 				+ ", street=" + street + ", building=" + building + ", location=" + location + ", companyName="
 				+ companyName + ", designation=" + designation + "]";
 	}
-	
-	
 
 }

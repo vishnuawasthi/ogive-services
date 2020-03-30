@@ -83,17 +83,17 @@ public class LoginController {
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 	@PostMapping(value = "/v1/memberships", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object memberRegistration(@RequestBody @Valid MemberRegistrationRequest memberRegistrationRequest) {
+		log.info("memberRegistration ()- start");
 		log.info("Request Body :  {} " + memberRegistrationRequest);
-		System.out.println("Request Body :  {} " + memberRegistrationRequest);
 		Long id = loginService.saveMembershipDetails(memberRegistrationRequest);
+		log.info("memberRegistration ()- end");
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "Get all memberships present in the system", tags = "Membership Operation ", response = List.class)
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Resource created successfully"),
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Fetch completed successfully"),
 			@ApiResponse(code = 401, message = "You are not authorized to perform the operation"),
-			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")})
 	@GetMapping(value = "/v1/memberships", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getAllMemberships() {
 		log.info("getAllMemberships ()- start");
