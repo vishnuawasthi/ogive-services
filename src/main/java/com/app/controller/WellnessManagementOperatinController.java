@@ -22,7 +22,7 @@ import com.app.dto.ErrorResponseEntity;
 import com.app.dto.MemberDetailsResponse;
 import com.app.dto.MemberRegistrationRequest;
 import com.app.services.EmailService;
-import com.app.services.LoginService;
+import com.app.services.PortalOperationService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,12 +31,12 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value = "/api")
-public class LoginController {
+public class WellnessManagementOperatinController {
 
-	private static final Logger log = Logger.getLogger(LoginController.class);
+	private static final Logger log = Logger.getLogger(WellnessManagementOperatinController.class);
 
 	@Autowired
-	private LoginService loginService;
+	private PortalOperationService loginService;
 
 	@Autowired
 	private EmailService emailService;

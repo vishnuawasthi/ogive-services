@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.EmailDetailDTO;
 import com.app.services.EmailService;
-import com.app.services.LoginService;
+import com.app.services.PortalOperationService;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -25,7 +25,7 @@ public class ResearchAndDevelopmentController {
 	private static final Logger log = Logger.getLogger(ResearchAndDevelopmentController.class);
 
 	@Autowired
-	private LoginService loginService;
+	private PortalOperationService loginService;
 
 	@Autowired
 	private EmailService emailService;
