@@ -20,13 +20,10 @@ import com.app.dto.ErrorResponseEntity;
 public class RequestValidationExceptionResponseHandler extends ResponseEntityExceptionHandler {
 
 	private static final Logger log = Logger.getLogger(RequestValidationExceptionResponseHandler.class);
-	
+
 	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(
-			MethodArgumentNotValidException ex,
-			HttpHeaders headers, 
-			HttpStatus status, 
-			WebRequest request) {
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		List<String> errors = new ArrayList<>();
 		for (ObjectError error : ex.getBindingResult().getAllErrors()) {
 			errors.add(error.getObjectName() + " " + error.getDefaultMessage());
@@ -38,9 +35,16 @@ public class RequestValidationExceptionResponseHandler extends ResponseEntityExc
 		return new ResponseEntity(errorResponseEntity, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(value = RecordNotFoundException.class)
+	public ResponseEntity<Object> handleRecordNotFoundException(RecordNotFoundException exception) {
+		log.info("Exception ->     {}  ", exception);
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+	}
+
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<Object> handleDatabaseOperationFailedException(Exception exception) {
-		log.info("Exception ->     {}  ",exception);
+		log.info("Exception ->     {}  ", exception);
+		
 		return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 

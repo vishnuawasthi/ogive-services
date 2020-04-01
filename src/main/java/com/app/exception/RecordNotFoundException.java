@@ -1,4 +1,4 @@
-package com.app.services;
+package com.app.exception;
 
 public class RecordNotFoundException extends RuntimeException {
 

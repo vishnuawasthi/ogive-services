@@ -23,6 +23,7 @@ import com.app.dto.UserAuthenticationDetails;
 import com.app.entities.MembershipDetails;
 import com.app.entities.PortalUserDetails;
 import com.app.entities.UserAuthority;
+import com.app.exception.RecordNotFoundException;
 import com.app.repositories.MembershipDetailsRepository;
 import com.app.repositories.PortalUserRepository;
 import com.app.repositories.UserAuthoritiesRepository;
@@ -194,9 +195,37 @@ public class PortalOperationServiceImpl implements PortalOperationService {
 		if (!StringUtils.isEmpty(portalUserDetailsRequest.getEmail())) {
 			entity.setEmail(portalUserDetailsRequest.getEmail());
 		}
-		
+
 		log.info("updatePortalUserDetails() - end");
 		return null;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void suspendAcccount(Long id) throws RecordNotFoundException {
+		log.info("suspendAcccount() - start");
+		PortalUserDetails entity = portalUserRepository.findById(id).orElse(null);
+
+		if (Objects.isNull(entity)) {
+			throw new RecordNotFoundException("Record Not Found with id = " + id);
+		}
+		entity.setIsEnabled("N");
+		portalUserRepository.save(entity);
+		log.info("suspendAcccount() - end");
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void enableAcccount(Long id) {
+		log.info("enableAcccount() - start");
+		PortalUserDetails entity = portalUserRepository.findById(id).orElse(null);
+		
+		if (Objects.isNull(entity)) {
+			throw new RecordNotFoundException("Record Not Found with id = " + id);
+		}
+		entity.setIsEnabled("Y");
+		portalUserRepository.save(entity);
+		log.info("enableAcccount() - start");
 	}
 
 }

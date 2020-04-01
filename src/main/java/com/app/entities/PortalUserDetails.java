@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 @Entity
 @Table(name = "USER_DETAILS")
@@ -58,6 +59,10 @@ public class PortalUserDetails extends AuditDetails {
 
 	@Column(name = "ALT_CONTACT_NO")
 	private String alternateContactNumber;
+
+	@Version()
+	@Column(name = "VERSION")
+	private Integer version;
 
 	/**
 	 * TODO - Need to explore on it as got below error 2020-01-13 10:20:11 -
@@ -190,22 +195,21 @@ public class PortalUserDetails extends AuditDetails {
 		this.alternateContactNumber = alternateContactNumber;
 	}
 
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
 	@Override
 	public String toString() {
 		return "PortalUserDetails [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
 				+ ", isAcccountLocked=" + isAcccountLocked + ", isEnabled=" + isEnabled + ", firstname=" + firstname
 				+ ", lastname=" + lastname + ", middlename=" + middlename + ", gender=" + gender + ", dateOfBirth="
 				+ dateOfBirth + ", contactNumber=" + contactNumber + ", alternateContactNumber="
-				+ alternateContactNumber + ", authorities=" + authorities + ", getId()=" + getId() + ", getUsername()="
-				+ getUsername() + ", getPassword()=" + getPassword() + ", getAuthorities()=" + getAuthorities()
-				+ ", getIsAcccountLocked()=" + getIsAcccountLocked() + ", getIsEnabled()=" + getIsEnabled()
-				+ ", getEmail()=" + getEmail() + ", getFirstname()=" + getFirstname() + ", getLastname()="
-				+ getLastname() + ", getMiddlename()=" + getMiddlename() + ", getGender()=" + getGender()
-				+ ", getDateOfBirth()=" + getDateOfBirth() + ", getContactNumber()=" + getContactNumber()
-				+ ", getAlternateContactNumber()=" + getAlternateContactNumber() + ", getCreatedBy()=" + getCreatedBy()
-				+ ", getUpdatedBy()=" + getUpdatedBy() + ", getCreatedDate()=" + getCreatedDate() + ", getUpatedDate()="
-				+ getUpatedDate() + ", toString()=" + super.toString() + ", getClass()=" + getClass() + ", hashCode()="
-				+ hashCode() + "]";
+				+ alternateContactNumber + ", version=" + version + ", authorities=" + authorities + "]";
 	}
 
 }

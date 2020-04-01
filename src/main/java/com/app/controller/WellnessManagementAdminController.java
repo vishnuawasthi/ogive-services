@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.dto.EmailDetailDTO;
 import com.app.dto.PortalUserDetailsRequest;
 import com.app.dto.PortalUserDetailsResponse;
+import com.app.exception.RecordNotFoundException;
 import com.app.services.PortalOperationService;
 
 import io.swagger.annotations.ApiOperation;
@@ -41,16 +41,26 @@ public class WellnessManagementAdminController {
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 
-	@GetMapping(value = "/v1/users/suspend-account", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object suspendAccount() {
-		System.out.println("suspendAccount() - start");
+	@PostMapping(value = "/v1/portal-users/{id}/suspend-account", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object suspendAccount(@PathVariable("id") Long id) {
+		log.info("suspendAccount() - start");
+		portalOperationService.suspendAcccount(id);
+		log.info("suspendAccount() - end");
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
-		EmailDetailDTO emailDetailDTO = new EmailDetailDTO();
-		emailDetailDTO.setSubject("Api call response");
+	@ApiOperation(value = "This service enable  an suspended account", tags = "Admin operations", response = Long.class)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Account suspended successfully"),
+			@ApiResponse(code = 401, message = "You are not authorized to perform the operation"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 
-		System.out.println("suspendAccount() - end");
-		return new ResponseEntity<EmailDetailDTO>(emailDetailDTO, HttpStatus.OK);
-
+	@PostMapping(value = "/v1/portal-users/{id}/enable-account", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object enableAccount(@PathVariable("id") Long id) {
+		log.info("enableAccount() - start");
+		portalOperationService.enableAcccount(id);
+		log.info("enableAccount() - end");
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/***************** PORTAL USER SERVICES **********************/
@@ -65,10 +75,11 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "This service used to update the details of an existing user. It accept updatable fields in body and those are firestname, lastname, email, contactNumber", tags = "Admin operations", response = PortalUserDetailsResponse.class)
+	@ApiOperation(value = "This service used to update the details of an existing user.It accept updatable fields in body and those are firestname, lastname, "
+			+ "email, contactNumber", tags = "Admin operations", response = PortalUserDetailsResponse.class)
 	@PutMapping(value = "/v1/portal-users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updatePortalUserDetails(@PathVariable("id") Long id,
-			@RequestBody @Valid PortalUserDetailsRequest portalUserDetailsRequest) {
+			@RequestBody @Valid PortalUserDetailsRequest portalUserDetailsRequest) throws RecordNotFoundException {
 		log.info("updatePortalUserDetails ()- start");
 		log.info("Request Body :  {} " + portalUserDetailsRequest);
 		PortalUserDetailsResponse portalUserDetailsResponse = portalOperationService.updatePortalUserDetails(id,
