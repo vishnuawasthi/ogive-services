@@ -196,8 +196,13 @@ public class PortalOperationServiceImpl implements PortalOperationService {
 			entity.setEmail(portalUserDetailsRequest.getEmail());
 		}
 
+		portalUserRepository.save(entity);
+		
+		PortalUserDetailsResponse response = new PortalUserDetailsResponse();
+		
+		BeanUtils.copyProperties(entity, response);
 		log.info("updatePortalUserDetails() - end");
-		return null;
+		return response;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)

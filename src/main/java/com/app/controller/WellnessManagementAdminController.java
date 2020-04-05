@@ -6,6 +6,9 @@ import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +18,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dto.CreateMembershipTypeRequest;
+import com.app.dto.MembershipTypeResponse;
 import com.app.dto.PortalUserDetailsRequest;
 import com.app.dto.PortalUserDetailsResponse;
 import com.app.exception.RecordNotFoundException;
+import com.app.services.MembershipService;
 import com.app.services.PortalOperationService;
 
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +41,9 @@ public class WellnessManagementAdminController {
 
 	@Autowired
 	private PortalOperationService portalOperationService;
+
+	@Autowired
+	private MembershipService membershipService;
 
 	@ApiOperation(value = "This service suspends an existing user", tags = "Admin operations", response = Long.class)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Account suspended successfully"),
@@ -104,6 +114,54 @@ public class WellnessManagementAdminController {
 		PortalUserDetailsResponse responseObject = portalOperationService.getPortalUserById(id);
 		log.info("getPortalUsersById ()- end");
 		return new ResponseEntity<PortalUserDetailsResponse>(responseObject, HttpStatus.OK);
+	}
+
+	/**
+	 * #################### MEMBERSHIP TYPE SERVICES
+	 */
+
+	@ApiOperation(value = "This api allow to update membership type", response = Long.class, tags = "Admin operations - Membership Type")
+	@PostMapping(value = "/v1/membership-type", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object createMembershipType(@RequestBody @Valid CreateMembershipTypeRequest createMembershipTypeRequest) {
+		log.info("createMembershipType ()- start");
+		log.info("Request Body :  {} " + createMembershipTypeRequest);
+		Long id = membershipService.createMembershipType(createMembershipTypeRequest);
+		log.info("createMembershipType ()- end");
+		return new ResponseEntity<Long>(id, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "This api allow to create membership type", tags = "Admin operations - Membership Type")
+	@PutMapping(value = "/v1/membership-type/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object updateMembershipType(@PathVariable("id") Long id,
+			@RequestBody @Valid CreateMembershipTypeRequest createMembershipTypeRequest) {
+		log.info("createMembershipType ()- start");
+		log.info("Request Body :  {} " + createMembershipTypeRequest);
+		MembershipTypeResponse responseObject = null;
+		log.info("createMembershipType ()- end");
+		return new ResponseEntity<MembershipTypeResponse>(responseObject, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "This api gives membership type queried against the id", response = MembershipTypeResponse.class, tags = "Admin operations - Membership Type")
+	@GetMapping(value = "/v1/membership-type/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getMembershipTypeById(@PathVariable("id") Long id) {
+		log.info("getMembershipTypeById ()- start");
+		MembershipTypeResponse responseObject = membershipService.getMembershipTypeById(id);
+		log.info("getMembershipTypeById ()- end");
+		return new ResponseEntity<MembershipTypeResponse>(responseObject, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "This api gives list of all the membership type available in the system", response = List.class, tags = "Admin operations - Membership Type")
+	@GetMapping(value = "/v1/membership-type", produces = MediaType.APPLICATION_JSON_VALUE)
+	public HttpEntity<Page<MembershipTypeResponse>> getAllMembershipTypes(
+			@RequestParam(required = false, name = "membershipTypeCode") String membershipTypeCode,
+			Pageable pageRequest) {
+		log.info("getAllMembershipTypes ()- start");
+
+		Page<MembershipTypeResponse> getAllMembershipTypes = membershipService.getAllMembershipTypes(membershipTypeCode,
+				pageRequest);
+		
+		log.info("getAllMembershipTypes ()- end");
+		return new ResponseEntity<Page<MembershipTypeResponse>>(getAllMembershipTypes, HttpStatus.OK);
 	}
 
 }

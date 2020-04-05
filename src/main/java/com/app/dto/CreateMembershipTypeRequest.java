@@ -1,13 +1,7 @@
-package com.app.entities;
+package com.app.dto;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -15,21 +9,20 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
 
-@Entity
-@Table(name = "MEMBERSHIP_TYPES")
-@SequenceGenerator(sequenceName = "SEQ_MEMBERSHIP_TYPES", initialValue = 1, allocationSize = 1, name = "SEQ_MEMBERSHIP_TYPES")
-public class MembershipTypes {
+public class CreateMembershipTypeRequest {
 
-	@Id
-	@GeneratedValue(generator = "SEQ_MEMBERSHIP_TYPES", strategy = GenerationType.SEQUENCE)
-	private Long id;
-
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String membershipTypeCode;
 
 	private String membershipType;
 
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String description;
 
+	@NotNull
+	@ApiModelProperty(required = true)
 	private Float duration;
 
 	private Float minimuHours;
@@ -38,6 +31,8 @@ public class MembershipTypes {
 
 	private String enableRecurringPayment;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@ApiModelProperty(required = false, allowableValues = "yyyy-MM-dd")
 	private Date effectiveDate;
 
 	private Float joiningFees;
@@ -50,12 +45,8 @@ public class MembershipTypes {
 
 	private String notes;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+	public CreateMembershipTypeRequest() {
+		super();
 	}
 
 	public String getMembershipTypeCode() {
@@ -164,7 +155,7 @@ public class MembershipTypes {
 
 	@Override
 	public String toString() {
-		return "MembershipTypes [id=" + id + ", membershipTypeCode=" + membershipTypeCode + ", membershipType="
+		return "CreateMembershipTypeRequest [membershipTypeCode=" + membershipTypeCode + ", membershipType="
 				+ membershipType + ", description=" + description + ", duration=" + duration + ", minimuHours="
 				+ minimuHours + ", maximumHours=" + maximumHours + ", enableRecurringPayment=" + enableRecurringPayment
 				+ ", effectiveDate=" + effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees="
