@@ -1,40 +1,57 @@
 package com.app.dto;
 
 import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
+import com.app.constants.ApplicationConstants;
+import com.app.constants.Authorities;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class PortalUserDetailsRequest {
+public class CreatePortalUserDetailsRequest {
 
-	// private Long id;
-
+	@NotEmpty
 	@ApiModelProperty(required = true)
 	private String username;
 
+	@NotEmpty
 	@ApiModelProperty(required = true)
 	private String password;
 
-	private String isAcccountLocked = "N";
+	// private String isAcccountLocked = "N";
 
-	private String isEnabled = "Y";
+	// private String isEnabled = "Y";
 
+	@NotEmpty
 	@ApiModelProperty(required = true)
 	private String firstname;
 
+	@NotEmpty
 	@ApiModelProperty(required = true)
 	private String lastname;
 
 	private String middlename;
 
+	@ApiModelProperty(required = false, example = "MALE,FEMALE,OTHER")
 	private String gender;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@ApiModelProperty(required = false, allowableValues = "yyyy-MM-dd")
 	private Date dateOfBirth;
 
+	@Pattern(regexp = ApplicationConstants.EMAIL_PATTERN,message="Invalid Email format")
 	private String email;
 
 	private String contactNumber;
 
 	private String alternateContactNumber;
+
+	@ApiModelProperty(example = "['ADMIN','USER']", required = true)
+	private List<Authorities> authorities;
 
 	public String getUsername() {
 		return username;
@@ -50,22 +67,6 @@ public class PortalUserDetailsRequest {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getIsAcccountLocked() {
-		return isAcccountLocked;
-	}
-
-	public void setIsAcccountLocked(String isAcccountLocked) {
-		this.isAcccountLocked = isAcccountLocked;
-	}
-
-	public String getIsEnabled() {
-		return isEnabled;
-	}
-
-	public void setIsEnabled(String isEnabled) {
-		this.isEnabled = isEnabled;
 	}
 
 	public String getFirstname() {
@@ -132,13 +133,12 @@ public class PortalUserDetailsRequest {
 		this.alternateContactNumber = alternateContactNumber;
 	}
 
-	@Override
-	public String toString() {
-		return "PortalUserDetailsRequest ["+"username=" + username + ", password=" + password
-				+ ", isAcccountLocked=" + isAcccountLocked + ", isEnabled=" + isEnabled + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", middlename=" + middlename + ", gender=" + gender + ", dateOfBirth="
-				+ dateOfBirth + ", email=" + email + ", contactNumber=" + contactNumber + ", alternateContactNumber="
-				+ alternateContactNumber + "]";
+	public List<Authorities> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(List<Authorities> authorities) {
+		this.authorities = authorities;
 	}
 
 }

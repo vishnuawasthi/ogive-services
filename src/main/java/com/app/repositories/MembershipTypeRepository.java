@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.app.entities.MembershipTypes;
+
 // https://www.petrikainulainen.net/programming/spring-framework/spring-data-jpa-tutorial-part-seven-pagination/
 public interface MembershipTypeRepository extends PagingAndSortingRepository<MembershipTypes, Long> {
 

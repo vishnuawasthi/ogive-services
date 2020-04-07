@@ -1,37 +1,31 @@
-package com.app.entities;
+package com.app.dto;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "PERSONAL_TRAINING_TYPES")
-@SequenceGenerator(sequenceName = "SEQ_PERSONAL_TRAINING_TYPES", initialValue = 1, allocationSize = 1, name = "SEQ_PERSONAL_TRAINING_TYPES")
-public class PersonalTrainingType {
-
-	@Id
-	@GeneratedValue(generator = "SEQ_PERSONAL_TRAINING_TYPES", strategy = GenerationType.SEQUENCE)
-	private Long id;
+import io.swagger.annotations.ApiModelProperty;
+public class CreatePersonalTrainingTypeRequest {
 
 	private String personalTrainingType;
 
+	@ApiModelProperty(required = true)
 	private String personalTrainingCode;
 
+	@ApiModelProperty(required = true)
 	private String description;
 
 	private String companyOrBusinessUnitCode;
 
+	@NotNull
+	@ApiModelProperty(required = true)
 	private Float duration;
 
 	private Integer extraSessions;
 
 	private Integer allowedSessions;
 
+	@ApiModelProperty(required = true, example = "15")
 	private Integer validityInDays;
 
 	private String enableRecurringPayment;
@@ -45,14 +39,6 @@ public class PersonalTrainingType {
 	private Float allowableDiscount;
 
 	private String notes;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getPersonalTrainingType() {
 		return personalTrainingType;
@@ -168,7 +154,7 @@ public class PersonalTrainingType {
 
 	@Override
 	public String toString() {
-		return "PersonalTrainingType [id=" + id + ", personalTrainingType=" + personalTrainingType
+		return "CreatePersonalTrainingTypeRequest [personalTrainingType=" + personalTrainingType
 				+ ", personalTrainingCode=" + personalTrainingCode + ", description=" + description
 				+ ", companyOrBusinessUnitCode=" + companyOrBusinessUnitCode + ", duration=" + duration
 				+ ", extraSessions=" + extraSessions + ", allowedSessions=" + allowedSessions + ", validityInDays="

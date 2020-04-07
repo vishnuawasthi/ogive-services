@@ -41,7 +41,7 @@ public class CreateMembershipTypeRequest {
 
 	private Float allowedDiscount;
 
-	private String companyOrBusinessUnitName;
+	private String companyOrBusinessUnitCode;
 
 	private String notes;
 
@@ -137,12 +137,12 @@ public class CreateMembershipTypeRequest {
 		this.allowedDiscount = allowedDiscount;
 	}
 
-	public String getCompanyOrBusinessUnitName() {
-		return companyOrBusinessUnitName;
+	public String getCompanyOrBusinessUnitCode() {
+		return companyOrBusinessUnitCode;
 	}
 
-	public void setCompanyOrBusinessUnitName(String companyOrBusinessUnitName) {
-		this.companyOrBusinessUnitName = companyOrBusinessUnitName;
+	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
+		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
 	}
 
 	public String getNotes() {
@@ -159,8 +159,8 @@ public class CreateMembershipTypeRequest {
 				+ membershipType + ", description=" + description + ", duration=" + duration + ", minimuHours="
 				+ minimuHours + ", maximumHours=" + maximumHours + ", enableRecurringPayment=" + enableRecurringPayment
 				+ ", effectiveDate=" + effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees="
-				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitName="
-				+ companyOrBusinessUnitName + ", notes=" + notes + "]";
+				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitCode="
+				+ companyOrBusinessUnitCode + ", notes=" + notes + "]";
 	}
 
 }

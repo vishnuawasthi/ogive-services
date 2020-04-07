@@ -8,12 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "MEMBERSHIP_TYPES")
@@ -46,7 +40,7 @@ public class MembershipTypes {
 
 	private Float allowedDiscount;
 
-	private String companyOrBusinessUnitName;
+	private String companyOrBusinessUnitCode;
 
 	private String notes;
 
@@ -146,14 +140,6 @@ public class MembershipTypes {
 		this.allowedDiscount = allowedDiscount;
 	}
 
-	public String getCompanyOrBusinessUnitName() {
-		return companyOrBusinessUnitName;
-	}
-
-	public void setCompanyOrBusinessUnitName(String companyOrBusinessUnitName) {
-		this.companyOrBusinessUnitName = companyOrBusinessUnitName;
-	}
-
 	public String getNotes() {
 		return notes;
 	}
@@ -162,14 +148,22 @@ public class MembershipTypes {
 		this.notes = notes;
 	}
 
+	public String getCompanyOrBusinessUnitCode() {
+		return companyOrBusinessUnitCode;
+	}
+
+	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
+		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
+	}
+
 	@Override
 	public String toString() {
 		return "MembershipTypes [id=" + id + ", membershipTypeCode=" + membershipTypeCode + ", membershipType="
 				+ membershipType + ", description=" + description + ", duration=" + duration + ", minimuHours="
 				+ minimuHours + ", maximumHours=" + maximumHours + ", enableRecurringPayment=" + enableRecurringPayment
 				+ ", effectiveDate=" + effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees="
-				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitName="
-				+ companyOrBusinessUnitName + ", notes=" + notes + "]";
+				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitCode="
+				+ companyOrBusinessUnitCode + ", notes=" + notes + "]";
 	}
 
 }

@@ -17,7 +17,7 @@ public class MemberDetailsResponse {
 
 	private String displayName;
 	private String fullName;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MMM-dd")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date dateOfBirth;
 	private String gender;
 	private String maritalStatus;

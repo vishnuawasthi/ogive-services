@@ -1,41 +1,38 @@
-package com.app.entities;
+package com.app.dto;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Entity
-@Table(name = "PERSONAL_TRAINING_TYPES")
-@SequenceGenerator(sequenceName = "SEQ_PERSONAL_TRAINING_TYPES", initialValue = 1, allocationSize = 1, name = "SEQ_PERSONAL_TRAINING_TYPES")
-public class PersonalTrainingType {
+import io.swagger.annotations.ApiModelProperty;
 
-	@Id
-	@GeneratedValue(generator = "SEQ_PERSONAL_TRAINING_TYPES", strategy = GenerationType.SEQUENCE)
+public class PersonalTrainingTypeResponse {
+
+	@ApiModelProperty(required = true)
 	private Long id;
 
 	private String personalTrainingType;
 
 	private String personalTrainingCode;
 
+	@ApiModelProperty(required = true)
 	private String description;
 
 	private String companyOrBusinessUnitCode;
 
+	@ApiModelProperty(required = true)
 	private Float duration;
 
 	private Integer extraSessions;
 
 	private Integer allowedSessions;
 
+	@ApiModelProperty(required = true)
 	private Integer validityInDays;
 
 	private String enableRecurringPayment;
 
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date effectiveDate;
 
 	private Float joiningFees;
@@ -168,7 +165,7 @@ public class PersonalTrainingType {
 
 	@Override
 	public String toString() {
-		return "PersonalTrainingType [id=" + id + ", personalTrainingType=" + personalTrainingType
+		return "PersonalTrainingTypeResponse [id=" + id + ", personalTrainingType=" + personalTrainingType
 				+ ", personalTrainingCode=" + personalTrainingCode + ", description=" + description
 				+ ", companyOrBusinessUnitCode=" + companyOrBusinessUnitCode + ", duration=" + duration
 				+ ", extraSessions=" + extraSessions + ", allowedSessions=" + allowedSessions + ", validityInDays="

@@ -2,9 +2,6 @@ package com.app.dto;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -40,7 +37,7 @@ public class MembershipTypeResponse {
 
 	private Float allowedDiscount;
 
-	private String companyOrBusinessUnitName;
+	private String companyOrBusinessUnitCode;
 
 	private String notes;
 
@@ -143,12 +140,12 @@ public class MembershipTypeResponse {
 		this.allowedDiscount = allowedDiscount;
 	}
 
-	public String getCompanyOrBusinessUnitName() {
-		return companyOrBusinessUnitName;
+	public String getCompanyOrBusinessUnitCode() {
+		return companyOrBusinessUnitCode;
 	}
 
-	public void setCompanyOrBusinessUnitName(String companyOrBusinessUnitName) {
-		this.companyOrBusinessUnitName = companyOrBusinessUnitName;
+	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
+		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
 	}
 
 	public String getNotes() {
@@ -165,8 +162,8 @@ public class MembershipTypeResponse {
 				+ membershipType + ", description=" + description + ", duration=" + duration + ", minimuHours="
 				+ minimuHours + ", maximumHours=" + maximumHours + ", enableRecurringPayment=" + enableRecurringPayment
 				+ ", effectiveDate=" + effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees="
-				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitName="
-				+ companyOrBusinessUnitName + ", notes=" + notes + "]";
+				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitCode="
+				+ companyOrBusinessUnitCode + ", notes=" + notes + "]";
 	}
 
 }

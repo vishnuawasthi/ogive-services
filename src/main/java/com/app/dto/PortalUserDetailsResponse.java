@@ -1,6 +1,11 @@
 package com.app.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.app.constants.Authorities;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -26,6 +31,7 @@ public class PortalUserDetailsResponse {
 
 	private String gender;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
 
 	private String email;
@@ -33,6 +39,8 @@ public class PortalUserDetailsResponse {
 	private String contactNumber;
 
 	private String alternateContactNumber;
+
+	private List<Authorities> authorities = new ArrayList<Authorities>();
 
 	public String getUsername() {
 		return username;
@@ -153,13 +161,21 @@ public class PortalUserDetailsResponse {
 		this.alternateContactNumber = alternateContactNumber;
 	}
 
+	public List<Authorities> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(List<Authorities> authorities) {
+		this.authorities = authorities;
+	}
+
 	@Override
 	public String toString() {
 		return "PortalUserDetailsResponse [username=" + username + ", password=" + password + ", isAcccountLocked="
 				+ isAcccountLocked + ", isEnabled=" + isEnabled + ", firstname=" + firstname + ", lastname=" + lastname
 				+ ", middlename=" + middlename + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", email="
 				+ email + ", contactNumber=" + contactNumber + ", alternateContactNumber=" + alternateContactNumber
-				+ "]";
+				+ ", authorities=" + authorities + "]";
 	}
 
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -13,11 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.app.constants.Authorities;
+import com.app.dto.CreatePortalUserDetailsRequest;
 import com.app.dto.MemberDetailsResponse;
 import com.app.dto.MemberRegistrationRequest;
-import com.app.dto.PortalUserDetailsRequest;
 import com.app.dto.PortalUserDetailsResponse;
 import com.app.dto.UserAuthenticationDetails;
 import com.app.entities.MembershipDetails;
@@ -126,13 +130,29 @@ public class PortalOperationServiceImpl implements PortalOperationService {
 		return responseList;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public Long savePortalUserDetails(PortalUserDetailsRequest request) {
+	public Long savePortalUserDetails(CreatePortalUserDetailsRequest request) {
 		log.info("savePortalUserDetails() - start");
 		PortalUserDetails entity = new PortalUserDetails();
 		BeanUtils.copyProperties(request, entity);
 		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 		portalUserRepository.save(entity);
+		List<Authorities> authorities = request.getAuthorities();
+
+		if (!CollectionUtils.isEmpty(authorities)) {
+
+			List<UserAuthority> authoDetailsList = new ArrayList<UserAuthority>();
+			
+			authorities.forEach(auth -> {
+				UserAuthority authEntity = new UserAuthority();
+				authEntity.setAuthority(auth);
+				authEntity.setPortalUserDetails(entity);
+				authEntity.setDescription("Auth created for user id " + entity.getId());
+				authoDetailsList.add(authEntity);
+			});
+			authoritiesRepository.saveAll(authoDetailsList);
+		}
 		log.info("savePortalUserDetails() - end");
 		return entity.getId();
 	}
@@ -164,14 +184,20 @@ public class PortalOperationServiceImpl implements PortalOperationService {
 			responseObj = new PortalUserDetailsResponse();
 			BeanUtils.copyProperties(entity, responseObj);
 			responseObj.setPassword("");
+			List<Authorities> authorities = new ArrayList<Authorities>();
+
+			entity.getAuthorities().forEach(auth -> {
+				authorities.add(auth.getAuthority());
+			});
+			responseObj.setAuthorities(authorities);
 		}
 		log.info("getPortalUserById() - end");
 		return responseObj;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public PortalUserDetailsResponse updatePortalUserDetails(Long id, PortalUserDetailsRequest portalUserDetailsRequest)
-			throws RecordNotFoundException {
+	public PortalUserDetailsResponse updatePortalUserDetails(Long id, CreatePortalUserDetailsRequest portalUserDetailsRequest) throws RecordNotFoundException {
 		log.info("updatePortalUserDetails() - start");
 
 		PortalUserDetails entity = portalUserRepository.findById(id).orElse(null);
@@ -195,11 +221,23 @@ public class PortalOperationServiceImpl implements PortalOperationService {
 		if (!StringUtils.isEmpty(portalUserDetailsRequest.getEmail())) {
 			entity.setEmail(portalUserDetailsRequest.getEmail());
 		}
-
+		
+		/*List<Authorities> authoritiesFromUI = portalUserDetailsRequest.getAuthorities();
+		List<String>    listOfAuthNames = authoritiesFromUI.stream().map(item ->{
+			return item.name();
+			
+		}).collect(Collectors.toList());
+		
+		if (!CollectionUtils.isEmpty(authoritiesFromUI)) {
+			entity.getAuthorities().forEach(authority -> {
+				if (!listOfAuthNames.contains(authority.getAuthority().name())) {
+					authoritiesRepository.delete(authority);
+				}
+			});
+		}*/
+		
 		portalUserRepository.save(entity);
-		
 		PortalUserDetailsResponse response = new PortalUserDetailsResponse();
-		
 		BeanUtils.copyProperties(entity, response);
 		log.info("updatePortalUserDetails() - end");
 		return response;
@@ -233,4 +271,49 @@ public class PortalOperationServiceImpl implements PortalOperationService {
 		log.info("enableAcccount() - start");
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void updateAuthorities(Long id, List<Authorities> authorities) {
+		log.info("updateAuthorities() - start");
+		PortalUserDetails entity = portalUserRepository.findById(id).orElse(null);
+
+		if (Objects.isNull(entity)) {
+			throw new RecordNotFoundException("Record Not Found with id = " + id);
+		}
+
+		List<UserAuthority> authoDetailsList = new ArrayList<UserAuthority>();
+		authorities.forEach(auth -> {
+			UserAuthority authEntity = new UserAuthority();
+			authEntity.setAuthority(auth);
+			authEntity.setPortalUserDetails(entity);
+			authEntity.setDescription("Auth created for user id " + entity.getId());
+			authoDetailsList.add(authEntity);
+		});
+		authoritiesRepository.saveAll(authoDetailsList);
+		log.info("updateAuthorities() - end");
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void deleteAuthorities(Long id, List<Authorities> authorities) {
+		log.info("deleteAuthorities() - start");
+
+		PortalUserDetails entity = portalUserRepository.findById(id).orElse(null);
+
+		if (Objects.isNull(entity)) {
+			throw new RecordNotFoundException("Record Not Found with id = " + id);
+		}
+
+		List<String> authNamesToDelete = authorities.stream().map(auth -> {
+			return auth.name();
+		}).collect(Collectors.toList());
+
+		entity.getAuthorities().stream().forEach(auth -> {
+			if (authNamesToDelete.contains(auth.getAuthority().name())) {
+				authoritiesRepository.delete(auth);
+			}
+		});
+		log.info("deleteAuthorities() - end");
+
+	}
 }
