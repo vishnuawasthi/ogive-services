@@ -4,22 +4,10 @@ import java.util.List;
 
 import com.app.constants.Authorities;
 import com.app.dto.CreatePortalUserDetailsRequest;
-import com.app.dto.MemberDetailsResponse;
-import com.app.dto.MemberRegistrationRequest;
 import com.app.dto.PortalUserDetailsResponse;
 import com.app.exception.RecordNotFoundException;
 
-public interface PortalOperationService {
-
-	MemberRegistrationRequest getUserById(Long id);
-
-	Long saveUserDetails(MemberRegistrationRequest userDetailsDTO);
-
-	Long saveMembershipDetails(MemberRegistrationRequest memberRegistrationRequest);
-
-	List<MemberDetailsResponse> getAllMemberShips();
-
-	// Portal User Details
+public interface PortalAdminOperationService {
 
 	Long savePortalUserDetails(CreatePortalUserDetailsRequest request);
 

@@ -36,7 +36,7 @@ import com.app.dto.PortalUserDetailsResponse;
 import com.app.dto.StaffDetailsResponse;
 import com.app.exception.RecordNotFoundException;
 import com.app.services.MembershipService;
-import com.app.services.PortalOperationService;
+import com.app.services.PortalAdminOperationService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -53,7 +53,7 @@ public class WellnessManagementAdminController {
 	private static final Logger log =LoggerFactory.getLogger(WellnessManagementAdminController.class);
 
 	@Autowired
-	private PortalOperationService portalOperationService;
+	private PortalAdminOperationService portalOperationService;
 
 	@Autowired
 	private MembershipService membershipService;

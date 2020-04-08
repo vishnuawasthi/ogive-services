@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.EmailDetailDTO;
 import com.app.services.EmailService;
-import com.app.services.PortalOperationService;
+import com.app.services.PortalAdminOperationService;
 
 @RestController
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/dummy")
 public class ResearchAndDevelopmentController {
 
 	private static final Logger log = Logger.getLogger(ResearchAndDevelopmentController.class);
 
 	@Autowired
-	private PortalOperationService loginService;
+	private PortalAdminOperationService loginService;
 
 	@Autowired
 	private EmailService emailService;

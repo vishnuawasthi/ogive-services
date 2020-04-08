@@ -2,34 +2,53 @@ package com.app.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class MemberDetailsResponse {
+import io.swagger.annotations.ApiModelProperty;
 
-	private Long id;
+public class MemberDetailsRequest {
 
 	private String initial;
+
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String firstName;
 
 	private String middleName;
 	private String lastName;
 	private String familyName;
 
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String displayName;
+
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String fullName;
+
+	@ApiModelProperty(allowableValues = "yyyy-MM-dd", required = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
+
 	private String gender;
+
 	private String maritalStatus;
 	private String bloodGroup;
 	private String email;
 
+	@ApiModelProperty(required = true)
+	@Pattern(regexp = "\\d{10}")
 	private String mobileNumber;
-	private Float height;
+	private Integer height;
 	private Float weight;
 	private String referenceNumber;
 	private String membershipNumber;
 
+	@ApiModelProperty(required = true)
+	@NotEmpty
 	private String idNumber;
 	private String passportNumber;
 	private String nationality;
@@ -41,14 +60,6 @@ public class MemberDetailsResponse {
 	private String location;
 	private String companyName;
 	private String designation;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getInitial() {
 		return initial;
@@ -152,6 +163,22 @@ public class MemberDetailsResponse {
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public Integer getHeight() {
+		return height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
+	public Float getWeight() {
+		return weight;
+	}
+
+	public void setWeight(Float weight) {
+		this.weight = weight;
 	}
 
 	public String getReferenceNumber() {
@@ -258,25 +285,9 @@ public class MemberDetailsResponse {
 		this.designation = designation;
 	}
 
-	public Float getHeight() {
-		return height;
-	}
-
-	public void setHeight(Float height) {
-		this.height = height;
-	}
-
-	public Float getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Float weight) {
-		this.weight = weight;
-	}
-
 	@Override
 	public String toString() {
-		return "MemberDetailsResponse [id=" + id + ", initial=" + initial + ", firstName=" + firstName + ", middleName="
+		return "MemberRegistrationRequest [initial=" + initial + ", firstName=" + firstName + ", middleName="
 				+ middleName + ", lastName=" + lastName + ", familyName=" + familyName + ", displayName=" + displayName
 				+ ", fullName=" + fullName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + ", maritalStatus="
 				+ maritalStatus + ", bloodGroup=" + bloodGroup + ", email=" + email + ", mobileNumber=" + mobileNumber

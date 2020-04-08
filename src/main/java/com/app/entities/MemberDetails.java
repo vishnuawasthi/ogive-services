@@ -1,57 +1,48 @@
-package com.app.dto;
+package com.app.entities;
 
 import java.util.Date;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+@Entity
+@Table(name = "MEMBER_DETAILS")
+@SequenceGenerator(sequenceName = "SEQ_MEMBER_DETAILS", initialValue = 1, allocationSize = 1, name = "SEQ_MEMBER_DETAILS")
+public class MemberDetails {
 
-import io.swagger.annotations.ApiModelProperty;
-
-@JsonInclude(value = Include.NON_NULL)
-public class MemberRegistrationRequest {
+	@Id
+	@GeneratedValue(generator = "SEQ_MEMBER_DETAILS", strategy = GenerationType.SEQUENCE)
+	private Long id;
 
 	private String initial;
-	
-	@NotEmpty
-	@ApiModelProperty( required = true)
+
 	private String firstName;
 
 	private String middleName;
 	private String lastName;
 	private String familyName;
 
-	@NotEmpty
-	@ApiModelProperty( required = true)
 	private String displayName;
-	
-	@NotEmpty
-	@ApiModelProperty( required = true)
 	private String fullName;
 
-	@ApiModelProperty( allowableValues="yyyy-MM-dd",required = true)
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date dateOfBirth;
-	
 	private String gender;
-	
 	private String maritalStatus;
 	private String bloodGroup;
 	private String email;
 
-	@ApiModelProperty( required = true)
-	@Pattern(regexp="\\d{10}")
 	private String mobileNumber;
-	private Integer height;
-	private float weight;
+	private Float height;
+	private Float weight;
 	private String referenceNumber;
 	private String membershipNumber;
 
-	@ApiModelProperty( required = true)
-	@NotEmpty
 	private String idNumber;
 	private String passportNumber;
 	private String nationality;
@@ -63,6 +54,18 @@ public class MemberRegistrationRequest {
 	private String location;
 	private String companyName;
 	private String designation;
+
+	@OneToOne
+	@JoinColumn(name = "MEMBERSHIP_DTLS_ID", referencedColumnName = "ID")
+	private MembershipDetails membershipDetails;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getInitial() {
 		return initial;
@@ -168,19 +171,19 @@ public class MemberRegistrationRequest {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public Integer getHeight() {
+	public Float getHeight() {
 		return height;
 	}
 
-	public void setHeight(Integer height) {
+	public void setHeight(Float height) {
 		this.height = height;
 	}
 
-	public float getWeight() {
+	public Float getWeight() {
 		return weight;
 	}
 
-	public void setWeight(float weight) {
+	public void setWeight(Float weight) {
 		this.weight = weight;
 	}
 
@@ -288,9 +291,17 @@ public class MemberRegistrationRequest {
 		this.designation = designation;
 	}
 
+	public MembershipDetails getMembershipDetails() {
+		return membershipDetails;
+	}
+
+	public void setMembershipDetails(MembershipDetails membershipDetails) {
+		this.membershipDetails = membershipDetails;
+	}
+
 	@Override
 	public String toString() {
-		return "MemberRegistrationRequest [initial=" + initial + ", firstName=" + firstName + ", middleName="
+		return "MemberDetails [id=" + id + ", initial=" + initial + ", firstName=" + firstName + ", middleName="
 				+ middleName + ", lastName=" + lastName + ", familyName=" + familyName + ", displayName=" + displayName
 				+ ", fullName=" + fullName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + ", maritalStatus="
 				+ maritalStatus + ", bloodGroup=" + bloodGroup + ", email=" + email + ", mobileNumber=" + mobileNumber
@@ -299,9 +310,7 @@ public class MemberRegistrationRequest {
 				+ passportNumber + ", nationality=" + nationality + ", poBoxNumber=" + poBoxNumber
 				+ ", companyOrBusinessUnit=" + companyOrBusinessUnit + ", apartmentNumber=" + apartmentNumber
 				+ ", street=" + street + ", building=" + building + ", location=" + location + ", companyName="
-				+ companyName + ", designation=" + designation + "]";
+				+ companyName + ", designation=" + designation + ", membershipDetails=" + membershipDetails + "]";
 	}
-	
-	
 
 }

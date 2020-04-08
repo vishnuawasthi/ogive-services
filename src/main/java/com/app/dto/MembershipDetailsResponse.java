@@ -1,22 +1,13 @@
-package com.app.entities;
+package com.app.dto;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Entity
-@Table(name = "MEMBERSHIP_DETAILS")
-@SequenceGenerator(sequenceName = "SEQ_MEMBERSHIP_DETAILS", initialValue = 1, allocationSize = 1, name = "SEQ_MEMBERSHIP_DETAILS")
-public class MembershipDetails {
+import io.swagger.annotations.ApiModelProperty;
 
-	@Id
-	@GeneratedValue(generator = "SEQ_MEMBERSHIP_DETAILS", strategy = GenerationType.SEQUENCE)
+public class MembershipDetailsResponse {
+
 	private Long id;
 
 	private String membershipType;
@@ -39,22 +30,28 @@ public class MembershipDetails {
 
 	private String packageName;
 
+	@ApiModelProperty(required = true)
 	private String advisorName;
 
+	@ApiModelProperty(required = true)
 	private String advisorCode;
 
 	private String accessCardNumber;
 
+	@ApiModelProperty(required = true)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date registrationDate;
 
+	@ApiModelProperty(required = true)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date joiningDate;
 
+	@ApiModelProperty(required = true)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date startDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date expireDate;
-
-	@OneToOne(mappedBy = "membershipDetails")
-	private MemberDetails memberDetails;
 
 	public Long getId() {
 		return id;
@@ -200,23 +197,15 @@ public class MembershipDetails {
 		this.expireDate = expireDate;
 	}
 
-	public MemberDetails getMemberDetails() {
-		return memberDetails;
-	}
-
-	public void setMemberDetails(MemberDetails memberDetails) {
-		this.memberDetails = memberDetails;
-	}
-
 	@Override
 	public String toString() {
-		return "MembershipDetails [id=" + id + ", membershipType=" + membershipType + ", source=" + source
+		return "MembershipDetailsResponse [id=" + id + ", membershipType=" + membershipType + ", source=" + source
 				+ ", introducedMemberCode=" + introducedMemberCode + ", registrationType=" + registrationType
 				+ ", membershipTypeCode=" + membershipTypeCode + ", duration=" + duration + ", corporateCode="
 				+ corporateCode + ", corporateName=" + corporateName + ", packageCode=" + packageCode + ", packageName="
 				+ packageName + ", advisorName=" + advisorName + ", advisorCode=" + advisorCode + ", accessCardNumber="
 				+ accessCardNumber + ", registrationDate=" + registrationDate + ", joiningDate=" + joiningDate
-				+ ", startDate=" + startDate + ", expireDate=" + expireDate + ", memberDetails=" + memberDetails + "]";
+				+ ", startDate=" + startDate + ", expireDate=" + expireDate + "]";
 	}
 
 }
