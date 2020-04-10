@@ -3,10 +3,12 @@ package com.app.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -25,39 +27,64 @@ public class MemberDetails {
 	private String firstName;
 
 	private String middleName;
+
 	private String lastName;
+
 	private String familyName;
 
 	private String displayName;
+
 	private String fullName;
 
 	private Date dateOfBirth;
+
 	private String gender;
+
 	private String maritalStatus;
+
 	private String bloodGroup;
+
 	private String email;
 
 	private String mobileNumber;
+
 	private Float height;
+
 	private Float weight;
+
 	private String referenceNumber;
+
 	private String membershipNumber;
 
 	private String idNumber;
+
 	private String passportNumber;
-	private String nationality;
+
 	private String poBoxNumber;
-	private String companyOrBusinessUnit;
+
 	private String apartmentNumber;
+
 	private String street;
+
 	private String building;
+
 	private String location;
+
 	private String companyName;
+
 	private String designation;
 
 	@OneToOne
 	@JoinColumn(name = "MEMBERSHIP_DTLS_ID", referencedColumnName = "ID")
 	private MembershipDetails membershipDetails;
+
+	@OneToOne
+	@JoinColumn(name = "COUNTRY_DETAILS_ID", referencedColumnName = "ID")
+	private CountryDetails countryDetails;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "BUSINESS_UNIT_DTLS_ID")
+	private BusinessUnitDetails businessUnitDetails;
 
 	public Long getId() {
 		return id;
@@ -219,28 +246,12 @@ public class MemberDetails {
 		this.passportNumber = passportNumber;
 	}
 
-	public String getNationality() {
-		return nationality;
-	}
-
-	public void setNationality(String nationality) {
-		this.nationality = nationality;
-	}
-
 	public String getPoBoxNumber() {
 		return poBoxNumber;
 	}
 
 	public void setPoBoxNumber(String poBoxNumber) {
 		this.poBoxNumber = poBoxNumber;
-	}
-
-	public String getCompanyOrBusinessUnit() {
-		return companyOrBusinessUnit;
-	}
-
-	public void setCompanyOrBusinessUnit(String companyOrBusinessUnit) {
-		this.companyOrBusinessUnit = companyOrBusinessUnit;
 	}
 
 	public String getApartmentNumber() {
@@ -299,18 +310,20 @@ public class MemberDetails {
 		this.membershipDetails = membershipDetails;
 	}
 
-	@Override
-	public String toString() {
-		return "MemberDetails [id=" + id + ", initial=" + initial + ", firstName=" + firstName + ", middleName="
-				+ middleName + ", lastName=" + lastName + ", familyName=" + familyName + ", displayName=" + displayName
-				+ ", fullName=" + fullName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + ", maritalStatus="
-				+ maritalStatus + ", bloodGroup=" + bloodGroup + ", email=" + email + ", mobileNumber=" + mobileNumber
-				+ ", height=" + height + ", weight=" + weight + ", referenceNumber=" + referenceNumber
-				+ ", membershipNumber=" + membershipNumber + ", idNumber=" + idNumber + ", passportNumber="
-				+ passportNumber + ", nationality=" + nationality + ", poBoxNumber=" + poBoxNumber
-				+ ", companyOrBusinessUnit=" + companyOrBusinessUnit + ", apartmentNumber=" + apartmentNumber
-				+ ", street=" + street + ", building=" + building + ", location=" + location + ", companyName="
-				+ companyName + ", designation=" + designation + ", membershipDetails=" + membershipDetails + "]";
+	public BusinessUnitDetails getBusinessUnitDetails() {
+		return businessUnitDetails;
+	}
+
+	public void setBusinessUnitDetails(BusinessUnitDetails businessUnitDetails) {
+		this.businessUnitDetails = businessUnitDetails;
+	}
+
+	public CountryDetails getCountryDetails() {
+		return countryDetails;
+	}
+
+	public void setCountryDetails(CountryDetails countryDetails) {
+		this.countryDetails = countryDetails;
 	}
 
 }

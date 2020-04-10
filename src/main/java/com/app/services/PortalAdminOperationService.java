@@ -3,6 +3,8 @@ package com.app.services;
 import java.util.List;
 
 import com.app.constants.Authorities;
+import com.app.dto.CountryDetailsResponse;
+import com.app.dto.CreateCountryDetailsRequest;
 import com.app.dto.CreatePortalUserDetailsRequest;
 import com.app.dto.PortalUserDetailsResponse;
 import com.app.exception.RecordNotFoundException;
@@ -25,5 +27,15 @@ public interface PortalAdminOperationService {
 	void updateAuthorities(Long id,List<Authorities> authorities);
 	
 	void deleteAuthorities(Long id,List<Authorities> authorities);
-
+	
+	/**################### COUNTRY SERVICES #######################*/
+	
+	Long addCountryDetails(CreateCountryDetailsRequest createCountryDetailsRequest );
+	
+	List<CountryDetailsResponse> getAllCountryDetails();
+	
+	CountryDetailsResponse getCountryDetailsByCode(String code);
+	
+	CountryDetailsResponse getCountryDetailsById(Long id);
+	
 }

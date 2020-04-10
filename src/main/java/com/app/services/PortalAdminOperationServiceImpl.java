@@ -17,11 +17,15 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.app.constants.Authorities;
+import com.app.dto.CountryDetailsResponse;
+import com.app.dto.CreateCountryDetailsRequest;
 import com.app.dto.CreatePortalUserDetailsRequest;
 import com.app.dto.PortalUserDetailsResponse;
+import com.app.entities.CountryDetails;
 import com.app.entities.PortalUserDetails;
 import com.app.entities.UserAuthority;
 import com.app.exception.RecordNotFoundException;
+import com.app.repositories.CountryDetailsRepository;
 import com.app.repositories.MembershipDetailsRepository;
 import com.app.repositories.PortalUserRepository;
 import com.app.repositories.UserAuthoritiesRepository;
@@ -42,6 +46,9 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 
 	@Autowired
 	private MembershipDetailsRepository membershipDetailsRepository;
+	
+	@Autowired
+	private CountryDetailsRepository countryDetailsRepository;
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
@@ -229,4 +236,62 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		log.info("deleteAuthorities() - end");
 
 	}
+	/**################### COUNTRY DETAILS SERVICES #######################*/
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public Long addCountryDetails(CreateCountryDetailsRequest createCountryDetailsRequest) {
+		log.info("addCountryDetails() - start");
+		CountryDetails entity = new CountryDetails();
+		BeanUtils.copyProperties(createCountryDetailsRequest, entity);
+		countryDetailsRepository.save(entity);
+		log.info("addCountryDetails() - end");
+		return entity.getId();
+	}
+
+	@Override
+	public List<CountryDetailsResponse> getAllCountryDetails() {
+		log.info("getAllCountryDetails() - start");
+
+		Iterable<CountryDetails> countriesDetails = countryDetailsRepository.findAll();
+		List<CountryDetailsResponse> responseObjectList = new ArrayList<CountryDetailsResponse>();
+
+		countriesDetails.forEach(country -> {
+			CountryDetailsResponse respnseObject = new CountryDetailsResponse();
+			BeanUtils.copyProperties(country, respnseObject);
+			responseObjectList.add(respnseObject);
+		});
+
+		log.info("getAllCountryDetails() - end");
+		return responseObjectList;
+	}
+
+	@Override
+	public CountryDetailsResponse getCountryDetailsByCode(String code) {
+		log.info("getCountryDetailsByCode() - start");
+		
+		CountryDetails entity = countryDetailsRepository.findCountryDetailsByCountryCodeIgnoreCase(code);
+		CountryDetailsResponse responseObject = null;
+		if (Objects.nonNull(entity)) {
+			responseObject = new CountryDetailsResponse();
+			BeanUtils.copyProperties(entity, responseObject);
+		}
+		log.info("getCountryDetailsByCode() - end");
+		return responseObject;
+	}
+
+	@Override
+	public CountryDetailsResponse getCountryDetailsById(Long id) {
+		log.info("getCountryDetailsById() - start");
+		CountryDetails entity = countryDetailsRepository.findById(id).orElse(null);
+		
+		CountryDetailsResponse responseObject = null;
+		if (Objects.nonNull(entity)) {
+			responseObject = new CountryDetailsResponse();
+			BeanUtils.copyProperties(entity, responseObject);
+		}
+		log.info("getCountryDetailsById() - end");
+		return responseObject;
+	}
+	
+	
 }

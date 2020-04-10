@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -43,6 +44,9 @@ public class MembershipTypes {
 	private String companyOrBusinessUnitCode;
 
 	private String notes;
+	
+	@OneToOne(mappedBy = "membershipTypes")
+	private MembershipDetails membershipDetails;
 
 	public Long getId() {
 		return id;

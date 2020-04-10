@@ -2,6 +2,7 @@ package com.app.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -10,9 +11,11 @@ public class CreatePersonalTrainingTypeRequest {
 	private String personalTrainingType;
 
 	@ApiModelProperty(required = true)
+	@NotEmpty
 	private String personalTrainingCode;
 
 	@ApiModelProperty(required = true)
+	@NotEmpty
 	private String description;
 
 	private String companyOrBusinessUnitCode;
@@ -26,6 +29,7 @@ public class CreatePersonalTrainingTypeRequest {
 	private Integer allowedSessions;
 
 	@ApiModelProperty(required = true, example = "15")
+	@NotEmpty
 	private Integer validityInDays;
 
 	private String enableRecurringPayment;

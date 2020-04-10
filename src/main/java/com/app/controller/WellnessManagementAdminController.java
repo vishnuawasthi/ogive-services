@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.constants.Authorities;
 import com.app.dto.BusinessUnitDetailsResponse;
+import com.app.dto.CountryDetailsResponse;
+import com.app.dto.CreateCountryDetailsRequest;
 import com.app.dto.CreateMembershipPackageDetailsRequest;
 import com.app.dto.CreateMembershipTypeRequest;
 import com.app.dto.CreatePersonalTrainingTypeRequest;
@@ -292,5 +294,46 @@ public class WellnessManagementAdminController {
 		log.info("getMembershipPkgDtlsById ()- end");
 		return new ResponseEntity<MembershipPackageDetailsResponse>(responseObject, HttpStatus.OK);
 	}
+	
+	/*######################## COUNTRY DETAILS #########################*/
+	
+	@ApiOperation(value = "This api allow to create country details", response = Long.class, tags = "Admin operations - Country Details")
+	@PostMapping(value = "/v1/country-details", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object addCountryDetails(@RequestBody @Valid CreateCountryDetailsRequest createCountryDetailsRequest) {
+		log.info("addCountryDetails ()- start");
+		log.info("Request Body :  {} " + createCountryDetailsRequest);
+		Long id = portalOperationService.addCountryDetails(createCountryDetailsRequest);
+		log.info("addCountryDetails ()- end");
+		return new ResponseEntity<Long>(id, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "This api give country details by id", response = CountryDetailsResponse.class, tags = "Admin operations - Country Details")
+	@GetMapping(value = "/v1/country-details/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getCountryById(@PathVariable("id") Long id) {
+		log.info("getCountryById ()- start");
+		CountryDetailsResponse responseObject = portalOperationService.getCountryDetailsById(id);
+		log.info("getCountryById ()- end");
+		return new ResponseEntity<CountryDetailsResponse>(responseObject, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "This api give country details by country code", response = CountryDetailsResponse.class, tags = "Admin operations - Country Details")
+	@GetMapping(value = "/v1/country-details/country-code/{countryCode}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getCountryByCode(@PathVariable("countryCode") String countryCode) {
+		log.info("getCountryById ()- 	CountryDetailsResponse start");
+		CountryDetailsResponse responseObject = portalOperationService.getCountryDetailsByCode(countryCode);
+		log.info("getCountryById ()- end");
+		return new ResponseEntity<CountryDetailsResponse>(responseObject, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "This api gives all the countries detail", response = List.class, tags = "Admin operations - Country Details")
+	@GetMapping(value = "/v1/country-details", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getAllCountryDetails() {
+		log.info("getAllCountryDetails ()- start");
+		List<CountryDetailsResponse> objectList = portalOperationService.getAllCountryDetails();
+		log.info("getAllCountryDetails ()- end");
+		return new ResponseEntity<List<CountryDetailsResponse>>(objectList, HttpStatus.OK);
+	}
+	
+	
 	
 }

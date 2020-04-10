@@ -20,10 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dto.CreateMemberTransferRequest;
 import com.app.dto.CreateMembershipRequest;
+import com.app.dto.CreatePersonalTrainingDetailsRequest;
 import com.app.dto.CreateProspectDetailsRequest;
 import com.app.dto.ErrorResponseEntity;
 import com.app.dto.MembershipResponse;
+import com.app.dto.PersonalTrainingDetailsResponse;
 import com.app.dto.ProspectDetailsResponse;
 import com.app.services.EmailService;
 import com.app.services.PortalAdminOperationService;
@@ -121,11 +124,58 @@ public class WellnessManagementUserOperationController {
 	@GetMapping(value = "/v1/memberships", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getAllMembershipDetails() {
 		log.info("getAllMembershipDetails ()- start");
-
 		List<MembershipResponse> allMemberships = portalUserOperationService.getAllMembershipDetails();
-
 		log.info("getAllMembershipDetails ()- end");
 		return new ResponseEntity<List<MembershipResponse>>(allMemberships, HttpStatus.OK);
 	}
+	
+	/** ################# PERSONAL TRAINING  DETAILS ##########################*/
+	
+	
+	@ApiOperation(value = "This api creates Personal training.", tags = "User Operations - Personal Trainings", response = Long.class)
+	@PostMapping(value = "/v1/personal-trainings", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object createPersonalTraing(
+			@RequestBody @Valid CreatePersonalTrainingDetailsRequest createPersonalTrainingDetailsRequest) {
+		log.info("createPersonalTraingDetails ()- start");
+		log.info("Request Body :  {} " + createPersonalTrainingDetailsRequest);
+		Long id = portalUserOperationService.createPersonalTrainingDetails(createPersonalTrainingDetailsRequest);
+		log.info("createPersonalTraingDetails ()- end");
+		return new ResponseEntity<Long>(id, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Get all personal trainings availabe in the system", tags = "User Operations - Personal Trainings", response = List.class)
+	@GetMapping(value = "/v1/personal-trainings", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getAllPersonalTraining() {
+		log.info("getAllPersonalTraining ()- start");
+		List<PersonalTrainingDetailsResponse> allTrainings = portalUserOperationService.getAllPersonalTrainingDetails();
+		log.info("getAllPersonalTraining ()- end");
+		return new ResponseEntity<List<PersonalTrainingDetailsResponse>>(allTrainings, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "Get personal training details by id", tags = "User Operations - Personal Trainings", response = PersonalTrainingDetailsResponse.class)
+	@GetMapping(value = "/v1/personal-trainings/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getPersonalTraingById(@PathVariable("id") Long id) {
+		log.info("getAllPersonalTraining ()- start");
+		PersonalTrainingDetailsResponse personalTraining = portalUserOperationService
+				.getPersonalTrainingDetailsById(id);
+		
+		log.info("getAllPersonalTraining ()- end");
+		return new ResponseEntity<PersonalTrainingDetailsResponse>(personalTraining, HttpStatus.OK);
+	}
+	
+	/** #################### MEMBER TRASNSFER SERVICE ############################# */
+	
+	@ApiOperation(value = "This api is to transfer a member from one business unit to another.It gives transfer reference number back", tags = "User Operations - Member Transfer", response = Long.class)
+	@PostMapping(value = "/v1/member-transfer", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object createMemberTransfer(@RequestBody @Valid CreateMemberTransferRequest createMemberTransferRequest) {
+		log.info("createMemberTransfer ()- start");
+		log.info("Request Body :  {} " + createMemberTransferRequest);
+		Long id = portalUserOperationService.createMemberTransfer(createMemberTransferRequest);
+		log.info("createMemberTransfer ()- end");
+		return new ResponseEntity<Long>(id, HttpStatus.OK);
+	}
+	
+	/** #################### CREATE FREEZE REQUEST SERVICE ########################## */
+	
 	
 }

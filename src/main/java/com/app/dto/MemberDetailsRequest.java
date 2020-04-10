@@ -51,9 +51,16 @@ public class MemberDetailsRequest {
 	@NotEmpty
 	private String idNumber;
 	private String passportNumber;
+	
+	@ApiModelProperty(required = true,example="IND,USA",allowableValues="Any valid country code. It should be available in the system")
+	@NotEmpty
 	private String nationality;
 	private String poBoxNumber;
+	
+	@ApiModelProperty(required = true)
+	@NotEmpty
 	private String companyOrBusinessUnit;
+	
 	private String apartmentNumber;
 	private String street;
 	private String building;

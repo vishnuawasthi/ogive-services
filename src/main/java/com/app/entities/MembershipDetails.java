@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -55,6 +56,10 @@ public class MembershipDetails {
 
 	@OneToOne(mappedBy = "membershipDetails")
 	private MemberDetails memberDetails;
+
+	@OneToOne
+	@JoinColumn(name = "MEMBERSHIP_TYPE_ID", referencedColumnName = "ID")
+	private MembershipTypes membershipTypes;
 
 	public Long getId() {
 		return id;
@@ -208,6 +213,14 @@ public class MembershipDetails {
 		this.memberDetails = memberDetails;
 	}
 
+	public MembershipTypes getMembershipTypes() {
+		return membershipTypes;
+	}
+
+	public void setMembershipTypes(MembershipTypes membershipTypes) {
+		this.membershipTypes = membershipTypes;
+	}
+
 	@Override
 	public String toString() {
 		return "MembershipDetails [id=" + id + ", membershipType=" + membershipType + ", source=" + source
@@ -216,7 +229,8 @@ public class MembershipDetails {
 				+ corporateCode + ", corporateName=" + corporateName + ", packageCode=" + packageCode + ", packageName="
 				+ packageName + ", advisorName=" + advisorName + ", advisorCode=" + advisorCode + ", accessCardNumber="
 				+ accessCardNumber + ", registrationDate=" + registrationDate + ", joiningDate=" + joiningDate
-				+ ", startDate=" + startDate + ", expireDate=" + expireDate + ", memberDetails=" + memberDetails + "]";
+				+ ", startDate=" + startDate + ", expireDate=" + expireDate + ", memberDetails=" + memberDetails
+				+ ", membershipTypes=" + membershipTypes + "]";
 	}
 
 }

@@ -34,6 +34,12 @@ public class RequestValidationExceptionResponseHandler extends ResponseEntityExc
 		errorResponseEntity.setErrors(errors);
 		return new ResponseEntity(errorResponseEntity, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(OperationNotSupportedException.class)
+	public ResponseEntity<Object> handleOperationNotSupportedException(OperationNotSupportedException exception) {
+		log.info("Exception ->     {}  ", exception);
+		return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+	}
 
 	@ExceptionHandler(value = RecordNotFoundException.class)
 	public ResponseEntity<Object> handleRecordNotFoundException(RecordNotFoundException exception) {

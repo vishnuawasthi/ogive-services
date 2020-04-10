@@ -1,9 +1,14 @@
 package com.app.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,6 +26,9 @@ public class BusinessUnitDetails {
 	private String businessUnitName;
 
 	private String description;
+
+	@OneToMany(mappedBy = "businessUnitDetails", fetch = FetchType.EAGER)
+	private Set<MemberDetails> memberDetails = new HashSet<MemberDetails>();
 
 	public Long getId() {
 		return id;
@@ -54,5 +62,12 @@ public class BusinessUnitDetails {
 		this.description = description;
 	}
 
-	
+	public Set<MemberDetails> getMemberDetails() {
+		return memberDetails;
+	}
+
+	public void setMemberDetails(Set<MemberDetails> memberDetails) {
+		this.memberDetails = memberDetails;
+	}
+
 }
