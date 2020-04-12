@@ -13,6 +13,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(value = Include.NON_NULL)
 @Entity
 @Table(name = "COUNTRY_DETAILS")
 @SequenceGenerator(sequenceName = "SEQ_COUNTRY_DETAILS", initialValue = 1, allocationSize = 1, name = "SEQ_COUNTRY_DETAILS")
@@ -24,7 +28,7 @@ public class CountryDetails {
 
 	private String countryName;
 
-	@Column(unique=true,length=6)
+	@Column(unique = true, length = 6)
 	private String countryCode;
 
 	private String nationality;

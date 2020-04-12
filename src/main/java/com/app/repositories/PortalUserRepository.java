@@ -8,4 +8,6 @@ import com.app.entities.PortalUserDetails;
 public interface PortalUserRepository extends PagingAndSortingRepository<PortalUserDetails, Long> {
 
 	PortalUserDetails findByUsername(String username);
+	
+	//PortalUserDetails findByUsernameAndPassword(String username,String password);
 }

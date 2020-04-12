@@ -52,10 +52,10 @@ public class SwaggerConfig {
       String licenseUrl,
        */
 		 ApiInfo apiInfo = new ApiInfo(
-				 "Ogive Services",
+				 "Wellness Management Services",
 				 "Api to manage day to day operation on system",
 				 "1.0",
-				 "http://localhost:8090/ogive-services",
+				 "http://localhost:8090/wellness-mngt",
 				 contact,
 				 "Private Source",
 				 "N/A");

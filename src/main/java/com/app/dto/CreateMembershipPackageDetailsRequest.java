@@ -2,6 +2,7 @@ package com.app.dto;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import io.swagger.annotations.ApiModel;
@@ -20,6 +21,7 @@ public class CreateMembershipPackageDetailsRequest {
 	@ApiModelProperty(required = true)
 	private String companyOrBusinessUnitCode;
 
+	@Valid
 	private List<PackageSpecificationDetailsRequest> packageSpecificationDetails;
 
 	public String getPackageCode() {

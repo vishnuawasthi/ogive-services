@@ -106,8 +106,7 @@ public class MembershipServiceImpl implements MembershipService {
 	public Page<MembershipTypeResponse> getAllMembershipTypes(String membershipTypeCode, Pageable pageRequest) {
 		log.info("getMembershipTypeById() - start");
 
-		Page<MembershipTypes> pagedMembershipData = membershipTypeRepository
-				.findByMembershipTypeCodeAllIgnoreCase(membershipTypeCode, pageRequest);
+		Page<MembershipTypes> pagedMembershipData = membershipTypeRepository.findByMembershipTypeCodeAllIgnoreCase(membershipTypeCode, pageRequest);
 
 		Page<MembershipTypeResponse> dtoPage = pagedMembershipData.map(entity -> {
 			MembershipTypeResponse responseObject = new MembershipTypeResponse();

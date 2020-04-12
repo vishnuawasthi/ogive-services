@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,7 +27,8 @@ public class RequestValidationExceptionResponseHandler extends ResponseEntityExc
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		List<String> errors = new ArrayList<>();
 		for (ObjectError error : ex.getBindingResult().getAllErrors()) {
-			errors.add(error.getObjectName() + " " + error.getDefaultMessage());
+			FieldError field = (FieldError) error;
+			errors.add( field.getField()+" " +error.getDefaultMessage());
 		}
 		ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
 		errorResponseEntity.setDescription("Bad Request");
@@ -38,20 +40,51 @@ public class RequestValidationExceptionResponseHandler extends ResponseEntityExc
 	@ExceptionHandler(OperationNotSupportedException.class)
 	public ResponseEntity<Object> handleOperationNotSupportedException(OperationNotSupportedException exception) {
 		log.info("Exception ->     {}  ", exception);
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+		List<String> errors = new ArrayList<>();
+		ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
+		errorResponseEntity.setDescription("Forbidden");
+		errorResponseEntity.setStatus("403");
+		errors.add(exception.getMessage());
+		errorResponseEntity.setErrors(errors);
+		return new ResponseEntity<>(errorResponseEntity, HttpStatus.FORBIDDEN);
 	}
-
+	
 	@ExceptionHandler(value = RecordNotFoundException.class)
 	public ResponseEntity<Object> handleRecordNotFoundException(RecordNotFoundException exception) {
 		log.info("Exception ->     {}  ", exception);
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+		List<String> errors = new ArrayList<>();
+		ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
+		errorResponseEntity.setDescription("Bad Request");
+		errorResponseEntity.setStatus("400");
+		errors.add(exception.getMessage());
+		errorResponseEntity.setErrors(errors);
+		return new ResponseEntity<>(errorResponseEntity, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(value = UserNotFoundException.class)
+	public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException exception) {
+		log.info("Exception ->     {}  ", exception);
+		List<String> errors = new ArrayList<>();
+		ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
+		errorResponseEntity.setDescription("Bad Request");
+		errorResponseEntity.setStatus("400");
+
+		errors.add(exception.getMessage());
+		errorResponseEntity.setErrors(errors);
+		return new ResponseEntity<>(errorResponseEntity, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<Object> handleDatabaseOperationFailedException(Exception exception) {
 		log.info("Exception ->     {}  ", exception);
-		
-		return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		List<String> errors = new ArrayList<>();
+		ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity();
+		errorResponseEntity.setDescription("Internal Server Error");
+		errorResponseEntity.setStatus("500");
+		errors.add(exception.getMessage());
+		errorResponseEntity.setErrors(errors);
+
+		return new ResponseEntity<>(errorResponseEntity, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

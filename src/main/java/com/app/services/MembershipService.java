@@ -17,6 +17,7 @@ import com.app.dto.StaffDetailsResponse;
 
 public interface MembershipService {
 
+	 /** ######################## MEMBERSHIP TYPE SERVICE ############################ */
 	 Long createMembershipType(CreateMembershipTypeRequest createMembershipTypeRequest);
 
 	 MembershipTypeResponse updateMembershipType(Long id, CreateMembershipTypeRequest createMembershipTypeRequest);

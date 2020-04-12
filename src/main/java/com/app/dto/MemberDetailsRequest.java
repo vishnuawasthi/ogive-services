@@ -18,16 +18,14 @@ public class MemberDetailsRequest {
 	private String firstName;
 
 	private String middleName;
+
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String lastName;
-	private String familyName;
 
 	@NotEmpty
 	@ApiModelProperty(required = true)
 	private String displayName;
-
-	@NotEmpty
-	@ApiModelProperty(required = true)
-	private String fullName;
 
 	@ApiModelProperty(allowableValues = "yyyy-MM-dd", required = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -42,8 +40,11 @@ public class MemberDetailsRequest {
 	@ApiModelProperty(required = true)
 	@Pattern(regexp = "\\d{10}")
 	private String mobileNumber;
+
 	private Integer height;
+
 	private Float weight;
+
 	private String referenceNumber;
 	private String membershipNumber;
 
@@ -51,16 +52,16 @@ public class MemberDetailsRequest {
 	@NotEmpty
 	private String idNumber;
 	private String passportNumber;
-	
-	@ApiModelProperty(required = true,example="IND,USA",allowableValues="Any valid country code. It should be available in the system")
+
+	@ApiModelProperty(required = true, example = "IND,USA", allowableValues = "Any valid country code. It should be available in the system")
 	@NotEmpty
 	private String nationality;
 	private String poBoxNumber;
-	
+
 	@ApiModelProperty(required = true)
 	@NotEmpty
 	private String companyOrBusinessUnit;
-	
+
 	private String apartmentNumber;
 	private String street;
 	private String building;
@@ -100,28 +101,12 @@ public class MemberDetailsRequest {
 		this.lastName = lastName;
 	}
 
-	public String getFamilyName() {
-		return familyName;
-	}
-
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
-	}
-
 	public String getDisplayName() {
 		return displayName;
 	}
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 
 	public Date getDateOfBirth() {
@@ -292,18 +277,5 @@ public class MemberDetailsRequest {
 		this.designation = designation;
 	}
 
-	@Override
-	public String toString() {
-		return "MemberRegistrationRequest [initial=" + initial + ", firstName=" + firstName + ", middleName="
-				+ middleName + ", lastName=" + lastName + ", familyName=" + familyName + ", displayName=" + displayName
-				+ ", fullName=" + fullName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + ", maritalStatus="
-				+ maritalStatus + ", bloodGroup=" + bloodGroup + ", email=" + email + ", mobileNumber=" + mobileNumber
-				+ ", height=" + height + ", weight=" + weight + ", referenceNumber=" + referenceNumber
-				+ ", membershipNumber=" + membershipNumber + ", idNumber=" + idNumber + ", passportNumber="
-				+ passportNumber + ", nationality=" + nationality + ", poBoxNumber=" + poBoxNumber
-				+ ", companyOrBusinessUnit=" + companyOrBusinessUnit + ", apartmentNumber=" + apartmentNumber
-				+ ", street=" + street + ", building=" + building + ", location=" + location + ", companyName="
-				+ companyName + ", designation=" + designation + "]";
-	}
-
+	
 }

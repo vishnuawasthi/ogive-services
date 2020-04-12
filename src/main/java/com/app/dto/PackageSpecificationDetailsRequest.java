@@ -1,7 +1,13 @@
 package com.app.dto;
 
+import javax.validation.constraints.NotEmpty;
+
+import io.swagger.annotations.ApiModelProperty;
+
 public class PackageSpecificationDetailsRequest {
 
+	@ApiModelProperty(required=true)
+	@NotEmpty
 	private String specificationName;
 
 	private Integer periodNumber;

@@ -30,11 +30,7 @@ public class MemberDetails {
 
 	private String lastName;
 
-	private String familyName;
-
 	private String displayName;
-
-	private String fullName;
 
 	private Date dateOfBirth;
 
@@ -86,6 +82,10 @@ public class MemberDetails {
 	@JoinColumn(name = "BUSINESS_UNIT_DTLS_ID")
 	private BusinessUnitDetails businessUnitDetails;
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "EMERG_CTC_DTLS_ID", referencedColumnName = "ID")
+	private EmergencyContactDetails emergencyContactDetails;
+
 	public Long getId() {
 		return id;
 	}
@@ -122,32 +122,12 @@ public class MemberDetails {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getFamilyName() {
-		return familyName;
-	}
-
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
-	}
-
 	public String getDisplayName() {
 		return displayName;
 	}
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 
 	public Date getDateOfBirth() {
@@ -324,6 +304,29 @@ public class MemberDetails {
 
 	public void setCountryDetails(CountryDetails countryDetails) {
 		this.countryDetails = countryDetails;
+	}
+
+	public EmergencyContactDetails getEmergencyContactDetails() {
+		return emergencyContactDetails;
+	}
+
+	public void setEmergencyContactDetails(EmergencyContactDetails emergencyContactDetails) {
+		this.emergencyContactDetails = emergencyContactDetails;
+	}
+
+	@Override
+	public String toString() {
+		return "MemberDetails [id=" + id + ", initial=" + initial + ", firstName=" + firstName + ", middleName="
+				+ middleName + ", lastName=" + lastName + ", displayName=" + displayName + ", dateOfBirth="
+				+ dateOfBirth + ", gender=" + gender + ", maritalStatus=" + maritalStatus + ", bloodGroup=" + bloodGroup
+				+ ", email=" + email + ", mobileNumber=" + mobileNumber + ", height=" + height + ", weight=" + weight
+				+ ", referenceNumber=" + referenceNumber + ", membershipNumber=" + membershipNumber + ", idNumber="
+				+ idNumber + ", passportNumber=" + passportNumber + ", poBoxNumber=" + poBoxNumber
+				+ ", apartmentNumber=" + apartmentNumber + ", street=" + street + ", building=" + building
+				+ ", location=" + location + ", companyName=" + companyName + ", designation=" + designation
+				+ ", membershipDetails=" + membershipDetails + ", countryDetails=" + countryDetails
+				+ ", businessUnitDetails=" + businessUnitDetails + ", emergencyContactDetails="
+				+ emergencyContactDetails + "]";
 	}
 
 }

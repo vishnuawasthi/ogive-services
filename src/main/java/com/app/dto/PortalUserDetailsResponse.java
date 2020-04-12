@@ -14,7 +14,6 @@ public class PortalUserDetailsResponse {
 	@ApiModelProperty(required = true)
 	private String username;
 
-	@ApiModelProperty(required = true)
 	private String password;
 
 	private String isAcccountLocked = "N";

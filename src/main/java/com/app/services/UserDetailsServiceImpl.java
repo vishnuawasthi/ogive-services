@@ -27,7 +27,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 
 		UserDetails userDetails = new UserAuthenticationDetails(appUser);
-
 		return userDetails;
 	}
 }

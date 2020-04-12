@@ -17,6 +17,7 @@ import com.app.dto.CreateMemberTransferRequest;
 import com.app.dto.CreateMembershipRequest;
 import com.app.dto.CreatePersonalTrainingDetailsRequest;
 import com.app.dto.CreateProspectDetailsRequest;
+import com.app.dto.EmergencyContactRequest;
 import com.app.dto.MemberDetailsRequest;
 import com.app.dto.MemberDetailsResponse;
 import com.app.dto.MembershipDetailsRequest;
@@ -26,6 +27,7 @@ import com.app.dto.PersonalTrainingDetailsResponse;
 import com.app.dto.ProspectDetailsResponse;
 import com.app.entities.BusinessUnitDetails;
 import com.app.entities.CountryDetails;
+import com.app.entities.EmergencyContactDetails;
 import com.app.entities.FreezeRequestDetails;
 import com.app.entities.MemberDetails;
 import com.app.entities.MemberTransferDetails;
@@ -37,6 +39,7 @@ import com.app.exception.OperationNotSupportedException;
 import com.app.exception.RecordNotFoundException;
 import com.app.repositories.BusinessUnitDetailsRepository;
 import com.app.repositories.CountryDetailsRepository;
+import com.app.repositories.EmergencyContactDetailsRepository;
 import com.app.repositories.FreezeRequestDetailsRepository;
 import com.app.repositories.MemberDetailsRepository;
 import com.app.repositories.MemberTransferDetailsRepository;
@@ -77,6 +80,9 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 	
 	@Autowired
 	private FreezeRequestDetailsRepository freezeRequestDetailsRepository;
+	
+	@Autowired
+	private EmergencyContactDetailsRepository emergencyContactDetailsRepository;
 
 	/** ######################### PROSPECT SERVICES ###################### */
 
@@ -136,9 +142,11 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 	public Long createMembership(CreateMembershipRequest createMembershipRequest) {
 		log.info("createMembership() - start");
 
-		MemberDetailsRequest memberDetails = createMembershipRequest.getPersonalDetails();
+		MemberDetailsRequest memberDetails = createMembershipRequest.getMemberDetails();
 
 		MembershipDetailsRequest membershipDetails = createMembershipRequest.getMembershipDetails();
+		
+		EmergencyContactRequest emergencyContact = createMembershipRequest.getEmergencyContactDetails();
 
 		CountryDetails countryDetails = countryDetailsRepository
 				.findCountryDetailsByCountryCodeIgnoreCase(memberDetails.getNationality());
@@ -166,12 +174,21 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		BeanUtils.copyProperties(membershipDetails, membershipDetailsEntity);
 		membershipDetailsRepository.save(membershipDetailsEntity);
 
+		
+		EmergencyContactDetails  emergencyContactDetailsEntity = new EmergencyContactDetails();
+		
+		BeanUtils.copyProperties(emergencyContact, emergencyContactDetailsEntity);
+		emergencyContactDetailsRepository.save(emergencyContactDetailsEntity);
+		
+		
 		MemberDetails memberDetailsEntity = new MemberDetails();
 		BeanUtils.copyProperties(memberDetails, memberDetailsEntity);
+		
 		memberDetailsEntity.setBusinessUnitDetails(businessUnitDetails);
 		memberDetailsEntity.setMembershipDetails(membershipDetailsEntity);
 		memberDetailsEntity.setCountryDetails(countryDetails);
-
+		memberDetailsEntity.setEmergencyContactDetails(emergencyContactDetailsEntity);
+		
 		memberDetailsRepository.save(memberDetailsEntity);
 		log.info("createMembership() - end");
 		return membershipDetailsEntity.getId();
@@ -199,13 +216,17 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 				// TODO - Change the type as planned
 				String businessUnitId = String.valueOf(memberDetails.getBusinessUnitDetails().getId());
 				memeberDetailsResponse.setCompanyOrBusinessUnit(businessUnitId);
-				String nationality = memberDetails.getCountryDetails() == null ? ""
-						: memberDetails.getCountryDetails().getCountryCode();
+				String nationality = memberDetails.getCountryDetails() == null ? "": memberDetails.getCountryDetails().getCountryCode();
 				memeberDetailsResponse.setNationality(nationality);
 				responseObject.setMemeberDetails(memeberDetailsResponse);
+				
+				if(Objects.nonNull(memberDetails.getEmergencyContactDetails())) {
+					EmergencyContactRequest emergencyContactDetails = new EmergencyContactRequest();
+					BeanUtils.copyProperties(memberDetails.getEmergencyContactDetails(), emergencyContactDetails);
+					responseObject.setEmergencyContactDetails(emergencyContactDetails);
+				}
 			}
 		}
-
 		log.info("getMembershipDetailsById() - end");
 		return responseObject;
 	}
@@ -233,11 +254,15 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 				String businessUnitId = String.valueOf(memberDetails.getBusinessUnitDetails().getId());
 				memeberDetailsResponse.setCompanyOrBusinessUnit(businessUnitId);
 
-				String nationality = memberDetails.getCountryDetails() == null ? ""
-						: memberDetails.getCountryDetails().getCountryCode();
+				String nationality = memberDetails.getCountryDetails() == null ? "": memberDetails.getCountryDetails().getCountryCode();
 				memeberDetailsResponse.setNationality(nationality);
-
 				responseObject.setMemeberDetails(memeberDetailsResponse);
+				
+				if(Objects.nonNull(memberDetails.getEmergencyContactDetails())) {
+					EmergencyContactRequest emergencyContactDetails = new EmergencyContactRequest();
+					BeanUtils.copyProperties(memberDetails.getEmergencyContactDetails(), emergencyContactDetails);
+					responseObject.setEmergencyContactDetails(emergencyContactDetails);
+				}
 			}
 			responseList.add(responseObject);
 		});

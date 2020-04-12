@@ -16,13 +16,17 @@ public class CreateMembershipRequest {
 	@Valid
 	@NotNull
 	private MembershipDetailsRequest membershipDetails;
+	
+	
 
-	public MemberDetailsRequest getPersonalDetails() {
+	private EmergencyContactRequest emergencyContactDetails;
+
+	public MemberDetailsRequest getMemberDetails() {
 		return memberDetails;
 	}
 
-	public void setPersonalDetails(MemberDetailsRequest personalDetails) {
-		this.memberDetails = personalDetails;
+	public void setMemberDetails(MemberDetailsRequest memberDetails) {
+		this.memberDetails = memberDetails;
 	}
 
 	public MembershipDetailsRequest getMembershipDetails() {
@@ -33,10 +37,12 @@ public class CreateMembershipRequest {
 		this.membershipDetails = membershipDetails;
 	}
 
-	@Override
-	public String toString() {
-		return "CreateMembershipRequest [personalDetails=" + memberDetails + ", membershipDetails="
-				+ membershipDetails + "]";
+	public EmergencyContactRequest getEmergencyContactDetails() {
+		return emergencyContactDetails;
+	}
+
+	public void setEmergencyContactDetails(EmergencyContactRequest emergencyContactDetails) {
+		this.emergencyContactDetails = emergencyContactDetails;
 	}
 
 }

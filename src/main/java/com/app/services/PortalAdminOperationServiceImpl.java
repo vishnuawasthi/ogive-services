@@ -163,6 +163,7 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		return response;
 	}
 
+	
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public void suspendAcccount(Long id) throws RecordNotFoundException {
@@ -292,6 +293,7 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		log.info("getCountryDetailsById() - end");
 		return responseObject;
 	}
+
 	
 	
 }
