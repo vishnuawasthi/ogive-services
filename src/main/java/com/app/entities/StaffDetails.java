@@ -1,11 +1,20 @@
 package com.app.entities;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import com.app.config.StaffType;
 
 @Entity
 @Table(name = "STAFF_DETAILS")
@@ -16,21 +25,31 @@ public class StaffDetails {
 	@GeneratedValue(generator = "SEQ_STAFF_DETAILS", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	private String staffTypeCode;
+	@Column(length = 32)
+	private String firstName;;
 
-	private String employeeCode;
+	@Column(length = 32)
+	private String lastName;
 
-	private String employeeName;
+	@Column(length = 32)
+	private String middleName;
 
-	private String designation;
+	@Column(length = 15)
+	private String mobileNumber;
 
-	private String joiningDate;
+	@Column(length = 60)
+	private String email;
 
-	private Float basicSalary;
+	@Column
+	private Date joiningDate;
 
-	private Float grossSalary;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "staff_type", length = 32)
+	private StaffType staffType;
 
-	private Float ratePerHour;
+	@OneToOne
+	@JoinColumn(name = "BUSINESS_UNIT_DTLS_ID", referencedColumnName = "ID")
+	private BusinessUnitDetails businessUnitDetails;
 
 	public Long getId() {
 		return id;
@@ -40,76 +59,75 @@ public class StaffDetails {
 		this.id = id;
 	}
 
-	public String getStaffTypeCode() {
-		return staffTypeCode;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setStaffTypeCode(String staffTypeCode) {
-		this.staffTypeCode = staffTypeCode;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getEmployeeCode() {
-		return employeeCode;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setEmployeeCode(String employeeCode) {
-		this.employeeCode = employeeCode;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public String getEmployeeName() {
-		return employeeName;
+	public String getMiddleName() {
+		return middleName;
 	}
 
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 
-	public String getDesignation() {
-		return designation;
+	public String getMobileNumber() {
+		return mobileNumber;
 	}
 
-	public void setDesignation(String designation) {
-		this.designation = designation;
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
-	public String getJoiningDate() {
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Date getJoiningDate() {
 		return joiningDate;
 	}
 
-	public void setJoiningDate(String joiningDate) {
+	public void setJoiningDate(Date joiningDate) {
 		this.joiningDate = joiningDate;
 	}
 
-	public Float getBasicSalary() {
-		return basicSalary;
+	public StaffType getStaffType() {
+		return staffType;
 	}
 
-	public void setBasicSalary(Float basicSalary) {
-		this.basicSalary = basicSalary;
+	public void setStaffType(StaffType staffType) {
+		this.staffType = staffType;
 	}
 
-	public Float getGrossSalary() {
-		return grossSalary;
+	public BusinessUnitDetails getBusinessUnitDetails() {
+		return businessUnitDetails;
 	}
 
-	public void setGrossSalary(Float grossSalary) {
-		this.grossSalary = grossSalary;
-	}
-
-	public Float getRatePerHour() {
-		return ratePerHour;
-	}
-
-	public void setRatePerHour(Float ratePerHour) {
-		this.ratePerHour = ratePerHour;
+	public void setBusinessUnitDetails(BusinessUnitDetails businessUnitDetails) {
+		this.businessUnitDetails = businessUnitDetails;
 	}
 
 	@Override
 	public String toString() {
-		return "StaffDetails [id=" + id + ", staffTypeCode=" + staffTypeCode + ", employeeCode=" + employeeCode
-				+ ", employeeName=" + employeeName + ", designation=" + designation + ", joiningDate=" + joiningDate
-				+ ", basicSalary=" + basicSalary + ", grossSalary=" + grossSalary + ", ratePerHour=" + ratePerHour
-				+ "]";
+		return "StaffDetails [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", middleName="
+				+ middleName + ", mobileNumber=" + mobileNumber + ", email=" + email + ", joiningDate=" + joiningDate
+				+ ", staffType=" + staffType + ", businessUnitDetails=" + businessUnitDetails + "]";
 	}
 
 }

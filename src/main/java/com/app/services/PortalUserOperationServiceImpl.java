@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -13,12 +14,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.app.dto.CreateFreezeRequest;
+import com.app.dto.CreateMemberDetailsRequest;
 import com.app.dto.CreateMemberTransferRequest;
 import com.app.dto.CreateMembershipRequest;
 import com.app.dto.CreatePersonalTrainingDetailsRequest;
 import com.app.dto.CreateProspectDetailsRequest;
 import com.app.dto.EmergencyContactRequest;
-import com.app.dto.MemberDetailsRequest;
 import com.app.dto.MemberDetailsResponse;
 import com.app.dto.MembershipDetailsRequest;
 import com.app.dto.MembershipDetailsResponse;
@@ -142,21 +143,19 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 	public Long createMembership(CreateMembershipRequest createMembershipRequest) {
 		log.info("createMembership() - start");
 
-		MemberDetailsRequest memberDetails = createMembershipRequest.getMemberDetails();
+		CreateMemberDetailsRequest memberDetails = createMembershipRequest.getMemberDetails();
 
 		MembershipDetailsRequest membershipDetails = createMembershipRequest.getMembershipDetails();
 		
-		EmergencyContactRequest emergencyContact = createMembershipRequest.getEmergencyContactDetails();
+		EmergencyContactRequest emergencyContact = createMembershipRequest.getMemberDetails().getEmergencyContactDetails();
 
-		CountryDetails countryDetails = countryDetailsRepository
-				.findCountryDetailsByCountryCodeIgnoreCase(memberDetails.getNationality());
+		CountryDetails countryDetails = countryDetailsRepository.findCountryDetailsByCountryCodeIgnoreCase(memberDetails.getCountry());
 
 		if (Objects.isNull(countryDetails)) {
 			throw new RecordNotFoundException("No CountryDetails exist with given nationality ");
 		}
 
-		BusinessUnitDetails businessUnitDetails = businessUnitDetailsRepository
-				.findById(Long.valueOf(memberDetails.getCompanyOrBusinessUnit())).orElse(null);
+		BusinessUnitDetails businessUnitDetails = businessUnitDetailsRepository.findById(Long.valueOf(memberDetails.getCompanyOrBusinessUnit())).orElse(null);
 
 		if (Objects.isNull(businessUnitDetails)) {
 			throw new RecordNotFoundException("No BusinessUnitDetails exist with given companyOrBusinessUnit ");
@@ -170,10 +169,6 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 			throw new RecordNotFoundException("No MembershipTypes exist with given membershipType ");
 		}
 
-		MembershipDetails membershipDetailsEntity = new MembershipDetails();
-		BeanUtils.copyProperties(membershipDetails, membershipDetailsEntity);
-		membershipDetailsRepository.save(membershipDetailsEntity);
-
 		
 		EmergencyContactDetails  emergencyContactDetailsEntity = new EmergencyContactDetails();
 		
@@ -185,11 +180,16 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		BeanUtils.copyProperties(memberDetails, memberDetailsEntity);
 		
 		memberDetailsEntity.setBusinessUnitDetails(businessUnitDetails);
-		memberDetailsEntity.setMembershipDetails(membershipDetailsEntity);
+		//memberDetailsEntity.setMembershipDetails(membershipDetailsEntity);
 		memberDetailsEntity.setCountryDetails(countryDetails);
 		memberDetailsEntity.setEmergencyContactDetails(emergencyContactDetailsEntity);
-		
 		memberDetailsRepository.save(memberDetailsEntity);
+		
+		MembershipDetails membershipDetailsEntity = new MembershipDetails();
+		BeanUtils.copyProperties(membershipDetails, membershipDetailsEntity);
+		membershipDetailsEntity.setMemberDetails(memberDetailsEntity);
+		membershipDetailsRepository.save(membershipDetailsEntity);
+		
 		log.info("createMembership() - end");
 		return membershipDetailsEntity.getId();
 	}
@@ -339,7 +339,6 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 	public Long createMemberTransfer(CreateMemberTransferRequest createMemberTransferRequest) {
 		log.info("createMemberTransfer() - start");
 		Long memberNumber = createMemberTransferRequest.getMemberNumber();
-
 		MemberDetails memberDetails = memberDetailsRepository.findById(memberNumber).orElse(null);
 
 		if (Objects.isNull(memberDetails)) {
@@ -356,16 +355,10 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		}
 		memberDetails.setBusinessUnitDetails(toBusinessUnitDetails);
 		memberDetailsRepository.save(memberDetails);
-
 		MemberTransferDetails memberTransferDetails = new MemberTransferDetails();
 		BeanUtils.copyProperties(createMemberTransferRequest, memberTransferDetails);
 		
-		MembershipDetails membershipDetails = memberDetails.getMembershipDetails();
-		
 		//TODO - Transfer from & TransferTo values are not saving.
-		
-		memberTransferDetails.setTransferFromMembership(membershipDetails.getId());
-		memberTransferDetails.setTransferFromMembership(memberTransferDetails.getId());
 		
 		memberTransferDetailsRepository.save(memberTransferDetails);
 		log.info("createMemberTransfer() - end");

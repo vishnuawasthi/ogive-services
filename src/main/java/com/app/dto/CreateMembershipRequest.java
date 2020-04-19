@@ -10,22 +10,18 @@ public class CreateMembershipRequest {
 	@ApiModelProperty(required = true)
 	@Valid
 	@NotNull
-	private MemberDetailsRequest memberDetails;
+	private CreateMemberDetailsRequest memberDetails;
 
 	@ApiModelProperty(required = true)
 	@Valid
 	@NotNull
 	private MembershipDetailsRequest membershipDetails;
-	
-	
 
-	private EmergencyContactRequest emergencyContactDetails;
-
-	public MemberDetailsRequest getMemberDetails() {
+	public CreateMemberDetailsRequest getMemberDetails() {
 		return memberDetails;
 	}
 
-	public void setMemberDetails(MemberDetailsRequest memberDetails) {
+	public void setMemberDetails(CreateMemberDetailsRequest memberDetails) {
 		this.memberDetails = memberDetails;
 	}
 
@@ -35,14 +31,6 @@ public class CreateMembershipRequest {
 
 	public void setMembershipDetails(MembershipDetailsRequest membershipDetails) {
 		this.membershipDetails = membershipDetails;
-	}
-
-	public EmergencyContactRequest getEmergencyContactDetails() {
-		return emergencyContactDetails;
-	}
-
-	public void setEmergencyContactDetails(EmergencyContactRequest emergencyContactDetails) {
-		this.emergencyContactDetails = emergencyContactDetails;
 	}
 
 }

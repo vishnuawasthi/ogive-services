@@ -1,32 +1,36 @@
 package com.app.dto;
 
-public class BusinessUnitDetailsResponse {
+import javax.validation.constraints.NotEmpty;
 
-	private Long id;
+import io.swagger.annotations.ApiModelProperty;
+
+public class CreateBusinessUnitDetailsRequest {
 
 	private String businessUnitCode;
 
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String businessUnitName;
 
 	private String addressLine1;
 
 	private String addressLine2;
 
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String postOfficeBox;
 
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String city;
 
+	@NotEmpty
+	@ApiModelProperty(required = true)
 	private String state;
 
-	private String countryName;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	@NotEmpty
+	@ApiModelProperty(required = true)
+	private String countryCode;
 
 	public String getBusinessUnitCode() {
 		return businessUnitCode;
@@ -60,6 +64,14 @@ public class BusinessUnitDetailsResponse {
 		this.addressLine2 = addressLine2;
 	}
 
+	public String getPostOfficeBox() {
+		return postOfficeBox;
+	}
+
+	public void setPostOfficeBox(String postOfficeBox) {
+		this.postOfficeBox = postOfficeBox;
+	}
+
 	public String getCity() {
 		return city;
 	}
@@ -76,20 +88,12 @@ public class BusinessUnitDetailsResponse {
 		this.state = state;
 	}
 
-	public String getCountryName() {
-		return countryName;
+	public String getCountryCode() {
+		return countryCode;
 	}
 
-	public void setCountryName(String countryName) {
-		this.countryName = countryName;
-	}
-
-	public String getPostOfficeBox() {
-		return postOfficeBox;
-	}
-
-	public void setPostOfficeBox(String postOfficeBox) {
-		this.postOfficeBox = postOfficeBox;
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
 
 }

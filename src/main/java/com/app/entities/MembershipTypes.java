@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -19,9 +20,7 @@ public class MembershipTypes {
 	@GeneratedValue(generator = "SEQ_MEMBERSHIP_TYPES", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	private String membershipTypeCode;
-
-	private String membershipType;
+	private String membershipTypeName;
 
 	private String description;
 
@@ -31,8 +30,6 @@ public class MembershipTypes {
 
 	private Float maximumHours;
 
-	private String enableRecurringPayment;
-
 	private Date effectiveDate;
 
 	private Float joiningFees;
@@ -41,12 +38,15 @@ public class MembershipTypes {
 
 	private Float allowedDiscount;
 
-	private String companyOrBusinessUnitCode;
-
 	private String notes;
-	
-	@OneToOne(mappedBy = "membershipTypes")
-	private MembershipDetails membershipDetails;
+
+	@OneToOne
+	@JoinColumn(name = "BUSINESS_UNIT_DETAILS_ID", referencedColumnName = "ID")
+	private BusinessUnitDetails businessUnitDetails;
+
+	@OneToOne
+	@JoinColumn(name = "MBR_PKG_DTLS_ID", referencedColumnName = "ID")
+	private PackageDetails membershipPackageDetails;
 
 	public Long getId() {
 		return id;
@@ -56,20 +56,12 @@ public class MembershipTypes {
 		this.id = id;
 	}
 
-	public String getMembershipTypeCode() {
-		return membershipTypeCode;
+	public String getMembershipTypeName() {
+		return membershipTypeName;
 	}
 
-	public void setMembershipTypeCode(String membershipTypeCode) {
-		this.membershipTypeCode = membershipTypeCode;
-	}
-
-	public String getMembershipType() {
-		return membershipType;
-	}
-
-	public void setMembershipType(String membershipType) {
-		this.membershipType = membershipType;
+	public void setMembershipTypeName(String membershipTypeName) {
+		this.membershipTypeName = membershipTypeName;
 	}
 
 	public String getDescription() {
@@ -102,14 +94,6 @@ public class MembershipTypes {
 
 	public void setMaximumHours(Float maximumHours) {
 		this.maximumHours = maximumHours;
-	}
-
-	public String getEnableRecurringPayment() {
-		return enableRecurringPayment;
-	}
-
-	public void setEnableRecurringPayment(String enableRecurringPayment) {
-		this.enableRecurringPayment = enableRecurringPayment;
 	}
 
 	public Date getEffectiveDate() {
@@ -152,22 +136,20 @@ public class MembershipTypes {
 		this.notes = notes;
 	}
 
-	public String getCompanyOrBusinessUnitCode() {
-		return companyOrBusinessUnitCode;
+	public BusinessUnitDetails getBusinessUnitDetails() {
+		return businessUnitDetails;
 	}
 
-	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
-		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
+	public void setBusinessUnitDetails(BusinessUnitDetails businessUnitDetails) {
+		this.businessUnitDetails = businessUnitDetails;
 	}
 
-	@Override
-	public String toString() {
-		return "MembershipTypes [id=" + id + ", membershipTypeCode=" + membershipTypeCode + ", membershipType="
-				+ membershipType + ", description=" + description + ", duration=" + duration + ", minimuHours="
-				+ minimuHours + ", maximumHours=" + maximumHours + ", enableRecurringPayment=" + enableRecurringPayment
-				+ ", effectiveDate=" + effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees="
-				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitCode="
-				+ companyOrBusinessUnitCode + ", notes=" + notes + "]";
+	public PackageDetails getMembershipPackageDetails() {
+		return membershipPackageDetails;
+	}
+
+	public void setMembershipPackageDetails(PackageDetails membershipPackageDetails) {
+		this.membershipPackageDetails = membershipPackageDetails;
 	}
 
 }

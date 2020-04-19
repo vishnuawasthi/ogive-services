@@ -20,14 +20,18 @@ import com.app.constants.Authorities;
 import com.app.dto.CountryDetailsResponse;
 import com.app.dto.CreateCountryDetailsRequest;
 import com.app.dto.CreatePortalUserDetailsRequest;
+import com.app.dto.CreateSourceDetailsRequest;
 import com.app.dto.PortalUserDetailsResponse;
+import com.app.dto.SourceDetailsResponse;
 import com.app.entities.CountryDetails;
 import com.app.entities.PortalUserDetails;
+import com.app.entities.SourceDetails;
 import com.app.entities.UserAuthority;
 import com.app.exception.RecordNotFoundException;
 import com.app.repositories.CountryDetailsRepository;
 import com.app.repositories.MembershipDetailsRepository;
 import com.app.repositories.PortalUserRepository;
+import com.app.repositories.SourceDetailsRepository;
 import com.app.repositories.UserAuthoritiesRepository;
 
 @Service
@@ -46,9 +50,12 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 
 	@Autowired
 	private MembershipDetailsRepository membershipDetailsRepository;
-	
+
 	@Autowired
 	private CountryDetailsRepository countryDetailsRepository;
+
+	@Autowired
+	private SourceDetailsRepository sourceDetailsRepository;
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
@@ -163,7 +170,6 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		return response;
 	}
 
-	
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public void suspendAcccount(Long id) throws RecordNotFoundException {
@@ -237,7 +243,8 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		log.info("deleteAuthorities() - end");
 
 	}
-	/**################### COUNTRY DETAILS SERVICES #######################*/
+
+	/** ################### COUNTRY DETAILS SERVICES ####################### */
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public Long addCountryDetails(CreateCountryDetailsRequest createCountryDetailsRequest) {
@@ -269,7 +276,7 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 	@Override
 	public CountryDetailsResponse getCountryDetailsByCode(String code) {
 		log.info("getCountryDetailsByCode() - start");
-		
+
 		CountryDetails entity = countryDetailsRepository.findCountryDetailsByCountryCodeIgnoreCase(code);
 		CountryDetailsResponse responseObject = null;
 		if (Objects.nonNull(entity)) {
@@ -284,7 +291,7 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 	public CountryDetailsResponse getCountryDetailsById(Long id) {
 		log.info("getCountryDetailsById() - start");
 		CountryDetails entity = countryDetailsRepository.findById(id).orElse(null);
-		
+
 		CountryDetailsResponse responseObject = null;
 		if (Objects.nonNull(entity)) {
 			responseObject = new CountryDetailsResponse();
@@ -294,6 +301,39 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		return responseObject;
 	}
 
-	
-	
+	/** ##################### SOURCE DETAILS ############################# */
+
+	@Override
+	public String createSourceDetails(CreateSourceDetailsRequest createSourceDetailsRequest) {
+		log.info("createSourceDetails() - start");
+		SourceDetails entity = new SourceDetails();
+		BeanUtils.copyProperties(createSourceDetailsRequest, entity);
+		sourceDetailsRepository.save(entity);
+		log.info("createSourceDetails() - end");
+		return entity.getId();
+	}
+
+	@Override
+	public List<SourceDetailsResponse> getAllSourcesDetails() {
+		log.info("getAllSourcesDetails() - start");
+		Iterable<SourceDetails> dbContents = sourceDetailsRepository.findAll();
+		List<SourceDetailsResponse> responseList = new ArrayList<>();
+
+		dbContents.forEach(entity -> {
+			SourceDetailsResponse responseObject = new SourceDetailsResponse();
+			BeanUtils.copyProperties(entity, responseObject);
+			responseList.add(responseObject);
+		});
+		
+		log.info("getAllSourcesDetails() - end");
+		return responseList;
+	}
+
+	@Override
+	public void deleteSource(String id) {
+		log.info("deleteSource() - start");
+		sourceDetailsRepository.deleteById(id);
+		log.info("deleteSource() - end");
+	}
+
 }

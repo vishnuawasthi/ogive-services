@@ -2,8 +2,8 @@ package com.app.repositories;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import com.app.entities.MembershipPackageDetails;
+import com.app.entities.PackageDetails;
 
-public interface MembershipPackageDetailsRepository extends PagingAndSortingRepository<MembershipPackageDetails, Long> {
+public interface MembershipPackageDetailsRepository extends PagingAndSortingRepository<PackageDetails, Long> {
 
 }

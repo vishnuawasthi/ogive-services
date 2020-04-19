@@ -101,4 +101,12 @@ it will be running at http://localhost:1100/ogive-services-0.0.1-SNAPSHOT/swagge
 # BCryptPasswordEncoder encoder 
 
 Bcrypt is a cross platform file encryption utility. Encrypted files are portable across all supported operating systems and processors. Passphrases must be between 8 and 56 characters and are hashed internally to a 448 bit key. However, all characters supplied are significant. The stronger your passphrase, the more secure your data.
+
+# Drop Table/Sequence in Postgres
+
+DROP SEQUENCE IF EXISTS SEQ_PACKAGE_DTLS  CASCADE ;
+
+DROP TABLE  IF EXISTS MEMBERSHIP_TYPES  CASCADE ;
+
+DROP TABLE  IF EXISTS MEMBERSHIP_DETAILS  CASCADE ;
  		            

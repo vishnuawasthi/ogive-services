@@ -13,23 +13,19 @@ public class CreateMembershipTypeRequest {
 
 	@NotEmpty
 	@ApiModelProperty(required = true)
-	private String membershipTypeCode;
-
-	private String membershipType;
+	private String membershipTypeName;
 
 	@NotEmpty
 	@ApiModelProperty(required = true)
 	private String description;
 
 	@NotNull
-	@ApiModelProperty(required = true)
+	@ApiModelProperty(required = true, example = "Duration in months")
 	private Float duration;
 
 	private Float minimuHours;
 
 	private Float maximumHours;
-
-	private String enableRecurringPayment;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@ApiModelProperty(required = false, allowableValues = "yyyy-MM-dd")
@@ -41,28 +37,17 @@ public class CreateMembershipTypeRequest {
 
 	private Float allowedDiscount;
 
-	private String companyOrBusinessUnitCode;
+	@NotNull
+	private Long companyOrBusinessUnit;
+
+	@NotNull
+	@ApiModelProperty(required = true)
+	private Long packageNumber;
 
 	private String notes;
 
 	public CreateMembershipTypeRequest() {
 		super();
-	}
-
-	public String getMembershipTypeCode() {
-		return membershipTypeCode;
-	}
-
-	public void setMembershipTypeCode(String membershipTypeCode) {
-		this.membershipTypeCode = membershipTypeCode;
-	}
-
-	public String getMembershipType() {
-		return membershipType;
-	}
-
-	public void setMembershipType(String membershipType) {
-		this.membershipType = membershipType;
 	}
 
 	public String getDescription() {
@@ -97,14 +82,6 @@ public class CreateMembershipTypeRequest {
 		this.maximumHours = maximumHours;
 	}
 
-	public String getEnableRecurringPayment() {
-		return enableRecurringPayment;
-	}
-
-	public void setEnableRecurringPayment(String enableRecurringPayment) {
-		this.enableRecurringPayment = enableRecurringPayment;
-	}
-
 	public Date getEffectiveDate() {
 		return effectiveDate;
 	}
@@ -137,12 +114,12 @@ public class CreateMembershipTypeRequest {
 		this.allowedDiscount = allowedDiscount;
 	}
 
-	public String getCompanyOrBusinessUnitCode() {
-		return companyOrBusinessUnitCode;
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
 	}
 
-	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
-		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
 	}
 
 	public String getNotes() {
@@ -153,14 +130,20 @@ public class CreateMembershipTypeRequest {
 		this.notes = notes;
 	}
 
-	@Override
-	public String toString() {
-		return "CreateMembershipTypeRequest [membershipTypeCode=" + membershipTypeCode + ", membershipType="
-				+ membershipType + ", description=" + description + ", duration=" + duration + ", minimuHours="
-				+ minimuHours + ", maximumHours=" + maximumHours + ", enableRecurringPayment=" + enableRecurringPayment
-				+ ", effectiveDate=" + effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees="
-				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitCode="
-				+ companyOrBusinessUnitCode + ", notes=" + notes + "]";
+	public String getMembershipTypeName() {
+		return membershipTypeName;
+	}
+
+	public void setMembershipTypeName(String membershipTypeName) {
+		this.membershipTypeName = membershipTypeName;
+	}
+
+	public Long getPackageNumber() {
+		return packageNumber;
+	}
+
+	public void setPackageNumber(Long packageNumber) {
+		this.packageNumber = packageNumber;
 	}
 
 }

@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -18,13 +20,9 @@ public class PersonalTrainingType {
 	@GeneratedValue(generator = "SEQ_PERSONAL_TRAINING_TYPES", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	private String personalTrainingType;
-
-	private String personalTrainingCode;
+	private String personalTrainingTypeName;
 
 	private String description;
-
-	private String companyOrBusinessUnitCode;
 
 	private Float duration;
 
@@ -33,8 +31,6 @@ public class PersonalTrainingType {
 	private Integer allowedSessions;
 
 	private Integer validityInDays;
-
-	private String enableRecurringPayment;
 
 	private Date effectiveDate;
 
@@ -46,6 +42,10 @@ public class PersonalTrainingType {
 
 	private String notes;
 
+	@OneToOne()
+	@JoinColumn(name = "BUSINESS_UNIT_ID", referencedColumnName = "ID")
+	private BusinessUnitDetails businessUnitDetails;
+
 	public Long getId() {
 		return id;
 	}
@@ -54,20 +54,12 @@ public class PersonalTrainingType {
 		this.id = id;
 	}
 
-	public String getPersonalTrainingType() {
-		return personalTrainingType;
+	public String getPersonalTrainingTypeName() {
+		return personalTrainingTypeName;
 	}
 
-	public void setPersonalTrainingType(String personalTrainingType) {
-		this.personalTrainingType = personalTrainingType;
-	}
-
-	public String getPersonalTrainingCode() {
-		return personalTrainingCode;
-	}
-
-	public void setPersonalTrainingCode(String personalTrainingCode) {
-		this.personalTrainingCode = personalTrainingCode;
+	public void setPersonalTrainingTypeName(String personalTrainingTypeName) {
+		this.personalTrainingTypeName = personalTrainingTypeName;
 	}
 
 	public String getDescription() {
@@ -76,14 +68,6 @@ public class PersonalTrainingType {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getCompanyOrBusinessUnitCode() {
-		return companyOrBusinessUnitCode;
-	}
-
-	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
-		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
 	}
 
 	public Float getDuration() {
@@ -116,14 +100,6 @@ public class PersonalTrainingType {
 
 	public void setValidityInDays(Integer validityInDays) {
 		this.validityInDays = validityInDays;
-	}
-
-	public String getEnableRecurringPayment() {
-		return enableRecurringPayment;
-	}
-
-	public void setEnableRecurringPayment(String enableRecurringPayment) {
-		this.enableRecurringPayment = enableRecurringPayment;
 	}
 
 	public Date getEffectiveDate() {
@@ -166,15 +142,12 @@ public class PersonalTrainingType {
 		this.notes = notes;
 	}
 
-	@Override
-	public String toString() {
-		return "PersonalTrainingType [id=" + id + ", personalTrainingType=" + personalTrainingType
-				+ ", personalTrainingCode=" + personalTrainingCode + ", description=" + description
-				+ ", companyOrBusinessUnitCode=" + companyOrBusinessUnitCode + ", duration=" + duration
-				+ ", extraSessions=" + extraSessions + ", allowedSessions=" + allowedSessions + ", validityInDays="
-				+ validityInDays + ", enableRecurringPayment=" + enableRecurringPayment + ", effectiveDate="
-				+ effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees=" + subscriptionFees
-				+ ", allowableDiscount=" + allowableDiscount + ", notes=" + notes + "]";
+	public BusinessUnitDetails getBusinessUnitDetails() {
+		return businessUnitDetails;
+	}
+
+	public void setBusinessUnitDetails(BusinessUnitDetails businessUnitDetails) {
+		this.businessUnitDetails = businessUnitDetails;
 	}
 
 }

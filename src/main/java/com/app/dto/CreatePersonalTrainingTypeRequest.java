@@ -5,20 +5,23 @@ import java.util.Date;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import io.swagger.annotations.ApiModelProperty;
-public class CreatePersonalTrainingTypeRequest {
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-	private String personalTrainingType;
+import io.swagger.annotations.ApiModelProperty;
+
+public class CreatePersonalTrainingTypeRequest {
 
 	@ApiModelProperty(required = true)
 	@NotEmpty
-	private String personalTrainingCode;
+	private String personalTrainingTypeName;
 
 	@ApiModelProperty(required = true)
 	@NotEmpty
 	private String description;
 
-	private String companyOrBusinessUnitCode;
+	@ApiModelProperty(required = true)
+	@NotNull
+	private Long companyOrBusinessUnit;
 
 	@NotNull
 	@ApiModelProperty(required = true)
@@ -29,35 +32,29 @@ public class CreatePersonalTrainingTypeRequest {
 	private Integer allowedSessions;
 
 	@ApiModelProperty(required = true, example = "15")
-	@NotEmpty
+	@NotNull
 	private Integer validityInDays;
 
-	private String enableRecurringPayment;
-
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@ApiModelProperty(required = false, allowableValues = "yyyy-MM-dd")
 	private Date effectiveDate;
 
 	private Float joiningFees;
 
 	private Float subscriptionFees;
 
+	@ApiModelProperty(required = true)
+	@NotNull
 	private Float allowableDiscount;
 
 	private String notes;
 
-	public String getPersonalTrainingType() {
-		return personalTrainingType;
+	public String getPersonalTrainingTypeName() {
+		return personalTrainingTypeName;
 	}
 
-	public void setPersonalTrainingType(String personalTrainingType) {
-		this.personalTrainingType = personalTrainingType;
-	}
-
-	public String getPersonalTrainingCode() {
-		return personalTrainingCode;
-	}
-
-	public void setPersonalTrainingCode(String personalTrainingCode) {
-		this.personalTrainingCode = personalTrainingCode;
+	public void setPersonalTrainingTypeName(String personalTrainingTypeName) {
+		this.personalTrainingTypeName = personalTrainingTypeName;
 	}
 
 	public String getDescription() {
@@ -68,12 +65,12 @@ public class CreatePersonalTrainingTypeRequest {
 		this.description = description;
 	}
 
-	public String getCompanyOrBusinessUnitCode() {
-		return companyOrBusinessUnitCode;
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
 	}
 
-	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
-		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
 	}
 
 	public Float getDuration() {
@@ -106,14 +103,6 @@ public class CreatePersonalTrainingTypeRequest {
 
 	public void setValidityInDays(Integer validityInDays) {
 		this.validityInDays = validityInDays;
-	}
-
-	public String getEnableRecurringPayment() {
-		return enableRecurringPayment;
-	}
-
-	public void setEnableRecurringPayment(String enableRecurringPayment) {
-		this.enableRecurringPayment = enableRecurringPayment;
 	}
 
 	public Date getEffectiveDate() {
@@ -158,13 +147,12 @@ public class CreatePersonalTrainingTypeRequest {
 
 	@Override
 	public String toString() {
-		return "CreatePersonalTrainingTypeRequest [personalTrainingType=" + personalTrainingType
-				+ ", personalTrainingCode=" + personalTrainingCode + ", description=" + description
-				+ ", companyOrBusinessUnitCode=" + companyOrBusinessUnitCode + ", duration=" + duration
-				+ ", extraSessions=" + extraSessions + ", allowedSessions=" + allowedSessions + ", validityInDays="
-				+ validityInDays + ", enableRecurringPayment=" + enableRecurringPayment + ", effectiveDate="
-				+ effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees=" + subscriptionFees
-				+ ", allowableDiscount=" + allowableDiscount + ", notes=" + notes + "]";
+		return "CreatePersonalTrainingTypeRequest [personalTrainingTypeName=" + personalTrainingTypeName
+				+ ", description=" + description + ", companyOrBusinessUnit=" + companyOrBusinessUnit + ", duration="
+				+ duration + ", extraSessions=" + extraSessions + ", allowedSessions=" + allowedSessions
+				+ ", validityInDays=" + validityInDays + ", effectiveDate=" + effectiveDate + ", joiningFees="
+				+ joiningFees + ", subscriptionFees=" + subscriptionFees + ", allowableDiscount=" + allowableDiscount
+				+ ", notes=" + notes + "]";
 	}
 
 }

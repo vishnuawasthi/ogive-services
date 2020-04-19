@@ -1,6 +1,12 @@
 package com.app.dto;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import com.app.config.StaffType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -8,96 +14,88 @@ public class CreateStaffDetailsRequest {
 
 	@NotEmpty
 	@ApiModelProperty(required = true)
-	private String staffTypeCode;
+	private String firstName;
 
 	@NotEmpty
 	@ApiModelProperty(required = true)
-	private String employeeCode;
+	private String lastName;
 
-	@NotEmpty
-	@ApiModelProperty(required = true)
-	private String employeeName;
+	private String middleName;
 
-	private String designation;
+	private String email;
 
-	private String joiningDate;
+	private String mobileNumber;
 
-	private Float basicSalary;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date joiningDate;
 
-	private Float grossSalary;
+	private StaffType staffType;
+	
+	private Long companyOrBusinessUnit;
 
-	private Float ratePerHour;
-
-	public String getStaffTypeCode() {
-		return staffTypeCode;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setStaffTypeCode(String staffTypeCode) {
-		this.staffTypeCode = staffTypeCode;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getEmployeeCode() {
-		return employeeCode;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setEmployeeCode(String employeeCode) {
-		this.employeeCode = employeeCode;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public String getEmployeeName() {
-		return employeeName;
+	public String getMiddleName() {
+		return middleName;
 	}
 
-	public void setEmployeeName(String employeeName) {
-		this.employeeName = employeeName;
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
 
-	public String getDesignation() {
-		return designation;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setDesignation(String designation) {
-		this.designation = designation;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public String getJoiningDate() {
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public Date getJoiningDate() {
 		return joiningDate;
 	}
 
-	public void setJoiningDate(String joiningDate) {
+	public void setJoiningDate(Date joiningDate) {
 		this.joiningDate = joiningDate;
 	}
 
-	public Float getBasicSalary() {
-		return basicSalary;
+	public StaffType getStaffType() {
+		return staffType;
 	}
 
-	public void setBasicSalary(Float basicSalary) {
-		this.basicSalary = basicSalary;
+	public void setStaffType(StaffType staffType) {
+		this.staffType = staffType;
 	}
 
-	public Float getGrossSalary() {
-		return grossSalary;
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
 	}
 
-	public void setGrossSalary(Float grossSalary) {
-		this.grossSalary = grossSalary;
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
 	}
 
-	public Float getRatePerHour() {
-		return ratePerHour;
-	}
-
-	public void setRatePerHour(Float ratePerHour) {
-		this.ratePerHour = ratePerHour;
-	}
-
-	@Override
-	public String toString() {
-		return "CreateStaffDetailsRequest [staffTypeCode=" + staffTypeCode + ", employeeCode=" + employeeCode
-				+ ", employeeName=" + employeeName + ", designation=" + designation + ", joiningDate=" + joiningDate
-				+ ", basicSalary=" + basicSalary + ", grossSalary=" + grossSalary + ", ratePerHour=" + ratePerHour
-				+ "]";
-	}
-
+	
 }

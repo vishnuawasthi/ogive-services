@@ -6,7 +6,9 @@ import com.app.constants.Authorities;
 import com.app.dto.CountryDetailsResponse;
 import com.app.dto.CreateCountryDetailsRequest;
 import com.app.dto.CreatePortalUserDetailsRequest;
+import com.app.dto.CreateSourceDetailsRequest;
 import com.app.dto.PortalUserDetailsResponse;
+import com.app.dto.SourceDetailsResponse;
 import com.app.exception.RecordNotFoundException;
 
 public interface PortalAdminOperationService {
@@ -37,5 +39,14 @@ public interface PortalAdminOperationService {
 	CountryDetailsResponse getCountryDetailsByCode(String code);
 	
 	CountryDetailsResponse getCountryDetailsById(Long id);
+	
+	/*################# SOURCE DETAILS ############################ */ 
+	
+	String createSourceDetails(CreateSourceDetailsRequest createSourceDetailsRequest);
+	
+    List<SourceDetailsResponse > getAllSourcesDetails();
+   
+    void deleteSource(String id);
+   
 	
 }

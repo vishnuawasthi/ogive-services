@@ -11,14 +11,10 @@ public class PersonalTrainingTypeResponse {
 	@ApiModelProperty(required = true)
 	private Long id;
 
-	private String personalTrainingType;
-
-	private String personalTrainingCode;
+	private String personalTrainingTypeName;
 
 	@ApiModelProperty(required = true)
 	private String description;
-
-	private String companyOrBusinessUnitCode;
 
 	@ApiModelProperty(required = true)
 	private Float duration;
@@ -30,9 +26,7 @@ public class PersonalTrainingTypeResponse {
 	@ApiModelProperty(required = true)
 	private Integer validityInDays;
 
-	private String enableRecurringPayment;
-
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date effectiveDate;
 
 	private Float joiningFees;
@@ -43,6 +37,8 @@ public class PersonalTrainingTypeResponse {
 
 	private String notes;
 
+	private Long companyOrBusinessUnit;
+
 	public Long getId() {
 		return id;
 	}
@@ -51,20 +47,12 @@ public class PersonalTrainingTypeResponse {
 		this.id = id;
 	}
 
-	public String getPersonalTrainingType() {
-		return personalTrainingType;
+	public String getPersonalTrainingTypeName() {
+		return personalTrainingTypeName;
 	}
 
-	public void setPersonalTrainingType(String personalTrainingType) {
-		this.personalTrainingType = personalTrainingType;
-	}
-
-	public String getPersonalTrainingCode() {
-		return personalTrainingCode;
-	}
-
-	public void setPersonalTrainingCode(String personalTrainingCode) {
-		this.personalTrainingCode = personalTrainingCode;
+	public void setPersonalTrainingTypeName(String personalTrainingTypeName) {
+		this.personalTrainingTypeName = personalTrainingTypeName;
 	}
 
 	public String getDescription() {
@@ -73,14 +61,6 @@ public class PersonalTrainingTypeResponse {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getCompanyOrBusinessUnitCode() {
-		return companyOrBusinessUnitCode;
-	}
-
-	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
-		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
 	}
 
 	public Float getDuration() {
@@ -113,14 +93,6 @@ public class PersonalTrainingTypeResponse {
 
 	public void setValidityInDays(Integer validityInDays) {
 		this.validityInDays = validityInDays;
-	}
-
-	public String getEnableRecurringPayment() {
-		return enableRecurringPayment;
-	}
-
-	public void setEnableRecurringPayment(String enableRecurringPayment) {
-		this.enableRecurringPayment = enableRecurringPayment;
 	}
 
 	public Date getEffectiveDate() {
@@ -163,15 +135,22 @@ public class PersonalTrainingTypeResponse {
 		this.notes = notes;
 	}
 
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
+	}
+
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
+	}
+
 	@Override
 	public String toString() {
-		return "PersonalTrainingTypeResponse [id=" + id + ", personalTrainingType=" + personalTrainingType
-				+ ", personalTrainingCode=" + personalTrainingCode + ", description=" + description
-				+ ", companyOrBusinessUnitCode=" + companyOrBusinessUnitCode + ", duration=" + duration
-				+ ", extraSessions=" + extraSessions + ", allowedSessions=" + allowedSessions + ", validityInDays="
-				+ validityInDays + ", enableRecurringPayment=" + enableRecurringPayment + ", effectiveDate="
+		return "PersonalTrainingTypeResponse [id=" + id + ", personalTrainingTypeName=" + personalTrainingTypeName
+				+ ", description=" + description + ", duration=" + duration + ", extraSessions=" + extraSessions
+				+ ", allowedSessions=" + allowedSessions + ", validityInDays=" + validityInDays + ", effectiveDate="
 				+ effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees=" + subscriptionFees
-				+ ", allowableDiscount=" + allowableDiscount + ", notes=" + notes + "]";
+				+ ", allowableDiscount=" + allowableDiscount + ", notes=" + notes + ", companyOrBusinessUnit="
+				+ companyOrBusinessUnit + "]";
 	}
 
 }

@@ -6,11 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.app.dto.BusinessUnitDetailsResponse;
-import com.app.dto.CreateMembershipPackageDetailsRequest;
+import com.app.dto.CreateBusinessUnitDetailsRequest;
+import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreateMembershipTypeRequest;
 import com.app.dto.CreatePersonalTrainingTypeRequest;
 import com.app.dto.CreateStaffDetailsRequest;
-import com.app.dto.MembershipPackageDetailsResponse;
+import com.app.dto.PackageDetailsResponse;
 import com.app.dto.MembershipTypeResponse;
 import com.app.dto.PersonalTrainingTypeResponse;
 import com.app.dto.StaffDetailsResponse;
@@ -33,6 +34,10 @@ public interface MembershipService {
 	 List<BusinessUnitDetailsResponse> getAllCompanyOrBusinessUnits();
 	 
 	 BusinessUnitDetailsResponse getBusinessUnitDetailsById(Long id);
+	 
+	 Long createCompanyOrBusinessUnit(CreateBusinessUnitDetailsRequest createBusinessUnitDetailsRequest);
+	 
+	 BusinessUnitDetailsResponse updateCompanyOrBusinessUnit(Long id,CreateBusinessUnitDetailsRequest createBusinessUnitDetailsRequest);
 	 
 	 /** ###################### PERSONAL TRAINING TYPE   ################################  */
 	 
@@ -58,9 +63,11 @@ public interface MembershipService {
 	 
 	 /** ###################### MEMBERSHIP PKG DTLS   ######################################  */
 	 
-	 Long createMembershipPackageDetails(CreateMembershipPackageDetailsRequest createMembershipPackageDetailsRequest);
+	 Long createMembershipPackageDetails(CreatePackageDetailsRequest createMembershipPackageDetailsRequest);
 	 
-	 MembershipPackageDetailsResponse getMembershipPackageDetailsById(Long id);
+	 PackageDetailsResponse getMembershipPackageDetailsById(Long id);
+	 
+	 List<PackageDetailsResponse> getAllPackageDetails();
 	
 	 
 

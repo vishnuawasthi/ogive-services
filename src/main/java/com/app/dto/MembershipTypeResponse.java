@@ -11,21 +11,17 @@ public class MembershipTypeResponse {
 	private Long id;
 
 	@ApiModelProperty(required = true)
-	private String membershipTypeCode;
-
-	private String membershipType;
+	private String membershipTypeName;
 
 	@ApiModelProperty(required = true)
 	private String description;
 
-	@ApiModelProperty(required = true)
+	@ApiModelProperty(required = true, example = "Duration in months")
 	private Float duration;
 
 	private Float minimuHours;
 
 	private Float maximumHours;
-
-	private String enableRecurringPayment;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@ApiModelProperty(required = false, allowableValues = "yyyy-MM-dd")
@@ -37,9 +33,13 @@ public class MembershipTypeResponse {
 
 	private Float allowedDiscount;
 
-	private String companyOrBusinessUnitCode;
-
 	private String notes;
+
+	private Long companyOrBusinessUnit;
+
+	// private Long packageNumber;
+
+	private PackageDetailsResponse packageDetails;
 
 	public MembershipTypeResponse() {
 	}
@@ -50,22 +50,6 @@ public class MembershipTypeResponse {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getMembershipTypeCode() {
-		return membershipTypeCode;
-	}
-
-	public void setMembershipTypeCode(String membershipTypeCode) {
-		this.membershipTypeCode = membershipTypeCode;
-	}
-
-	public String getMembershipType() {
-		return membershipType;
-	}
-
-	public void setMembershipType(String membershipType) {
-		this.membershipType = membershipType;
 	}
 
 	public String getDescription() {
@@ -100,12 +84,12 @@ public class MembershipTypeResponse {
 		this.maximumHours = maximumHours;
 	}
 
-	public String getEnableRecurringPayment() {
-		return enableRecurringPayment;
+	public String getMembershipTypeName() {
+		return membershipTypeName;
 	}
 
-	public void setEnableRecurringPayment(String enableRecurringPayment) {
-		this.enableRecurringPayment = enableRecurringPayment;
+	public void setMembershipTypeName(String membershipTypeName) {
+		this.membershipTypeName = membershipTypeName;
 	}
 
 	public Date getEffectiveDate() {
@@ -140,14 +124,6 @@ public class MembershipTypeResponse {
 		this.allowedDiscount = allowedDiscount;
 	}
 
-	public String getCompanyOrBusinessUnitCode() {
-		return companyOrBusinessUnitCode;
-	}
-
-	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
-		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
-	}
-
 	public String getNotes() {
 		return notes;
 	}
@@ -156,14 +132,20 @@ public class MembershipTypeResponse {
 		this.notes = notes;
 	}
 
-	@Override
-	public String toString() {
-		return "MembershipTypeResponse [id=" + id + ", membershipTypeCode=" + membershipTypeCode + ", membershipType="
-				+ membershipType + ", description=" + description + ", duration=" + duration + ", minimuHours="
-				+ minimuHours + ", maximumHours=" + maximumHours + ", enableRecurringPayment=" + enableRecurringPayment
-				+ ", effectiveDate=" + effectiveDate + ", joiningFees=" + joiningFees + ", subscriptionFees="
-				+ subscriptionFees + ", allowedDiscount=" + allowedDiscount + ", companyOrBusinessUnitCode="
-				+ companyOrBusinessUnitCode + ", notes=" + notes + "]";
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
+	}
+
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
+	}
+
+	public PackageDetailsResponse getPackageDetails() {
+		return packageDetails;
+	}
+
+	public void setPackageDetails(PackageDetailsResponse packageDetails) {
+		this.packageDetails = packageDetails;
 	}
 
 }

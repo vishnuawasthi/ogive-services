@@ -33,8 +33,8 @@ public class CountryDetails {
 
 	private String nationality;
 
-	@OneToMany(mappedBy = "countryDetails", fetch = FetchType.EAGER)
-	Set<MemberDetails> memberDetails = new HashSet<MemberDetails>();
+	/*@OneToMany(mappedBy = "countryDetails", fetch = FetchType.LAZY)
+	Set<MemberDetails> memberDetails = new HashSet<MemberDetails>();*/
 
 	public Long getId() {
 		return id;
@@ -68,18 +68,5 @@ public class CountryDetails {
 		this.nationality = nationality;
 	}
 
-	public Set<MemberDetails> getMemberDetails() {
-		return memberDetails;
-	}
-
-	public void setMemberDetails(Set<MemberDetails> memberDetails) {
-		this.memberDetails = memberDetails;
-	}
-
-	@Override
-	public String toString() {
-		return "CountryDetails [id=" + id + ", countryName=" + countryName + ", countryCode=" + countryCode
-				+ ", nationality=" + nationality + ", memberDetails=" + memberDetails + "]";
-	}
-
+	
 }

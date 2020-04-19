@@ -1,6 +1,8 @@
 package com.app.entities;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -21,8 +24,6 @@ public class MemberDetails {
 	@Id
 	@GeneratedValue(generator = "SEQ_MEMBER_DETAILS", strategy = GenerationType.SEQUENCE)
 	private Long id;
-
-	private String initial;
 
 	private String firstName;
 
@@ -48,31 +49,16 @@ public class MemberDetails {
 
 	private Float weight;
 
-	private String referenceNumber;
-
-	private String membershipNumber;
-
 	private String idNumber;
 
 	private String passportNumber;
-
-	private String poBoxNumber;
-
-	private String apartmentNumber;
-
-	private String street;
-
-	private String building;
-
-	private String location;
 
 	private String companyName;
 
 	private String designation;
 
-	@OneToOne
-	@JoinColumn(name = "MEMBERSHIP_DTLS_ID", referencedColumnName = "ID")
-	private MembershipDetails membershipDetails;
+	@OneToMany(mappedBy = "memberDetails", fetch = FetchType.EAGER)
+	private Set<MembershipDetails> membershipDetails = new HashSet<MembershipDetails>();
 
 	@OneToOne
 	@JoinColumn(name = "COUNTRY_DETAILS_ID", referencedColumnName = "ID")
@@ -86,20 +72,16 @@ public class MemberDetails {
 	@JoinColumn(name = "EMERG_CTC_DTLS_ID", referencedColumnName = "ID")
 	private EmergencyContactDetails emergencyContactDetails;
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ADDRESS_DTL_ID", referencedColumnName = "ID")
+	private AddressDetails addressDetails;
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getInitial() {
-		return initial;
-	}
-
-	public void setInitial(String initial) {
-		this.initial = initial;
 	}
 
 	public String getFirstName() {
@@ -120,6 +102,10 @@ public class MemberDetails {
 
 	public String getLastName() {
 		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getDisplayName() {
@@ -194,22 +180,6 @@ public class MemberDetails {
 		this.weight = weight;
 	}
 
-	public String getReferenceNumber() {
-		return referenceNumber;
-	}
-
-	public void setReferenceNumber(String referenceNumber) {
-		this.referenceNumber = referenceNumber;
-	}
-
-	public String getMembershipNumber() {
-		return membershipNumber;
-	}
-
-	public void setMembershipNumber(String membershipNumber) {
-		this.membershipNumber = membershipNumber;
-	}
-
 	public String getIdNumber() {
 		return idNumber;
 	}
@@ -224,46 +194,6 @@ public class MemberDetails {
 
 	public void setPassportNumber(String passportNumber) {
 		this.passportNumber = passportNumber;
-	}
-
-	public String getPoBoxNumber() {
-		return poBoxNumber;
-	}
-
-	public void setPoBoxNumber(String poBoxNumber) {
-		this.poBoxNumber = poBoxNumber;
-	}
-
-	public String getApartmentNumber() {
-		return apartmentNumber;
-	}
-
-	public void setApartmentNumber(String apartmentNumber) {
-		this.apartmentNumber = apartmentNumber;
-	}
-
-	public String getStreet() {
-		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public String getBuilding() {
-		return building;
-	}
-
-	public void setBuilding(String building) {
-		this.building = building;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public String getCompanyName() {
@@ -282,12 +212,12 @@ public class MemberDetails {
 		this.designation = designation;
 	}
 
-	public MembershipDetails getMembershipDetails() {
-		return membershipDetails;
+	public CountryDetails getCountryDetails() {
+		return countryDetails;
 	}
 
-	public void setMembershipDetails(MembershipDetails membershipDetails) {
-		this.membershipDetails = membershipDetails;
+	public void setCountryDetails(CountryDetails countryDetails) {
+		this.countryDetails = countryDetails;
 	}
 
 	public BusinessUnitDetails getBusinessUnitDetails() {
@@ -298,14 +228,6 @@ public class MemberDetails {
 		this.businessUnitDetails = businessUnitDetails;
 	}
 
-	public CountryDetails getCountryDetails() {
-		return countryDetails;
-	}
-
-	public void setCountryDetails(CountryDetails countryDetails) {
-		this.countryDetails = countryDetails;
-	}
-
 	public EmergencyContactDetails getEmergencyContactDetails() {
 		return emergencyContactDetails;
 	}
@@ -314,19 +236,20 @@ public class MemberDetails {
 		this.emergencyContactDetails = emergencyContactDetails;
 	}
 
-	@Override
-	public String toString() {
-		return "MemberDetails [id=" + id + ", initial=" + initial + ", firstName=" + firstName + ", middleName="
-				+ middleName + ", lastName=" + lastName + ", displayName=" + displayName + ", dateOfBirth="
-				+ dateOfBirth + ", gender=" + gender + ", maritalStatus=" + maritalStatus + ", bloodGroup=" + bloodGroup
-				+ ", email=" + email + ", mobileNumber=" + mobileNumber + ", height=" + height + ", weight=" + weight
-				+ ", referenceNumber=" + referenceNumber + ", membershipNumber=" + membershipNumber + ", idNumber="
-				+ idNumber + ", passportNumber=" + passportNumber + ", poBoxNumber=" + poBoxNumber
-				+ ", apartmentNumber=" + apartmentNumber + ", street=" + street + ", building=" + building
-				+ ", location=" + location + ", companyName=" + companyName + ", designation=" + designation
-				+ ", membershipDetails=" + membershipDetails + ", countryDetails=" + countryDetails
-				+ ", businessUnitDetails=" + businessUnitDetails + ", emergencyContactDetails="
-				+ emergencyContactDetails + "]";
+	public AddressDetails getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(AddressDetails addressDetails) {
+		this.addressDetails = addressDetails;
+	}
+
+	public Set<MembershipDetails> getMembershipDetails() {
+		return membershipDetails;
+	}
+
+	public void setMembershipDetails(Set<MembershipDetails> membershipDetails) {
+		this.membershipDetails = membershipDetails;
 	}
 
 }

@@ -25,16 +25,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.constants.Authorities;
 import com.app.dto.BusinessUnitDetailsResponse;
 import com.app.dto.CountryDetailsResponse;
+import com.app.dto.CreateBusinessUnitDetailsRequest;
 import com.app.dto.CreateCountryDetailsRequest;
-import com.app.dto.CreateMembershipPackageDetailsRequest;
+import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreateMembershipTypeRequest;
 import com.app.dto.CreatePersonalTrainingTypeRequest;
 import com.app.dto.CreatePortalUserDetailsRequest;
+import com.app.dto.CreateSourceDetailsRequest;
 import com.app.dto.CreateStaffDetailsRequest;
-import com.app.dto.MembershipPackageDetailsResponse;
+import com.app.dto.PackageDetailsResponse;
 import com.app.dto.MembershipTypeResponse;
 import com.app.dto.PersonalTrainingTypeResponse;
 import com.app.dto.PortalUserDetailsResponse;
+import com.app.dto.SourceDetailsResponse;
 import com.app.dto.StaffDetailsResponse;
 import com.app.exception.RecordNotFoundException;
 import com.app.services.MembershipService;
@@ -100,8 +103,6 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	
-	
 	@ApiOperation(value = "Create a user in the system", tags = "Admin operations - Users")
 	@PostMapping(value = "/v1/portal-users", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object regiserPortalUSer(@RequestBody @Valid CreatePortalUserDetailsRequest portalUserDetailsRequest) {
@@ -157,7 +158,7 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "This api allow to create membership type", tags = "Admin operations - Membership Type")
+/*	@ApiOperation(value = "This api allow to create membership type", tags = "Admin operations - Membership Type")
 	@PutMapping(value = "/v1/membership-type/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object updateMembershipType(@PathVariable("id") Long id,
 			@RequestBody @Valid CreateMembershipTypeRequest createMembershipTypeRequest) {
@@ -166,7 +167,7 @@ public class WellnessManagementAdminController {
 		MembershipTypeResponse responseObject = null;
 		log.info("createMembershipType ()- end");
 		return new ResponseEntity<MembershipTypeResponse>(responseObject, HttpStatus.OK);
-	}
+	}*/
 
 	@ApiOperation(value = "This api gives membership type queried against the id", response = MembershipTypeResponse.class, tags = "Admin operations - Membership Type")
 	@GetMapping(value = "/v1/membership-type/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -194,6 +195,26 @@ public class WellnessManagementAdminController {
 	}
 
 	/** #################### BUSINESS UNIT ########################### */
+	
+	@ApiOperation(value = "Give api allow to create Business Unit details", tags = "Admin operations - Comapny Or Business Unit", response = Long.class)
+	@PostMapping(value = "/v1/business-units", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object createCompanyOrBusinessUnit(@RequestBody @Valid CreateBusinessUnitDetailsRequest createBusinessUnitDetailsRequest) {
+		log.info("companyOrBusinessUnit ()- start");
+		Long id = membershipService.createCompanyOrBusinessUnit(createBusinessUnitDetailsRequest);
+		log.info("companyOrBusinessUnit ()- end");
+		return new ResponseEntity<Long>(id, HttpStatus.OK);
+	}
+	
+	
+	@ApiOperation(value = "Give api allow to update Business Unit details", tags = "Admin operations - Comapny Or Business Unit", response = Long.class)
+	@PutMapping(value = "/v1/business-units/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object updateCompanyOrBusinessUnit(@PathVariable("id") Long id,@RequestBody @Valid CreateBusinessUnitDetailsRequest createBusinessUnitDetailsRequest) {
+		log.info("updateCompanyOrBusinessUnit ()- start");
+		BusinessUnitDetailsResponse responseObject = membershipService.updateCompanyOrBusinessUnit(id,createBusinessUnitDetailsRequest);
+		log.info("updateCompanyOrBusinessUnit ()- end");
+		return new ResponseEntity<BusinessUnitDetailsResponse>(responseObject, HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "Give all the Business Unit details", tags = "Admin operations - Comapny Or Business Unit", response = List.class)
 	@GetMapping(value = "/v1/business-units", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getAllCompanyOrBusinessUnits() {
@@ -224,6 +245,17 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 
+	
+	@ApiOperation(value = "This api allow to update Personal Training Type.These fields are duration,extraSessions,allowedSessions,validityInDays,effectiveDate,joiningFees,subscriptionFees,subscriptionFees,allowableDiscount", response = Long.class, tags = "Admin operations - Personal Training Type")
+	@PutMapping(value = "/v1/personal-training-types/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object updatePersonalTrainingType(@PathVariable("id") Long id,@RequestBody @Valid CreatePersonalTrainingTypeRequest createPersonalTrainingTypeRequest) {
+		log.info("createPersonalTrainingType ()- start");
+		log.info("Request Body :  {} " + createPersonalTrainingTypeRequest);
+		PersonalTrainingTypeResponse responseObject = membershipService.updatePersonalTrainingType(id,createPersonalTrainingTypeRequest);
+		log.info("createPersonalTrainingType ()- end");
+		return new ResponseEntity<PersonalTrainingTypeResponse>(responseObject, HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "Thi api gives the Personal Training Type details by id",tags = "Admin operations - Personal Training Type", response = PersonalTrainingTypeResponse.class)
 	@GetMapping(value = "/v1/personal-training-types/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getPersonalTrainingTypeById(@PathVariable("id") Long id) {
@@ -254,6 +286,16 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "This api allow to create Staff Details", response = Long.class, tags = "Admin operations - Staff Details")
+	@PutMapping(value = "/v1/staff-details/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object createStaffDetails(@PathVariable("id") Long id, @RequestBody @Valid CreateStaffDetailsRequest createStaffDetailsRequest) {
+		log.info("createStaffDetails ()- start");
+		log.info("Request Body :  {} " + createStaffDetailsRequest);
+		StaffDetailsResponse responseObject = membershipService.updateStaffDetails(id, createStaffDetailsRequest);
+		log.info("createStaffDetails ()- end");
+		return new ResponseEntity<StaffDetailsResponse>(responseObject, HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "This api give list of all the staff details available in the system", response = List.class, tags = "Admin operations - Staff Details")
 	@GetMapping(value = "/v1/staff-details", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getAllStaffDetails() {
@@ -274,10 +316,10 @@ public class WellnessManagementAdminController {
 	
 	/*######################## MEMBERSHIP PACKAGE DETAILS #########################*/
 	
-	@ApiResponse(response=Long.class, code=200,message ="Return ID of the created membership package.")
+	@ApiResponse(response=Long.class, code=200,message ="Return ID of the created package.")
 	@ApiOperation(value = "This api allow to create membership package details", response = Long.class, tags = "Admin operations - Membership Package Details")
 	@PostMapping(value = "/v1/membership-pkg-details", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createMembershipPkgDtls(@RequestBody @Valid CreateMembershipPackageDetailsRequest createMembershipPackageDetailsRequest) {
+	public Object createMembershipPkgDtls(@RequestBody @Valid CreatePackageDetailsRequest createMembershipPackageDetailsRequest) {
 		log.info("createMembershipPkgDtls ()- start");
 		log.info("Request Body :  {} " + createMembershipPackageDetailsRequest);
 		Long id = membershipService.createMembershipPackageDetails(createMembershipPackageDetailsRequest);
@@ -285,14 +327,23 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "This api allow to create membership package details", response = Long.class, tags = "Admin operations - Membership Package Details")
+	@ApiOperation(value = "This api give package details against supplied id", response = Long.class, tags = "Admin operations - Membership Package Details")
 	@GetMapping(value = "/v1/membership-pkg-details/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getMembershipPkgDtlsById(@PathVariable("id") Long id) {
 		log.info("getMembershipPkgDtlsById ()- start");
 		log.info("Request Param :  {} " + id);
-		MembershipPackageDetailsResponse responseObject = membershipService.getMembershipPackageDetailsById(id);
+		PackageDetailsResponse responseObject = membershipService.getMembershipPackageDetailsById(id);
 		log.info("getMembershipPkgDtlsById ()- end");
-		return new ResponseEntity<MembershipPackageDetailsResponse>(responseObject, HttpStatus.OK);
+		return new ResponseEntity<PackageDetailsResponse>(responseObject, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "This api allow to create membership package details", response = List.class, tags = "Admin operations - Membership Package Details")
+	@GetMapping(value = "/v1/membership-pkg-details", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getAllMembershipPkgDtls() {
+		log.info("getAllMembershipPkgDtls ()- start");
+		List<PackageDetailsResponse> responseObject = membershipService.getAllPackageDetails();
+		log.info("getAllMembershipPkgDtls ()- end");
+		return new ResponseEntity<List<PackageDetailsResponse>>(responseObject, HttpStatus.OK);
 	}
 	
 	/*######################## COUNTRY DETAILS #########################*/
@@ -334,6 +385,34 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<List<CountryDetailsResponse>>(objectList, HttpStatus.OK);
 	}
 	
+	/**############################# SOURCE DETAILS ######################################## */
 	
-	
+	@ApiOperation(value = "This api allow to create source details", response = String.class, tags = "Admin operations - Source Details")
+	@PostMapping(value = "/v1/source-details", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object createSourceDetails(@RequestBody @Valid CreateSourceDetailsRequest createSourceDetailsRequest) {
+		log.info("createSourceDetails ()- start");
+		log.info("Request Body :  {} " + createSourceDetailsRequest);
+		String id = portalOperationService.createSourceDetails(createSourceDetailsRequest);
+		log.info("createSourceDetails ()- end");
+		return new ResponseEntity<String>(id, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "This api gives all the sources available in database", response = List.class, tags = "Admin operations - Source Details")
+	@GetMapping(value = "/v1/source-details", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getAllSourcesDetails() {
+		log.info("getAllSourcesDetails ()- start");
+		List<SourceDetailsResponse> objectList = portalOperationService.getAllSourcesDetails();
+		log.info("getAllSourcesDetails ()- end");
+		return new ResponseEntity<List<SourceDetailsResponse>>(objectList, HttpStatus.OK);
+	}
+
+	@ApiOperation(value = "This api delete source by id", response = List.class, tags = "Admin operations - Source Details")
+	@DeleteMapping(value = "/v1/source-details/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object deleteSourceDetails(@PathVariable("id") String id) {
+		log.info("deleteSourceDetails ()- start");
+		portalOperationService.deleteSource(id);
+		log.info("deleteSourceDetails ()- end");
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 }

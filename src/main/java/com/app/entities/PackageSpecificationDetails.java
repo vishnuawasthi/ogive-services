@@ -26,7 +26,7 @@ public class PackageSpecificationDetails {
 
 	@ManyToOne()
 	@JoinColumn(name = "MBR_PKG_DTLS_ID")
-	private MembershipPackageDetails membershipPackageDetails;
+	private PackageDetails membershipPackageDetails;
 
 	public Long getId() {
 		return id;
@@ -60,11 +60,11 @@ public class PackageSpecificationDetails {
 		this.unit = unit;
 	}
 
-	public MembershipPackageDetails getMembershipPackageDetails() {
+	public PackageDetails getMembershipPackageDetails() {
 		return membershipPackageDetails;
 	}
 
-	public void setMembershipPackageDetails(MembershipPackageDetails membershipPackageDetails) {
+	public void setMembershipPackageDetails(PackageDetails membershipPackageDetails) {
 		this.membershipPackageDetails = membershipPackageDetails;
 	}
 

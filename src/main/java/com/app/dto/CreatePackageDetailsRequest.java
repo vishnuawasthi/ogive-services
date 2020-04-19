@@ -5,31 +5,33 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
+import com.sun.istack.NotNull;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "MembershipPackageDetails")
-public class CreateMembershipPackageDetailsRequest {
+public class CreatePackageDetailsRequest {
 
 	@NotEmpty
 	@ApiModelProperty(required = true)
-	private String packageCode;
+	private String packageName;
 
 	private String description;
 
-	@NotEmpty
+	@NotNull
 	@ApiModelProperty(required = true)
-	private String companyOrBusinessUnitCode;
+	private Long companyOrBusinessUnit;
 
 	@Valid
 	private List<PackageSpecificationDetailsRequest> packageSpecificationDetails;
 
-	public String getPackageCode() {
-		return packageCode;
+	public String getPackageName() {
+		return packageName;
 	}
 
-	public void setPackageCode(String packageCode) {
-		this.packageCode = packageCode;
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 
 	public String getDescription() {
@@ -40,12 +42,12 @@ public class CreateMembershipPackageDetailsRequest {
 		this.description = description;
 	}
 
-	public String getCompanyOrBusinessUnitCode() {
-		return companyOrBusinessUnitCode;
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
 	}
 
-	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
-		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
 	}
 
 	public List<PackageSpecificationDetailsRequest> getPackageSpecificationDetails() {
@@ -54,13 +56,6 @@ public class CreateMembershipPackageDetailsRequest {
 
 	public void setPackageSpecificationDetails(List<PackageSpecificationDetailsRequest> packageSpecificationDetails) {
 		this.packageSpecificationDetails = packageSpecificationDetails;
-	}
-
-	@Override
-	public String toString() {
-		return "CreateMembershipPackageDetailsRequest [packageCode=" + packageCode + ", description=" + description
-				+ ", companyOrBusinessUnitCode=" + companyOrBusinessUnitCode + ", packageSpecificationDetails="
-				+ packageSpecificationDetails + "]";
 	}
 
 }

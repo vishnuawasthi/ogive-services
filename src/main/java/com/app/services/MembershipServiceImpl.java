@@ -1,8 +1,12 @@
 package com.app.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -13,26 +17,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import com.app.dto.BusinessUnitDetailsResponse;
-import com.app.dto.CreateMembershipPackageDetailsRequest;
+import com.app.dto.CreateBusinessUnitDetailsRequest;
+import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreateMembershipTypeRequest;
 import com.app.dto.CreatePersonalTrainingTypeRequest;
 import com.app.dto.CreateStaffDetailsRequest;
-import com.app.dto.MembershipPackageDetailsResponse;
+import com.app.dto.PackageDetailsResponse;
 import com.app.dto.MembershipTypeResponse;
 import com.app.dto.PackageSpecificationDetailsRequest;
 import com.app.dto.PackageSpecificationDetailsResponse;
 import com.app.dto.PersonalTrainingTypeResponse;
 import com.app.dto.StaffDetailsResponse;
 import com.app.entities.BusinessUnitDetails;
-import com.app.entities.MembershipPackageDetails;
+import com.app.entities.CountryDetails;
+import com.app.entities.PackageDetails;
 import com.app.entities.MembershipTypes;
 import com.app.entities.PackageSpecificationDetails;
 import com.app.entities.PersonalTrainingType;
 import com.app.entities.StaffDetails;
 import com.app.exception.RecordNotFoundException;
 import com.app.repositories.BusinessUnitDetailsRepository;
+import com.app.repositories.CountryDetailsRepository;
 import com.app.repositories.MembershipPackageDetailsRepository;
 import com.app.repositories.MembershipTypeRepository;
 import com.app.repositories.PackageSpecificationDetailsRepository;
@@ -58,18 +66,37 @@ public class MembershipServiceImpl implements MembershipService {
 
 	@Autowired
 	private MembershipPackageDetailsRepository membershipPackageDetailsRepository;
-	
+
 	@Autowired
 	private PackageSpecificationDetailsRepository packageSpecificationDetailsRepository;
+
+	@Autowired
+	private CountryDetailsRepository countryDetailsRepository;
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public Long createMembershipType(CreateMembershipTypeRequest createMembershipTypeRequest) {
 		log.info("createMembershipType() - start");
 		MembershipTypes entity = new MembershipTypes();
+
+		BusinessUnitDetails businessUnitDetails = businessUnitDetailsRepository.findById(createMembershipTypeRequest.getCompanyOrBusinessUnit()).orElse(null);
+
+		if (Objects.isNull(businessUnitDetails)) {
+			throw new RecordNotFoundException("No BusinessUnitDetails record exist with given companyOrBusinessUnit "+ createMembershipTypeRequest.getCompanyOrBusinessUnit());
+		}
+
+		Long pkgNumber = createMembershipTypeRequest.getPackageNumber();
+		
+		PackageDetails membershipPackageDetails = membershipPackageDetailsRepository.findById(pkgNumber).orElse(null);
+
+		if (Objects.isNull(membershipPackageDetails)) {
+			throw new RecordNotFoundException("No MembershipPackageDetails record exist with given packageNumber " + pkgNumber);
+		}
+
 		BeanUtils.copyProperties(createMembershipTypeRequest, entity);
 		log.info("entity -> " + entity);
-		System.out.println("entity ->" + entity);
+		entity.setBusinessUnitDetails(businessUnitDetails);
+		entity.setMembershipPackageDetails(membershipPackageDetails);
 		membershipTypeRepository.save(entity);
 		log.info("createMembershipType() - end");
 		return entity.getId();
@@ -97,7 +124,32 @@ public class MembershipServiceImpl implements MembershipService {
 		if (Objects.nonNull(entity)) {
 			responseObject = new MembershipTypeResponse();
 			BeanUtils.copyProperties(entity, responseObject);
+
+			Long companyOrBusinessUnit = Objects.nonNull(entity.getBusinessUnitDetails())
+					? entity.getBusinessUnitDetails().getId()
+					: null;
+			responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
+
+			PackageDetails packageDetails = Objects.nonNull(entity.getMembershipPackageDetails())
+					? entity.getMembershipPackageDetails()
+					: null;
+
+			PackageDetailsResponse packageDetailsResponse = new PackageDetailsResponse();
+			BeanUtils.copyProperties(packageDetails, packageDetailsResponse);
+
+			Set<PackageSpecificationDetails> packageSpecificationDetails = packageDetails.getPackageSpecificationDetails();
+			List<PackageSpecificationDetailsResponse> packageSpecificationResList = new ArrayList<PackageSpecificationDetailsResponse>();
+
+			packageSpecificationDetails.forEach(specificationEntity -> {
+				PackageSpecificationDetailsResponse specificationResObject = new PackageSpecificationDetailsResponse();
+				BeanUtils.copyProperties(specificationEntity, specificationResObject);
+				packageSpecificationResList.add(specificationResObject);
+			});
+			
+			packageDetailsResponse.setPackageSpecificationDetails(packageSpecificationResList);
+			responseObject.setPackageDetails(packageDetailsResponse);
 		}
+
 		log.info("getMembershipTypeById() - start");
 		return responseObject;
 	}
@@ -106,11 +158,40 @@ public class MembershipServiceImpl implements MembershipService {
 	public Page<MembershipTypeResponse> getAllMembershipTypes(String membershipTypeCode, Pageable pageRequest) {
 		log.info("getMembershipTypeById() - start");
 
-		Page<MembershipTypes> pagedMembershipData = membershipTypeRepository.findByMembershipTypeCodeAllIgnoreCase(membershipTypeCode, pageRequest);
+		// Page<MembershipTypes> pagedMembershipData =
+		// membershipTypeRepository.findByMembershipTypeCodeAllIgnoreCase(membershipTypeCode,
+		// pageRequest);
+
+		Page<MembershipTypes> pagedMembershipData = membershipTypeRepository.findAll(pageRequest);
 
 		Page<MembershipTypeResponse> dtoPage = pagedMembershipData.map(entity -> {
 			MembershipTypeResponse responseObject = new MembershipTypeResponse();
 			BeanUtils.copyProperties(entity, responseObject);
+
+			Long companyOrBusinessUnit = Objects.nonNull(entity.getBusinessUnitDetails())
+					? entity.getBusinessUnitDetails().getId()
+					: null;
+			responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
+
+			PackageDetails packageDetails = Objects.nonNull(entity.getMembershipPackageDetails())
+					? entity.getMembershipPackageDetails()
+					: null;
+
+			PackageDetailsResponse packageDetailsResponse = new PackageDetailsResponse();
+			BeanUtils.copyProperties(packageDetails, packageDetailsResponse);
+
+			Set<PackageSpecificationDetails> packageSpecificationDetails = packageDetails.getPackageSpecificationDetails();
+			List<PackageSpecificationDetailsResponse> packageSpecificationResList = new ArrayList<PackageSpecificationDetailsResponse>();
+
+			packageSpecificationDetails.forEach(specificationEntity -> {
+				PackageSpecificationDetailsResponse specificationResObject = new PackageSpecificationDetailsResponse();
+				BeanUtils.copyProperties(specificationEntity, specificationResObject);
+				packageSpecificationResList.add(specificationResObject);
+			});
+			
+			packageDetailsResponse.setPackageSpecificationDetails(packageSpecificationResList);
+			responseObject.setPackageDetails(packageDetailsResponse);
+			//responseObject.setPackageNumber(packageNumber);
 			return responseObject;
 		});
 
@@ -126,6 +207,33 @@ public class MembershipServiceImpl implements MembershipService {
 		Page<MembershipTypeResponse> pageableMembershipResponses = pageableMembershipDetails.map(entity -> {
 			MembershipTypeResponse responseObject = new MembershipTypeResponse();
 			BeanUtils.copyProperties(entity, responseObject);
+
+			Long companyOrBusinessUnit = Objects.nonNull(entity.getBusinessUnitDetails())
+					? entity.getBusinessUnitDetails().getId()
+					: null;
+			responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
+
+			PackageDetails packageDetails = Objects.nonNull(entity.getMembershipPackageDetails())
+					? entity.getMembershipPackageDetails()
+					: null;
+
+			if (Objects.nonNull(packageDetails)) {
+				PackageDetailsResponse packageDetailsResponse = new PackageDetailsResponse();
+				BeanUtils.copyProperties(packageDetails, packageDetailsResponse);
+
+				Set<PackageSpecificationDetails> packageSpecificationDetails = packageDetails
+						.getPackageSpecificationDetails();
+				List<PackageSpecificationDetailsResponse> packageSpecificationResList = new ArrayList<PackageSpecificationDetailsResponse>();
+
+				packageSpecificationDetails.forEach(specificationEntity -> {
+					PackageSpecificationDetailsResponse specificationResObject = new PackageSpecificationDetailsResponse();
+					BeanUtils.copyProperties(specificationEntity, specificationResObject);
+					packageSpecificationResList.add(specificationResObject);
+				});
+
+				packageDetailsResponse.setPackageSpecificationDetails(packageSpecificationResList);
+				responseObject.setPackageDetails(packageDetailsResponse);
+			}
 			return responseObject;
 		});
 
@@ -137,10 +245,16 @@ public class MembershipServiceImpl implements MembershipService {
 	public List<BusinessUnitDetailsResponse> getAllCompanyOrBusinessUnits() {
 		log.info("getAllCompanyOrBusinessUnits() - start");
 		Iterable<BusinessUnitDetails> businessUnitDetails = businessUnitDetailsRepository.findAll();
+
 		List<BusinessUnitDetailsResponse> responseList = new ArrayList<BusinessUnitDetailsResponse>();
 		businessUnitDetails.forEach(entity -> {
 			BusinessUnitDetailsResponse responseObject = new BusinessUnitDetailsResponse();
 			BeanUtils.copyProperties(entity, responseObject);
+
+			String countryName = Objects.nonNull(entity.getCountryDetails())
+					? entity.getCountryDetails().getCountryName()
+					: null;
+			responseObject.setCountryName(countryName);
 			responseList.add(responseObject);
 
 		});
@@ -152,15 +266,61 @@ public class MembershipServiceImpl implements MembershipService {
 	public BusinessUnitDetailsResponse getBusinessUnitDetailsById(Long id) {
 		log.info("getAllCompanyOrBusinessUnits() - start");
 		BusinessUnitDetails entity = businessUnitDetailsRepository.findById(id).orElse(null);
-
 		BusinessUnitDetailsResponse responseObject = null;
 
 		if (Objects.nonNull(entity)) {
 			responseObject = new BusinessUnitDetailsResponse();
 			BeanUtils.copyProperties(entity, responseObject);
+			String countryName = Objects.nonNull(entity.getCountryDetails())
+					? entity.getCountryDetails().getCountryName()
+					: null;
+			responseObject.setCountryName(countryName);
 		}
-
 		log.info("getAllCompanyOrBusinessUnits() - start");
+		return responseObject;
+	}
+
+	@Override
+	public Long createCompanyOrBusinessUnit(CreateBusinessUnitDetailsRequest createBusinessUnitDetailsRequest) {
+		log.info("createCompanyOrBusinessUnit() - start");
+		BusinessUnitDetails entity = new BusinessUnitDetails();
+
+		BeanUtils.copyProperties(createBusinessUnitDetailsRequest, entity);
+		CountryDetails countryDetails = countryDetailsRepository
+				.findCountryDetailsByCountryCodeIgnoreCase(createBusinessUnitDetailsRequest.getCountryCode());
+
+		if (Objects.isNull(countryDetails)) {
+			throw new RecordNotFoundException("No CountryDetails record exist with given countryCode "
+					+ createBusinessUnitDetailsRequest.getCountryCode());
+		}
+		entity.setCountryDetails(countryDetails);
+		businessUnitDetailsRepository.save(entity);
+		log.info("createCompanyOrBusinessUnit() - end");
+		return entity.getId();
+	}
+	
+	
+	@Override
+	public BusinessUnitDetailsResponse updateCompanyOrBusinessUnit(Long id,CreateBusinessUnitDetailsRequest request) {
+		log.info("updateCompanyOrBusinessUnit() - start");
+		BusinessUnitDetails entity = businessUnitDetailsRepository.findById(id).orElse(null);
+
+		if (Objects.isNull(entity)) {
+			throw new RecordNotFoundException("No BusinessUnitDetails record exist with given id " + id);
+		}
+		
+		BeanUtils.copyProperties(request, entity);
+		log.info("updateCompanyOrBusinessUnit() - start");
+		
+		
+		CountryDetails countryDetails = countryDetailsRepository.findCountryDetailsByCountryCodeIgnoreCase(request.getCountryCode());
+		if (Objects.isNull(countryDetails)) {
+			throw new RecordNotFoundException("No CountryDetails record exist with given countryCode " + request.getCountryCode());
+		}
+		entity.setCountryDetails(countryDetails);
+		businessUnitDetailsRepository.save(entity);
+		BusinessUnitDetailsResponse responseObject = new BusinessUnitDetailsResponse();
+		BeanUtils.copyProperties(entity, responseObject);
 		return responseObject;
 	}
 
@@ -168,10 +328,20 @@ public class MembershipServiceImpl implements MembershipService {
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public Long createPersonalTrainingType(CreatePersonalTrainingTypeRequest createPersonalTrainingTypeRequest) {
+	public Long createPersonalTrainingType(CreatePersonalTrainingTypeRequest request) {
 		log.info("createPersonalTrainingType() - start");
 		PersonalTrainingType entity = new PersonalTrainingType();
-		BeanUtils.copyProperties(createPersonalTrainingTypeRequest, entity);
+		
+		BusinessUnitDetails businessUnitDetails = businessUnitDetailsRepository.findById(request.getCompanyOrBusinessUnit()).orElse(null);
+		
+		if (Objects.isNull(businessUnitDetails)) {
+			throw new RecordNotFoundException("No BusinessUnitDetails record exist with given id " + request.getCompanyOrBusinessUnit());
+		}
+		
+		BeanUtils.copyProperties(request, entity);
+		
+		entity.setBusinessUnitDetails(businessUnitDetails);
+		
 		personalTrainingTypeRepository.save(entity);
 		log.info("createPersonalTrainingType() - start");
 		return entity.getId();
@@ -180,18 +350,52 @@ public class MembershipServiceImpl implements MembershipService {
 	// TODO - Update logic implementation pending.
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public PersonalTrainingTypeResponse updatePersonalTrainingType(Long id,
-			CreatePersonalTrainingTypeRequest createPersonalTrainingTypeRequest) {
+	public PersonalTrainingTypeResponse updatePersonalTrainingType(Long id, CreatePersonalTrainingTypeRequest request) {
 		log.info("updatePersonalTrainingType() - start");
 		PersonalTrainingType entity = personalTrainingTypeRepository.findById(id).orElse(null);
 
 		if (Objects.isNull(entity)) {
-			throw new RecordNotFoundException("No such record exist with given id " + id);
+			throw new RecordNotFoundException("No such PersonalTrainingType exist with given id " + id);
 		}
-		// personalTrainingTypeRepository.save(entity);
 
+		if (Objects.nonNull(request.getDuration())) {
+			entity.setDuration(request.getDuration());
+		}
+
+		if (Objects.nonNull(request.getExtraSessions())) {
+			entity.setExtraSessions(request.getExtraSessions());
+		}
+
+		if (Objects.nonNull(request.getAllowableDiscount())) {
+			entity.setAllowableDiscount(request.getAllowableDiscount());
+		}
+		
+		if (Objects.nonNull(request.getAllowedSessions())) {
+			entity.setAllowedSessions(request.getAllowedSessions());
+		}
+
+		if (Objects.nonNull(request.getValidityInDays())) {
+			entity.setValidityInDays(request.getValidityInDays());
+		}
+
+		if (Objects.nonNull(request.getEffectiveDate())) {
+			entity.setEffectiveDate(request.getEffectiveDate());
+		}
+
+		if (Objects.nonNull(request.getJoiningFees())) {
+			entity.setJoiningFees(request.getJoiningFees());
+		}
+
+		if (Objects.nonNull(request.getSubscriptionFees())) {
+			request.setSubscriptionFees(request.getSubscriptionFees());
+		}
+		
+		personalTrainingTypeRepository.save(entity);
 		PersonalTrainingTypeResponse responseObject = new PersonalTrainingTypeResponse();
 		BeanUtils.copyProperties(entity, responseObject);
+		
+		Long companyOrBusinessUnit =Objects.nonNull(entity.getBusinessUnitDetails())? entity.getBusinessUnitDetails().getId():null;
+		responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
 		log.info("updatePersonalTrainingType() - start");
 		return responseObject;
 	}
@@ -205,6 +409,8 @@ public class MembershipServiceImpl implements MembershipService {
 			responseObject = new PersonalTrainingTypeResponse();
 			BeanUtils.copyProperties(entity, responseObject);
 		}
+		Long companyOrBusinessUnit =Objects.nonNull(entity.getBusinessUnitDetails())? entity.getBusinessUnitDetails().getId():null;
+		responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
 		log.info("getPersonalTrainingTypeById() - start");
 		return responseObject;
 	}
@@ -217,6 +423,8 @@ public class MembershipServiceImpl implements MembershipService {
 		personalTrainingTypeList.forEach(entity -> {
 			PersonalTrainingTypeResponse responseObject = new PersonalTrainingTypeResponse();
 			BeanUtils.copyProperties(entity, responseObject);
+			Long companyOrBusinessUnit =Objects.nonNull(entity.getBusinessUnitDetails())? entity.getBusinessUnitDetails().getId():null;
+			responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
 			responseList.add(responseObject);
 		});
 		log.info("getAllPersonalTrainingType() - end");
@@ -227,10 +435,19 @@ public class MembershipServiceImpl implements MembershipService {
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public Long createStaffDetails(CreateStaffDetailsRequest createStaffDetailsRequest) {
+	public Long createStaffDetails(CreateStaffDetailsRequest request) {
 		log.info("createStaffDetails() - start");
+
+		BusinessUnitDetails businessUnitDetails = businessUnitDetailsRepository.findById(request.getCompanyOrBusinessUnit()).orElse(null);
+
+		if (Objects.isNull(businessUnitDetails)) {
+			throw new RecordNotFoundException("No BusinessUnitDetails record exist with given id " + request.getCompanyOrBusinessUnit());
+		}
+
 		StaffDetails entity = new StaffDetails();
-		BeanUtils.copyProperties(createStaffDetailsRequest, entity);
+		BeanUtils.copyProperties(request, entity);
+		entity.setBusinessUnitDetails(businessUnitDetails);
+		
 		staffDetailsRepository.save(entity);
 		log.info("createStaffDetails() - end");
 		return entity.getId();
@@ -238,11 +455,35 @@ public class MembershipServiceImpl implements MembershipService {
 
 	// TODO- Update logic implementation pending.
 	@Override
-	public StaffDetailsResponse updateStaffDetails(Long id, CreateStaffDetailsRequest createStaffDetailsRequest) {
+	public StaffDetailsResponse updateStaffDetails(Long id, CreateStaffDetailsRequest request) {
 		log.info("updateStaffDetails() - start");
 
+		StaffDetails entity = staffDetailsRepository.findById(id).orElse(null);
+
+		if (Objects.isNull(entity)) {
+			throw new RecordNotFoundException("No such StaffDetails exist with given id " + id);
+		}
+		BeanUtils.copyProperties(request, entity);
+		
+		if (Objects.nonNull(request.getCompanyOrBusinessUnit())) {
+			BusinessUnitDetails businessUnitDetails = businessUnitDetailsRepository.findById(request.getCompanyOrBusinessUnit()).orElse(null);
+
+			if (Objects.isNull(businessUnitDetails)) {
+				throw new RecordNotFoundException(
+						"No BusinessUnitDetails record exist with given id " + request.getCompanyOrBusinessUnit());
+			}
+			
+			entity.setBusinessUnitDetails(businessUnitDetails);
+		}
+
+		staffDetailsRepository.save(entity);
+		StaffDetailsResponse responseObject = new StaffDetailsResponse();
+		BeanUtils.copyProperties(entity, responseObject);
+		Long companyOrBusinessUnit  = Objects.nonNull(entity.getBusinessUnitDetails()) ? entity.getBusinessUnitDetails().getId():null;
+		responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
+		
 		log.info("updateStaffDetails() - end");
-		return null;
+		return responseObject;
 	}
 
 	@Override
@@ -253,6 +494,8 @@ public class MembershipServiceImpl implements MembershipService {
 		if (Objects.nonNull(entity)) {
 			responseObject = new StaffDetailsResponse();
 			BeanUtils.copyProperties(entity, responseObject);
+			Long companyOrBusinessUnit  = Objects.nonNull(entity.getBusinessUnitDetails()) ? entity.getBusinessUnitDetails().getId():null;
+			responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
 		}
 		log.info("getStaffDetailsById() - end");
 		return responseObject;
@@ -267,6 +510,8 @@ public class MembershipServiceImpl implements MembershipService {
 		dbContents.forEach(entity -> {
 			StaffDetailsResponse responseObject = new StaffDetailsResponse();
 			BeanUtils.copyProperties(entity, responseObject);
+			Long companyOrBusinessUnit  = Objects.nonNull(entity.getBusinessUnitDetails()) ? entity.getBusinessUnitDetails().getId():null;
+			responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
 			responseObjectList.add(responseObject);
 		});
 
@@ -278,20 +523,31 @@ public class MembershipServiceImpl implements MembershipService {
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public Long createMembershipPackageDetails(CreateMembershipPackageDetailsRequest createMembershipPackageDetailsRequest) {
+	public Long createMembershipPackageDetails(CreatePackageDetailsRequest createMembershipPackageDetailsRequest) {
 		log.info("createMembershipPackageDetails() - start");
-		
-		MembershipPackageDetails entity = new MembershipPackageDetails();
+
+		PackageDetails entity = new PackageDetails();
 		BeanUtils.copyProperties(createMembershipPackageDetailsRequest, entity);
+		
+		Long businessUnit = createMembershipPackageDetailsRequest.getCompanyOrBusinessUnit();
+		
+		BusinessUnitDetails businessUnitDetails  = businessUnitDetailsRepository.findById(businessUnit).orElse(null);
+
+		if (Objects.isNull(businessUnitDetails)) {
+			throw new RecordNotFoundException("No BusinessUnitDetails record exist with given id " + businessUnit);
+		}
+		
+		entity.setBusinessUnitDetails(businessUnitDetails);
 		membershipPackageDetailsRepository.save(entity);
 
 		log.info("Saving PackageSpecificationDetails ... ");
-		List<PackageSpecificationDetailsRequest> packageSpecificationDetails = createMembershipPackageDetailsRequest.getPackageSpecificationDetails();
-		
-		if(!CollectionUtils.isEmpty(packageSpecificationDetails)) {
-			List<PackageSpecificationDetails>  pkgSpecDetailsList = new ArrayList<PackageSpecificationDetails>();
-			packageSpecificationDetails.forEach(specificationObj->{
-				
+		List<PackageSpecificationDetailsRequest> packageSpecificationDetails = createMembershipPackageDetailsRequest
+				.getPackageSpecificationDetails();
+
+		if (!CollectionUtils.isEmpty(packageSpecificationDetails)) {
+			List<PackageSpecificationDetails> pkgSpecDetailsList = new ArrayList<PackageSpecificationDetails>();
+			packageSpecificationDetails.forEach(specificationObj -> {
+
 				PackageSpecificationDetails pkgSpecDtlsEntity = new PackageSpecificationDetails();
 				BeanUtils.copyProperties(specificationObj, pkgSpecDtlsEntity);
 				pkgSpecDtlsEntity.setMembershipPackageDetails(entity);
@@ -305,27 +561,68 @@ public class MembershipServiceImpl implements MembershipService {
 	}
 
 	@Override
-	public MembershipPackageDetailsResponse getMembershipPackageDetailsById(Long id) {
+	public PackageDetailsResponse getMembershipPackageDetailsById(Long id) {
 		log.info("createMembershipPackageDetails() - start");
-
-		MembershipPackageDetails entity = membershipPackageDetailsRepository.findById(id).orElse(null);
+		PackageDetails entity = membershipPackageDetailsRepository.findById(id).orElse(null);
 
 		if (null == entity) {
 			return null;
 		}
-		MembershipPackageDetailsResponse responseObject = new MembershipPackageDetailsResponse();
+		PackageDetailsResponse responseObject = new PackageDetailsResponse();
 		BeanUtils.copyProperties(entity, responseObject);
+		
+		Long companyOrBusinessUnit = Objects.nonNull(entity.getBusinessUnitDetails()) ? entity.getBusinessUnitDetails().getId():null;
+		responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
 		List<PackageSpecificationDetailsResponse> packageSpecificationDetails = new ArrayList<PackageSpecificationDetailsResponse>();
+		
 		entity.getPackageSpecificationDetails().forEach(pkgSpecDtls -> {
-			
 			PackageSpecificationDetailsResponse specDetailsResponse = new PackageSpecificationDetailsResponse();
 			BeanUtils.copyProperties(pkgSpecDtls, specDetailsResponse);
 			packageSpecificationDetails.add(specDetailsResponse);
-
 		});
+		
 		responseObject.setPackageSpecificationDetails(packageSpecificationDetails);
-		log.info("getMembershipPackageDetailsById() - start");
+		log.info("getMembershipPackageDetailsById() - end");
 		return responseObject;
 	}
+
+	@Override
+	public List<PackageDetailsResponse> getAllPackageDetails() {
+		log.info("getAllPackageDetails() - start");
+
+		Iterable<PackageDetails> listOfPackages = membershipPackageDetailsRepository.findAll();
+
+		List<PackageDetailsResponse> pkgResponseList = new ArrayList<PackageDetailsResponse>();
+
+		listOfPackages.forEach(entity -> {
+
+			PackageDetailsResponse responseObject = new PackageDetailsResponse();
+			BeanUtils.copyProperties(entity, responseObject);
+
+			Long companyOrBusinessUnit = Objects.nonNull(entity.getBusinessUnitDetails())
+					? entity.getBusinessUnitDetails().getId()
+					: null;
+
+			responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
+			List<PackageSpecificationDetailsResponse> packageSpecificationDetails = new ArrayList<PackageSpecificationDetailsResponse>();
+
+			entity.getPackageSpecificationDetails().forEach(pkgSpecDtls -> {
+				PackageSpecificationDetailsResponse specDetailsResponse = new PackageSpecificationDetailsResponse();
+				BeanUtils.copyProperties(pkgSpecDtls, specDetailsResponse);
+				packageSpecificationDetails.add(specDetailsResponse);
+			});
+
+			responseObject.setPackageSpecificationDetails(packageSpecificationDetails);
+			pkgResponseList.add(responseObject);
+
+		});
+
+		log.info("getAllPackageDetails() - end");
+		return pkgResponseList;
+	}
+
+	
+	
+	
 
 }

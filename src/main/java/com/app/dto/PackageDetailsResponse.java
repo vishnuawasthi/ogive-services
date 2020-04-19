@@ -2,16 +2,20 @@ package com.app.dto;
 
 import java.util.List;
 
-public class MembershipPackageDetailsResponse {
+import io.swagger.annotations.ApiModelProperty;
+
+public class PackageDetailsResponse {
 
 	private Long id;
-	private String packageCode;
+
+	private String packageName;
 
 	private String description;
 
-	private String companyOrBusinessUnitCode;
+	@ApiModelProperty(required = true)
+	private Long companyOrBusinessUnit;
 
-	List<PackageSpecificationDetailsResponse> packageSpecificationDetails;
+	private List<PackageSpecificationDetailsResponse> packageSpecificationDetails;
 
 	public Long getId() {
 		return id;
@@ -21,12 +25,12 @@ public class MembershipPackageDetailsResponse {
 		this.id = id;
 	}
 
-	public String getPackageCode() {
-		return packageCode;
+	public String getPackageName() {
+		return packageName;
 	}
 
-	public void setPackageCode(String packageCode) {
-		this.packageCode = packageCode;
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 
 	public String getDescription() {
@@ -37,12 +41,12 @@ public class MembershipPackageDetailsResponse {
 		this.description = description;
 	}
 
-	public String getCompanyOrBusinessUnitCode() {
-		return companyOrBusinessUnitCode;
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
 	}
 
-	public void setCompanyOrBusinessUnitCode(String companyOrBusinessUnitCode) {
-		this.companyOrBusinessUnitCode = companyOrBusinessUnitCode;
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
 	}
 
 	public List<PackageSpecificationDetailsResponse> getPackageSpecificationDetails() {
