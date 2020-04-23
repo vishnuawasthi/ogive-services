@@ -11,7 +11,9 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,7 @@ import com.app.dto.BusinessUnitDetailsResponse;
 import com.app.dto.CountryDetailsResponse;
 import com.app.dto.LoginRequest;
 import com.app.dto.PortalUserDetailsResponse;
+import com.app.dto.ResetPasswordRequest;
 import com.app.services.LoginService;
 
 @RestController
@@ -50,6 +53,7 @@ public class LoginController {
 		CompletableFuture.allOf(countryDetails, loadAllBusinessUnits).join();
 
 		try {
+
 			masterData.put("countries", countryDetails.get());
 			masterData.put("businessUnits", loadAllBusinessUnits.get());
 		} catch (InterruptedException e) {
@@ -62,5 +66,16 @@ public class LoginController {
 		log.info("doLogin ()- end");
 		return paramMap;
 	}
+	
+	
+	@PostMapping(value = "/reset-password", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+		log.info("resetPassword ()- start");
+		log.info("Request Body :  {} " + request);
+		loginService.resetPassword(request);
+		log.info("resetPassword ()- end");
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 
 }

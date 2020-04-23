@@ -12,6 +12,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @Table(name = "MEMBERSHIP_DETAILS")
 @SequenceGenerator(sequenceName = "SEQ_MEMBERSHIP_DETAILS", initialValue = 1, allocationSize = 1, name = "SEQ_MEMBERSHIP_DETAILS")
@@ -21,39 +25,39 @@ public class MembershipDetails {
 	@GeneratedValue(generator = "SEQ_MEMBERSHIP_DETAILS", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	private String membershipType;
-
 	private String source;
-
-	private String introducedMemberCode;
 
 	private String registrationType;
 
-	private String membershipTypeCode;
-
 	private Float duration;
+
+	private String accessCardNumber;
+
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date registrationDate;
+
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date joiningDate;
+
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date startDate;
+
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Date expireDate;
 
 	private String corporateCode;
 
 	private String corporateName;
 
-	private String packageCode;
-
-	private String packageName;
-
-	private String advisorName;
-
-	private String advisorCode;
-
-	private String accessCardNumber;
-
-	private Date registrationDate;
-
-	private Date joiningDate;
-
-	private Date startDate;
-
-	private Date expireDate;
+	// Fee Details
+	private Float joiningFee;
+	private Float subscriptionFee;
+	private Float discount;
+	private Float totalFee;
 
 	@ManyToOne
 	@JoinColumn(name = "MEMBER_DETAILS_ID", referencedColumnName = "ID")
@@ -63,20 +67,16 @@ public class MembershipDetails {
 	@JoinColumn(name = "MEMBERSHIP_TYPE_ID", referencedColumnName = "ID")
 	private MembershipTypes membershipTypes;
 
+	@OneToOne
+	@JoinColumn(name = "STAFF_DETAILS_ID", referencedColumnName = "ID")
+	private StaffDetails staffDetails;
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getMembershipType() {
-		return membershipType;
-	}
-
-	public void setMembershipType(String membershipType) {
-		this.membershipType = membershipType;
 	}
 
 	public String getSource() {
@@ -87,14 +87,6 @@ public class MembershipDetails {
 		this.source = source;
 	}
 
-	public String getIntroducedMemberCode() {
-		return introducedMemberCode;
-	}
-
-	public void setIntroducedMemberCode(String introducedMemberCode) {
-		this.introducedMemberCode = introducedMemberCode;
-	}
-
 	public String getRegistrationType() {
 		return registrationType;
 	}
@@ -103,68 +95,12 @@ public class MembershipDetails {
 		this.registrationType = registrationType;
 	}
 
-	public String getMembershipTypeCode() {
-		return membershipTypeCode;
-	}
-
-	public void setMembershipTypeCode(String membershipTypeCode) {
-		this.membershipTypeCode = membershipTypeCode;
-	}
-
 	public Float getDuration() {
 		return duration;
 	}
 
 	public void setDuration(Float duration) {
 		this.duration = duration;
-	}
-
-	public String getCorporateCode() {
-		return corporateCode;
-	}
-
-	public void setCorporateCode(String corporateCode) {
-		this.corporateCode = corporateCode;
-	}
-
-	public String getCorporateName() {
-		return corporateName;
-	}
-
-	public void setCorporateName(String corporateName) {
-		this.corporateName = corporateName;
-	}
-
-	public String getPackageCode() {
-		return packageCode;
-	}
-
-	public void setPackageCode(String packageCode) {
-		this.packageCode = packageCode;
-	}
-
-	public String getPackageName() {
-		return packageName;
-	}
-
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-
-	public String getAdvisorName() {
-		return advisorName;
-	}
-
-	public void setAdvisorName(String advisorName) {
-		this.advisorName = advisorName;
-	}
-
-	public String getAdvisorCode() {
-		return advisorCode;
-	}
-
-	public void setAdvisorCode(String advisorCode) {
-		this.advisorCode = advisorCode;
 	}
 
 	public String getAccessCardNumber() {
@@ -207,6 +143,22 @@ public class MembershipDetails {
 		this.expireDate = expireDate;
 	}
 
+	public String getCorporateCode() {
+		return corporateCode;
+	}
+
+	public void setCorporateCode(String corporateCode) {
+		this.corporateCode = corporateCode;
+	}
+
+	public String getCorporateName() {
+		return corporateName;
+	}
+
+	public void setCorporateName(String corporateName) {
+		this.corporateName = corporateName;
+	}
+
 	public MemberDetails getMemberDetails() {
 		return memberDetails;
 	}
@@ -223,16 +175,55 @@ public class MembershipDetails {
 		this.membershipTypes = membershipTypes;
 	}
 
+	public StaffDetails getStaffDetails() {
+		return staffDetails;
+	}
+
+	public void setStaffDetails(StaffDetails staffDetails) {
+		this.staffDetails = staffDetails;
+	}
+
+	public Float getJoiningFee() {
+		return joiningFee;
+	}
+
+	public void setJoiningFee(Float joiningFee) {
+		this.joiningFee = joiningFee;
+	}
+
+	public Float getSubscriptionFee() {
+		return subscriptionFee;
+	}
+
+	public void setSubscriptionFee(Float subscriptionFee) {
+		this.subscriptionFee = subscriptionFee;
+	}
+
+	public Float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Float discount) {
+		this.discount = discount;
+	}
+
+	public Float getTotalFee() {
+		return totalFee;
+	}
+
+	public void setTotalFee(Float totalFee) {
+		this.totalFee = totalFee;
+	}
+
 	@Override
 	public String toString() {
-		return "MembershipDetails [id=" + id + ", membershipType=" + membershipType + ", source=" + source
-				+ ", introducedMemberCode=" + introducedMemberCode + ", registrationType=" + registrationType
-				+ ", membershipTypeCode=" + membershipTypeCode + ", duration=" + duration + ", corporateCode="
-				+ corporateCode + ", corporateName=" + corporateName + ", packageCode=" + packageCode + ", packageName="
-				+ packageName + ", advisorName=" + advisorName + ", advisorCode=" + advisorCode + ", accessCardNumber="
-				+ accessCardNumber + ", registrationDate=" + registrationDate + ", joiningDate=" + joiningDate
-				+ ", startDate=" + startDate + ", expireDate=" + expireDate + ", memberDetails=" + memberDetails
-				+ ", membershipTypes=" + membershipTypes + "]";
+		return "MembershipDetails [id=" + id + ", source=" + source + ", registrationType=" + registrationType
+				+ ", duration=" + duration + ", accessCardNumber=" + accessCardNumber + ", registrationDate="
+				+ registrationDate + ", joiningDate=" + joiningDate + ", startDate=" + startDate + ", expireDate="
+				+ expireDate + ", corporateCode=" + corporateCode + ", corporateName=" + corporateName + ", joiningFee="
+				+ joiningFee + ", subscriptionFee=" + subscriptionFee + ", discount=" + discount + ", totalFee="
+				+ totalFee + ", memberDetails=" + memberDetails + ", membershipTypes=" + membershipTypes
+				+ ", staffDetails=" + staffDetails + "]";
 	}
 
 }

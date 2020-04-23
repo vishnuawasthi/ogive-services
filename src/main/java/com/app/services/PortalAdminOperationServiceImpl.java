@@ -1,6 +1,7 @@
 package com.app.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ import com.app.repositories.MembershipDetailsRepository;
 import com.app.repositories.PortalUserRepository;
 import com.app.repositories.SourceDetailsRepository;
 import com.app.repositories.UserAuthoritiesRepository;
+import com.app.utils.CommonUtils;
 
 @Service
 public class PortalAdminOperationServiceImpl implements PortalAdminOperationService {
@@ -64,6 +66,14 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		PortalUserDetails entity = new PortalUserDetails();
 		BeanUtils.copyProperties(request, entity);
 		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+		String username = CommonUtils.getCurrentUser();
+		entity.setCreatedBy(username);
+		entity.setUpdatedBy(username);
+		
+		Date date = new Date();
+		
+		entity.setCreatedDate(date);
+		entity.setUpatedDate(date);
 		portalUserRepository.save(entity);
 		List<Authorities> authorities = request.getAuthorities();
 
@@ -162,7 +172,9 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		 * (!listOfAuthNames.contains(authority.getAuthority().name())) {
 		 * authoritiesRepository.delete(authority); } }); }
 		 */
-
+		String updatedBy = CommonUtils.getCurrentUser();
+		entity.setUpdatedBy(updatedBy);
+		entity.setUpatedDate(new Date());
 		portalUserRepository.save(entity);
 		PortalUserDetailsResponse response = new PortalUserDetailsResponse();
 		BeanUtils.copyProperties(entity, response);
@@ -180,6 +192,9 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 			throw new RecordNotFoundException("Record Not Found with id = " + id);
 		}
 		entity.setIsEnabled("N");
+		String updatedBy = CommonUtils.getCurrentUser();
+		entity.setUpdatedBy(updatedBy);
+		entity.setUpatedDate(new Date());
 		portalUserRepository.save(entity);
 		log.info("suspendAcccount() - end");
 	}
@@ -194,8 +209,11 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 			throw new RecordNotFoundException("Record Not Found with id = " + id);
 		}
 		entity.setIsEnabled("Y");
+		String updatedBy = CommonUtils.getCurrentUser();
+		entity.setUpdatedBy(updatedBy);
+		entity.setUpatedDate(new Date());
 		portalUserRepository.save(entity);
-		log.info("enableAcccount() - start");
+		log.info("enableAcccount() - end");
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)

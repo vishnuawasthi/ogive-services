@@ -22,13 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.CreateMemberTransferRequest;
 import com.app.dto.CreateMembershipRequest;
-import com.app.dto.CreatePersonalTrainingDetailsRequest;
+import com.app.dto.CreatePaymentRequest;
+import com.app.dto.CreatePersonalTrainingDetailRequest;
 import com.app.dto.CreateProspectDetailsRequest;
 import com.app.dto.ErrorResponseEntity;
+import com.app.dto.MembershipPaymentDetailResponse;
 import com.app.dto.MembershipResponse;
 import com.app.dto.PersonalTrainingDetailsResponse;
 import com.app.dto.ProspectDetailsResponse;
 import com.app.services.EmailService;
+import com.app.services.PaymentService;
 import com.app.services.PortalAdminOperationService;
 import com.app.services.PortalUserOperationService;
 
@@ -54,6 +57,9 @@ public class WellnessManagementUserOperationController {
 	
 	@Autowired
 	private PortalUserOperationService portalUserOperationService;
+	
+	@Autowired
+	private PaymentService paymentService;
 
 	@GetMapping(value = "/v1/users/accessDenied", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object accessDeniedHandler(@RequestParam("authentication") Authentication authentication) {
@@ -100,11 +106,11 @@ public class WellnessManagementUserOperationController {
 	/** *#################### MEMBERSHIP OPERATION ################################### */
 	@ApiOperation(value = "Enroll for membership.", tags = "User Operations - Membershp", response = Long.class)
 	@PostMapping(value = "/v1/memberships", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object memberRegistration(@RequestBody @Valid CreateMembershipRequest createMembershipRequest) {
-		log.info("memberRegistration ()- start");
+	public Object createMembership(@RequestBody @Valid CreateMembershipRequest createMembershipRequest) {
+		log.info("createMembership ()- start");
 		log.info("Request Body :  {} " + createMembershipRequest);
 		Long id = portalUserOperationService.createMembership(createMembershipRequest);
-		log.info("memberRegistration ()- end");
+		log.info("createMembership ()- end");
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 	
@@ -134,8 +140,7 @@ public class WellnessManagementUserOperationController {
 	
 	@ApiOperation(value = "This api creates Personal training.", tags = "User Operations - Personal Trainings", response = Long.class)
 	@PostMapping(value = "/v1/personal-trainings", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createPersonalTraing(
-			@RequestBody @Valid CreatePersonalTrainingDetailsRequest createPersonalTrainingDetailsRequest) {
+	public Object createPersonalTraing(@RequestBody @Valid CreatePersonalTrainingDetailRequest createPersonalTrainingDetailsRequest) {
 		log.info("createPersonalTraingDetails ()- start");
 		log.info("Request Body :  {} " + createPersonalTrainingDetailsRequest);
 		Long id = portalUserOperationService.createPersonalTrainingDetails(createPersonalTrainingDetailsRequest);
@@ -177,5 +182,27 @@ public class WellnessManagementUserOperationController {
 	
 	/** #################### CREATE FREEZE REQUEST SERVICE ########################## */
 	
+
+	/** #################### PULL PENDING PAYMENTS SERVICE - START ########################## */
 	
+	@ApiOperation(value = "This api allow to create payment entries into database.", tags = "User Operations - Payment")
+	@PostMapping(value = "/v1/membership-payments", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object savePaymentDetails(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
+		log.info("savePaymentDetails ()- start");
+		paymentService.savePaymentDetails(createPaymentRequest);
+		log.info("savePaymentDetails ()- end");
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/** #################### PULL PENDING PAYMENTS SERVICE -END ########################## */
+	
+	@ApiOperation(value = "Get payment details against an membership", tags = "User Operations - Payment", response = MembershipPaymentDetailResponse.class)
+	@GetMapping(value = "/v1/membership-payments/{membershipId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getPaymentDetailsById(@PathVariable("membershipId") Long membershipId) {
+		log.info("getPaymentDetailsById() - start");
+		MembershipPaymentDetailResponse responseObject = paymentService.fetchPaymentDetails(membershipId);
+
+		log.info("getPaymentDetailsById() - end");
+		return new ResponseEntity<MembershipPaymentDetailResponse>(responseObject, HttpStatus.OK);
+	}
 }

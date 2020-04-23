@@ -53,10 +53,6 @@ public class MemberDetails {
 
 	private String passportNumber;
 
-	private String companyName;
-
-	private String designation;
-
 	@OneToMany(mappedBy = "memberDetails", fetch = FetchType.EAGER)
 	private Set<MembershipDetails> membershipDetails = new HashSet<MembershipDetails>();
 
@@ -196,22 +192,6 @@ public class MemberDetails {
 		this.passportNumber = passportNumber;
 	}
 
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-	public String getDesignation() {
-		return designation;
-	}
-
-	public void setDesignation(String designation) {
-		this.designation = designation;
-	}
-
 	public CountryDetails getCountryDetails() {
 		return countryDetails;
 	}
@@ -250,6 +230,17 @@ public class MemberDetails {
 
 	public void setMembershipDetails(Set<MembershipDetails> membershipDetails) {
 		this.membershipDetails = membershipDetails;
+	}
+
+	@Override
+	public String toString() {
+		return "MemberDetails [id=" + id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName="
+				+ lastName + ", displayName=" + displayName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender
+				+ ", maritalStatus=" + maritalStatus + ", bloodGroup=" + bloodGroup + ", email=" + email
+				+ ", mobileNumber=" + mobileNumber + ", height=" + height + ", weight=" + weight + ", idNumber="
+				+ idNumber + ", passportNumber=" + passportNumber + ", membershipDetails=" + membershipDetails
+				+ ", countryDetails=" + countryDetails + ", businessUnitDetails=" + businessUnitDetails
+				+ ", emergencyContactDetails=" + emergencyContactDetails + ", addressDetails=" + addressDetails + "]";
 	}
 
 }

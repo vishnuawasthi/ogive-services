@@ -4,20 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.constants.Authorities;
 import com.app.dto.CreateFreezeRequest;
 import com.app.dto.CreateMemberDetailsRequest;
 import com.app.dto.CreateMemberTransferRequest;
 import com.app.dto.CreateMembershipRequest;
-import com.app.dto.CreatePersonalTrainingDetailsRequest;
+import com.app.dto.CreatePersonalTrainingDetailRequest;
 import com.app.dto.CreateProspectDetailsRequest;
 import com.app.dto.EmergencyContactRequest;
 import com.app.dto.MemberDetailsResponse;
@@ -26,6 +28,7 @@ import com.app.dto.MembershipDetailsResponse;
 import com.app.dto.MembershipResponse;
 import com.app.dto.PersonalTrainingDetailsResponse;
 import com.app.dto.ProspectDetailsResponse;
+import com.app.entities.AddressDetails;
 import com.app.entities.BusinessUnitDetails;
 import com.app.entities.CountryDetails;
 import com.app.entities.EmergencyContactDetails;
@@ -34,10 +37,15 @@ import com.app.entities.MemberDetails;
 import com.app.entities.MemberTransferDetails;
 import com.app.entities.MembershipDetails;
 import com.app.entities.MembershipTypes;
-import com.app.entities.PersonalTrainingDetails;
+import com.app.entities.PersonalTrainingDetail;
+import com.app.entities.PersonalTrainingType;
+import com.app.entities.PortalUserDetails;
 import com.app.entities.ProspectDetails;
+import com.app.entities.StaffDetails;
+import com.app.entities.UserAuthority;
 import com.app.exception.OperationNotSupportedException;
 import com.app.exception.RecordNotFoundException;
+import com.app.repositories.AddressDetailsRepository;
 import com.app.repositories.BusinessUnitDetailsRepository;
 import com.app.repositories.CountryDetailsRepository;
 import com.app.repositories.EmergencyContactDetailsRepository;
@@ -47,7 +55,11 @@ import com.app.repositories.MemberTransferDetailsRepository;
 import com.app.repositories.MembershipDetailsRepository;
 import com.app.repositories.MembershipTypeRepository;
 import com.app.repositories.PersonalTrainingDetailsRepository;
+import com.app.repositories.PersonalTrainingTypeRepository;
+import com.app.repositories.PortalUserRepository;
 import com.app.repositories.ProspectDetailsRepository;
+import com.app.repositories.StaffDetailsRepository;
+import com.app.repositories.UserAuthoritiesRepository;
 import com.app.utils.DateUtils;
 
 @Service
@@ -84,6 +96,27 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 	
 	@Autowired
 	private EmergencyContactDetailsRepository emergencyContactDetailsRepository;
+	
+	@Autowired
+	private StaffDetailsRepository staffDetailsRepository;
+	
+	@Autowired
+	private AddressDetailsRepository addressDetailsRepository;
+	
+	@Autowired
+	private PersonalTrainingTypeRepository personalTrainingTypeRepository;
+	
+	@Value("${application.member.default.password}")
+	private String memberDefaultPassword;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private PortalUserRepository portalUserRepository;
+
+	@Autowired
+	private UserAuthoritiesRepository authoritiesRepository;
 
 	/** ######################### PROSPECT SERVICES ###################### */
 
@@ -149,7 +182,7 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		
 		EmergencyContactRequest emergencyContact = createMembershipRequest.getMemberDetails().getEmergencyContactDetails();
 
-		CountryDetails countryDetails = countryDetailsRepository.findCountryDetailsByCountryCodeIgnoreCase(memberDetails.getCountry());
+		CountryDetails countryDetails = countryDetailsRepository.findCountryDetailsByCountryCodeIgnoreCase(memberDetails.getCountryCode());
 
 		if (Objects.isNull(countryDetails)) {
 			throw new RecordNotFoundException("No CountryDetails exist with given nationality ");
@@ -169,9 +202,13 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 			throw new RecordNotFoundException("No MembershipTypes exist with given membershipType ");
 		}
 
+		StaffDetails staffDetails = staffDetailsRepository.findById(membershipDetails.getAdvisorId()).orElse(null);
+		
+		if (Objects.isNull(staffDetails)) {
+			throw new RecordNotFoundException("No StaffDetails exist with given advisorId "+membershipDetails.getAdvisorId());
+		}
 		
 		EmergencyContactDetails  emergencyContactDetailsEntity = new EmergencyContactDetails();
-		
 		BeanUtils.copyProperties(emergencyContact, emergencyContactDetailsEntity);
 		emergencyContactDetailsRepository.save(emergencyContactDetailsEntity);
 		
@@ -180,15 +217,43 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		BeanUtils.copyProperties(memberDetails, memberDetailsEntity);
 		
 		memberDetailsEntity.setBusinessUnitDetails(businessUnitDetails);
-		//memberDetailsEntity.setMembershipDetails(membershipDetailsEntity);
 		memberDetailsEntity.setCountryDetails(countryDetails);
 		memberDetailsEntity.setEmergencyContactDetails(emergencyContactDetailsEntity);
+		
+		AddressDetails addressDetails = new AddressDetails();
+		BeanUtils.copyProperties(memberDetails, addressDetails);
+		addressDetailsRepository.save(addressDetails);
+		
+		memberDetailsEntity.setAddressDetails(addressDetails);
 		memberDetailsRepository.save(memberDetailsEntity);
 		
+		//MEMBERSHIP DETAILS
 		MembershipDetails membershipDetailsEntity = new MembershipDetails();
 		BeanUtils.copyProperties(membershipDetails, membershipDetailsEntity);
+		
 		membershipDetailsEntity.setMemberDetails(memberDetailsEntity);
+		membershipDetailsEntity.setMembershipTypes(membershipTypes);
+		membershipDetailsEntity.setStaffDetails(staffDetails);
+		
 		membershipDetailsRepository.save(membershipDetailsEntity);
+		
+		PortalUserDetails portalUserDetails = new PortalUserDetails();
+		portalUserDetails.setFirstname(memberDetailsEntity.getFirstName());
+		portalUserDetails.setLastname(memberDetailsEntity.getLastName());
+		portalUserDetails.setEmail(memberDetailsEntity.getEmail());
+		
+		portalUserDetails.setUsername(String.valueOf(membershipDetailsEntity.getId()));
+		String encodedPassword =  passwordEncoder.encode(memberDefaultPassword);
+		portalUserDetails.setPassword(encodedPassword);
+		portalUserDetails.setGender(memberDetailsEntity.getGender());
+		portalUserDetails.setContactNumber(memberDetailsEntity.getMobileNumber());
+		
+		portalUserRepository.save(portalUserDetails);
+		UserAuthority auth = new UserAuthority();
+		auth.setAuthority(Authorities.MEMBER);
+		auth.setDescription("Created Through Membership Registraion Process");
+		auth.setPortalUserDetails(portalUserDetails);
+		authoritiesRepository.save(auth);
 		
 		log.info("createMembership() - end");
 		return membershipDetailsEntity.getId();
@@ -201,34 +266,60 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		MembershipResponse responseObject = new MembershipResponse();
 
 		if (membershipDetailsEntity != null) {
+			
 			MembershipDetailsResponse membershipDetailsResponse = new MembershipDetailsResponse();
 			BeanUtils.copyProperties(membershipDetailsEntity, membershipDetailsResponse);
 
+			Long advisorId = Objects.nonNull(membershipDetailsEntity.getStaffDetails())?membershipDetailsEntity.getStaffDetails().getId():null;
+			String advisorName= Objects.nonNull(membershipDetailsEntity.getStaffDetails())?membershipDetailsEntity.getStaffDetails().getFirstName()+" "+membershipDetailsEntity.getStaffDetails().getLastName():null;
+			
+			Long membershipType =Objects.nonNull(membershipDetailsEntity.getMembershipTypes())?membershipDetailsEntity.getMembershipTypes().getId():null;
+			String membershipTypeName  = Objects.nonNull(membershipDetailsEntity.getMembershipTypes())?membershipDetailsEntity.getMembershipTypes().getMembershipTypeName():null;
+			
+			membershipDetailsResponse.setAdvisorId(advisorId);
+			membershipDetailsResponse.setAdvisorName(advisorName);
+			
+			membershipDetailsResponse.setMembershipTypeName(membershipTypeName);
+			membershipDetailsResponse.setMembershipType(membershipType);
+			
 			responseObject.setMembershipDetails(membershipDetailsResponse);
 
 			if (Objects.nonNull(membershipDetailsEntity.getMemberDetails())) {
 
 				MemberDetails memberDetails = membershipDetailsEntity.getMemberDetails();
-
 				MemberDetailsResponse memeberDetailsResponse = new MemberDetailsResponse();
 				BeanUtils.copyProperties(memberDetails, memeberDetailsResponse);
 
 				// TODO - Change the type as planned
-				String businessUnitId = String.valueOf(memberDetails.getBusinessUnitDetails().getId());
+				Long businessUnitId =Objects.nonNull(memberDetails.getBusinessUnitDetails()) ?memberDetails.getBusinessUnitDetails().getId():null;
 				memeberDetailsResponse.setCompanyOrBusinessUnit(businessUnitId);
-				String nationality = memberDetails.getCountryDetails() == null ? "": memberDetails.getCountryDetails().getCountryCode();
-				memeberDetailsResponse.setNationality(nationality);
-				responseObject.setMemeberDetails(memeberDetailsResponse);
 				
+				
+				populateAddressDetailsInResponse( memberDetails , memeberDetailsResponse );
+				EmergencyContactRequest emergencyContactDetails = null;
 				if(Objects.nonNull(memberDetails.getEmergencyContactDetails())) {
-					EmergencyContactRequest emergencyContactDetails = new EmergencyContactRequest();
+					emergencyContactDetails = new EmergencyContactRequest();
 					BeanUtils.copyProperties(memberDetails.getEmergencyContactDetails(), emergencyContactDetails);
-					responseObject.setEmergencyContactDetails(emergencyContactDetails);
 				}
+				
+				memeberDetailsResponse.setEmergencyContactDetails(emergencyContactDetails);
+				responseObject.setMemeberDetails(memeberDetailsResponse);
 			}
 		}
 		log.info("getMembershipDetailsById() - end");
 		return responseObject;
+	}
+	
+	private void populateAddressDetailsInResponse(MemberDetails memberDetails ,MemberDetailsResponse memeberDetailsResponse ) {
+		AddressDetails addressDetails =	memberDetails.getAddressDetails();
+		if(Objects.nonNull(addressDetails)) {
+			memeberDetailsResponse.setAddressLine1(addressDetails.getAddressLine1());
+			memeberDetailsResponse.setAddressLine2(addressDetails.getAddressLine2());
+			memeberDetailsResponse.setCity(addressDetails.getCity());
+			memeberDetailsResponse.setPoBoxNumber(addressDetails.getPoBoxNumber());
+			memeberDetailsResponse.setState(addressDetails.getState());
+			memeberDetailsResponse.setCountryCode(addressDetails.getCountryCode());
+		}
 	}
 
 	@Override
@@ -237,10 +328,25 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		Iterable<MembershipDetails> membershpEntities = membershipDetailsRepository.findAll();
 
 		List<MembershipResponse> responseList = new ArrayList<MembershipResponse>();
+		
 		membershpEntities.forEach(entity -> {
+			
 			MembershipResponse responseObject = new MembershipResponse();
 			MembershipDetailsResponse membershipDetailsResponse = new MembershipDetailsResponse();
 			BeanUtils.copyProperties(entity, membershipDetailsResponse);
+			
+			Long advisorId = Objects.nonNull(entity.getStaffDetails())?entity.getStaffDetails().getId():null;
+			String advisorName= Objects.nonNull(entity.getStaffDetails())?entity.getStaffDetails().getFirstName()+" "+entity.getStaffDetails().getLastName():null;
+			
+			Long membershipType =Objects.nonNull(entity.getMembershipTypes())?entity.getMembershipTypes().getId():null;
+			String membershipTypeName  = Objects.nonNull(entity.getMembershipTypes())?entity.getMembershipTypes().getMembershipTypeName():null;
+			
+			membershipDetailsResponse.setAdvisorId(advisorId);
+			membershipDetailsResponse.setAdvisorName(advisorName);
+			
+			membershipDetailsResponse.setMembershipTypeName(membershipTypeName);
+			membershipDetailsResponse.setMembershipType(membershipType);
+			
 			responseObject.setMembershipDetails(membershipDetailsResponse);
 
 			if (Objects.nonNull(entity.getMemberDetails())) {
@@ -251,18 +357,18 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 				BeanUtils.copyProperties(memberDetails, memeberDetailsResponse);
 
 				// TODO - Change the type as planned
-				String businessUnitId = String.valueOf(memberDetails.getBusinessUnitDetails().getId());
+				Long businessUnitId =Objects.nonNull(memberDetails.getBusinessUnitDetails()) ?memberDetails.getBusinessUnitDetails().getId():null;
 				memeberDetailsResponse.setCompanyOrBusinessUnit(businessUnitId);
-
-				String nationality = memberDetails.getCountryDetails() == null ? "": memberDetails.getCountryDetails().getCountryCode();
-				memeberDetailsResponse.setNationality(nationality);
-				responseObject.setMemeberDetails(memeberDetailsResponse);
+				EmergencyContactRequest emergencyContactDetails =null;
+				populateAddressDetailsInResponse( memberDetails , memeberDetailsResponse );
 				
 				if(Objects.nonNull(memberDetails.getEmergencyContactDetails())) {
-					EmergencyContactRequest emergencyContactDetails = new EmergencyContactRequest();
+					emergencyContactDetails = new EmergencyContactRequest();
 					BeanUtils.copyProperties(memberDetails.getEmergencyContactDetails(), emergencyContactDetails);
-					responseObject.setEmergencyContactDetails(emergencyContactDetails);
+					
 				}
+				memeberDetailsResponse.setEmergencyContactDetails(emergencyContactDetails);
+				responseObject.setMemeberDetails(memeberDetailsResponse);
 			}
 			responseList.add(responseObject);
 		});
@@ -277,11 +383,58 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public Long createPersonalTrainingDetails(
-			CreatePersonalTrainingDetailsRequest createPersonalTrainingDetailsRequest) {
+	public Long createPersonalTrainingDetails(CreatePersonalTrainingDetailRequest request) {
 		log.info("createPersonalTrainingDetails() - start");
-		PersonalTrainingDetails entity = new PersonalTrainingDetails();
-		BeanUtils.copyProperties(createPersonalTrainingDetailsRequest, entity);
+		PersonalTrainingDetail entity = new PersonalTrainingDetail();
+
+		Long advisorId = request.getAdvisorId();
+
+		Long trainerId = request.getTrainerId();
+
+		Long membershipId = request.getMembershipId();
+
+		Long companyOrBusinessUnit = request.getCompanyOrBusinessUnit();
+
+		Long personalTrainingTypeId = request.getPersonalTrainingType();
+
+		StaffDetails advisor = staffDetailsRepository.findById(advisorId).orElse(null);
+
+		if (Objects.isNull(advisor)) {
+			throw new RecordNotFoundException("No StaffDetails exist with given advisorId " + advisorId);
+		}
+
+		StaffDetails trainer = staffDetailsRepository.findById(trainerId).orElse(null);
+
+		if (Objects.isNull(trainer)) {
+			throw new RecordNotFoundException("No StaffDetails exist with given trainerId " + trainerId);
+		}
+
+		MembershipDetails membershipDetails = membershipDetailsRepository.findById(membershipId).orElse(null);
+
+		if (Objects.isNull(membershipDetails)) {
+			throw new RecordNotFoundException("No MembershipDetails exist with given membershipId " + membershipId);
+		}
+
+		PersonalTrainingType personalTrainingType = personalTrainingTypeRepository.findById(personalTrainingTypeId).orElse(null);
+		
+		if (Objects.isNull(personalTrainingType)) {
+			throw new RecordNotFoundException("No PersonalTrainingType exist with given personalTrainingType " + membershipId);
+		}
+		
+		BusinessUnitDetails businessUnitDetails  =  businessUnitDetailsRepository.findById(companyOrBusinessUnit).orElse(null);
+		
+		if (Objects.isNull(businessUnitDetails)) {
+			throw new RecordNotFoundException("No BusinessUnitDetails exist with given companyOrBusinessUnit " + companyOrBusinessUnit);
+		}
+		
+		BeanUtils.copyProperties(request, entity);
+		
+		entity.setMembershipDetails(membershipDetails);
+		entity.setTrainerDetails(trainer);
+		entity.setAdvisorDetails(advisor);
+		entity.setPersonalTrainingType(personalTrainingType);
+		entity.setBusinessUnitDetails(businessUnitDetails);
+
 		personalTrainingDetailsRepository.save(entity);
 		log.info("createPersonalTrainingDetails() - end");
 		return entity.getId();
@@ -289,9 +442,9 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 
 	@Override
 	public PersonalTrainingDetailsResponse updatePersonalTrainingDetails(Long id,
-			CreatePersonalTrainingDetailsRequest createPersonalTrainingDetailsRequest) {
+			CreatePersonalTrainingDetailRequest createPersonalTrainingDetailsRequest) {
 		log.info("updatePersonalTrainingDetails() - start");
-		PersonalTrainingDetails entity = personalTrainingDetailsRepository.findById(id).orElse(null);
+		PersonalTrainingDetail entity = personalTrainingDetailsRepository.findById(id).orElse(null);
 
 		if (Objects.isNull(entity)) {
 			throw new RecordNotFoundException("No such record exist with given id " + id);
@@ -303,7 +456,7 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 	@Override
 	public PersonalTrainingDetailsResponse getPersonalTrainingDetailsById(Long id) {
 		log.info("getPersonalTrainingDetailsById() - start");
-		PersonalTrainingDetails entity = personalTrainingDetailsRepository.findById(id).orElse(null);
+		PersonalTrainingDetail entity = personalTrainingDetailsRepository.findById(id).orElse(null);
 
 		PersonalTrainingDetailsResponse responseObject = null;
 		if (entity != null) {
@@ -319,12 +472,11 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		log.info("getAllPersonalTrainingDetails() - start");
 		List<PersonalTrainingDetailsResponse> responseList = new ArrayList<PersonalTrainingDetailsResponse>();
 
-		Iterable<PersonalTrainingDetails> dbContents = personalTrainingDetailsRepository.findAll();
+		Iterable<PersonalTrainingDetail> dbContents = personalTrainingDetailsRepository.findAll();
 
 		dbContents.forEach(entity -> {
 			PersonalTrainingDetailsResponse responseObject = new PersonalTrainingDetailsResponse();
 			BeanUtils.copyProperties(entity, responseObject);
-
 			responseList.add(responseObject);
 		});
 

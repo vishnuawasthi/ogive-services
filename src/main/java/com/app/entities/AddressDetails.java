@@ -20,13 +20,13 @@ public class AddressDetails {
 
 	private String addressLine2;
 
-	private String pincode;
+	private String poBoxNumber;
 
 	private String city;
 
 	private String state;
 
-	private String country;
+	private String countryCode;
 
 	public Long getId() {
 		return id;
@@ -52,12 +52,12 @@ public class AddressDetails {
 		this.addressLine2 = addressLine2;
 	}
 
-	public String getPincode() {
-		return pincode;
+	public String getPoBoxNumber() {
+		return poBoxNumber;
 	}
 
-	public void setPincode(String pincode) {
-		this.pincode = pincode;
+	public void setPoBoxNumber(String poBoxNumber) {
+		this.poBoxNumber = poBoxNumber;
 	}
 
 	public String getCity() {
@@ -76,12 +76,14 @@ public class AddressDetails {
 		this.state = state;
 	}
 
-	public String getCountry() {
-		return country;
+	public String getCountryCode() {
+		return countryCode;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
+
+	
 
 }

@@ -7,17 +7,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PERSONAL_TRAINING_TYPES")
-@SequenceGenerator(sequenceName = "SEQ_PERSONAL_TRAINING_TYPES", initialValue = 1, allocationSize = 1, name = "SEQ_PERSONAL_TRAINING_TYPES")
+@Table(name = "PERSONAL_TRAINING_TYPE")
+@SequenceGenerator(sequenceName = "SEQ_PERSONAL_TRAINING_TYPE", initialValue = 1, allocationSize = 1, name = "SEQ_PERSONAL_TRAINING_TYPE")
 public class PersonalTrainingType {
 
 	@Id
-	@GeneratedValue(generator = "SEQ_PERSONAL_TRAINING_TYPES", strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = "SEQ_PERSONAL_TRAINING_TYPE", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	private String personalTrainingTypeName;
@@ -42,7 +42,7 @@ public class PersonalTrainingType {
 
 	private String notes;
 
-	@OneToOne()
+	@ManyToOne
 	@JoinColumn(name = "BUSINESS_UNIT_ID", referencedColumnName = "ID")
 	private BusinessUnitDetails businessUnitDetails;
 

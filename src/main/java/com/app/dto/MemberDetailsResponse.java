@@ -2,45 +2,68 @@ package com.app.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.swagger.annotations.ApiModelProperty;
 
 public class MemberDetailsResponse {
 
 	private Long id;
 
-	private String initial;
+	@ApiModelProperty(required = true)
 	private String firstName;
 
 	private String middleName;
-	private String lastName;
-	private String familyName;
 
+	@ApiModelProperty(required = true)
+	private String lastName;
+
+	@ApiModelProperty(required = true)
 	private String displayName;
-	private String fullName;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date dateOfBirth;
+
 	private String gender;
+
 	private String maritalStatus;
+
 	private String bloodGroup;
+
 	private String email;
 
+	@ApiModelProperty(required = true)
+	@Pattern(regexp = "\\d{10}")
 	private String mobileNumber;
-	private Float height;
-	private Float weight;
-	private String referenceNumber;
-	private String membershipNumber;
 
+	private Float height;
+
+	private Float weight;
+
+	@ApiModelProperty(required = true)
 	private String idNumber;
+
 	private String passportNumber;
-	private String nationality;
+
+	// Address details
+	@ApiModelProperty(required = true)
+	private String addressLine1;
+
+	private String addressLine2;
+
 	private String poBoxNumber;
-	private String companyOrBusinessUnit;
-	private String apartmentNumber;
-	private String street;
-	private String building;
-	private String location;
-	private String companyName;
-	private String designation;
+
+	private String city;
+
+	private String state;
+
+	private String countryCode;
+
+	private Long companyOrBusinessUnit;
+
+	private EmergencyContactRequest emergencyContactDetails;
 
 	public Long getId() {
 		return id;
@@ -48,14 +71,6 @@ public class MemberDetailsResponse {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getInitial() {
-		return initial;
-	}
-
-	public void setInitial(String initial) {
-		this.initial = initial;
 	}
 
 	public String getFirstName() {
@@ -82,28 +97,12 @@ public class MemberDetailsResponse {
 		this.lastName = lastName;
 	}
 
-	public String getFamilyName() {
-		return familyName;
-	}
-
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
-	}
-
 	public String getDisplayName() {
 		return displayName;
 	}
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 
 	public Date getDateOfBirth() {
@@ -154,20 +153,20 @@ public class MemberDetailsResponse {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public String getReferenceNumber() {
-		return referenceNumber;
+	public Float getHeight() {
+		return height;
 	}
 
-	public void setReferenceNumber(String referenceNumber) {
-		this.referenceNumber = referenceNumber;
+	public void setHeight(Float height) {
+		this.height = height;
 	}
 
-	public String getMembershipNumber() {
-		return membershipNumber;
+	public Float getWeight() {
+		return weight;
 	}
 
-	public void setMembershipNumber(String membershipNumber) {
-		this.membershipNumber = membershipNumber;
+	public void setWeight(Float weight) {
+		this.weight = weight;
 	}
 
 	public String getIdNumber() {
@@ -186,12 +185,20 @@ public class MemberDetailsResponse {
 		this.passportNumber = passportNumber;
 	}
 
-	public String getNationality() {
-		return nationality;
+	public String getAddressLine1() {
+		return addressLine1;
 	}
 
-	public void setNationality(String nationality) {
-		this.nationality = nationality;
+	public void setAddressLine1(String addressLine1) {
+		this.addressLine1 = addressLine1;
+	}
+
+	public String getAddressLine2() {
+		return addressLine2;
+	}
+
+	public void setAddressLine2(String addressLine2) {
+		this.addressLine2 = addressLine2;
 	}
 
 	public String getPoBoxNumber() {
@@ -202,90 +209,44 @@ public class MemberDetailsResponse {
 		this.poBoxNumber = poBoxNumber;
 	}
 
-	public String getCompanyOrBusinessUnit() {
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+
+	public Long getCompanyOrBusinessUnit() {
 		return companyOrBusinessUnit;
 	}
 
-	public void setCompanyOrBusinessUnit(String companyOrBusinessUnit) {
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
 		this.companyOrBusinessUnit = companyOrBusinessUnit;
 	}
 
-	public String getApartmentNumber() {
-		return apartmentNumber;
+	public EmergencyContactRequest getEmergencyContactDetails() {
+		return emergencyContactDetails;
 	}
 
-	public void setApartmentNumber(String apartmentNumber) {
-		this.apartmentNumber = apartmentNumber;
-	}
-
-	public String getStreet() {
-		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public String getBuilding() {
-		return building;
-	}
-
-	public void setBuilding(String building) {
-		this.building = building;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-	public String getDesignation() {
-		return designation;
-	}
-
-	public void setDesignation(String designation) {
-		this.designation = designation;
-	}
-
-	public Float getHeight() {
-		return height;
-	}
-
-	public void setHeight(Float height) {
-		this.height = height;
-	}
-
-	public Float getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Float weight) {
-		this.weight = weight;
-	}
-
-	@Override
-	public String toString() {
-		return "MemberDetailsResponse [id=" + id + ", initial=" + initial + ", firstName=" + firstName + ", middleName="
-				+ middleName + ", lastName=" + lastName + ", familyName=" + familyName + ", displayName=" + displayName
-				+ ", fullName=" + fullName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + ", maritalStatus="
-				+ maritalStatus + ", bloodGroup=" + bloodGroup + ", email=" + email + ", mobileNumber=" + mobileNumber
-				+ ", height=" + height + ", weight=" + weight + ", referenceNumber=" + referenceNumber
-				+ ", membershipNumber=" + membershipNumber + ", idNumber=" + idNumber + ", passportNumber="
-				+ passportNumber + ", nationality=" + nationality + ", poBoxNumber=" + poBoxNumber
-				+ ", companyOrBusinessUnit=" + companyOrBusinessUnit + ", apartmentNumber=" + apartmentNumber
-				+ ", street=" + street + ", building=" + building + ", location=" + location + ", companyName="
-				+ companyName + ", designation=" + designation + "]";
+	public void setEmergencyContactDetails(EmergencyContactRequest emergencyContactDetails) {
+		this.emergencyContactDetails = emergencyContactDetails;
 	}
 
 }

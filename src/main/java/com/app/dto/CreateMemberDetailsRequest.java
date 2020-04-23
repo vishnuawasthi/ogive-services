@@ -3,6 +3,7 @@ package com.app.dto;
 import java.util.Date;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -10,24 +11,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.swagger.annotations.ApiModelProperty;
 
-@JsonPropertyOrder(value= {
-		
-		"firstName", 
-		"middleName", 
-		"lastName", 
-		"displayName",
-		"gender",
-		"dateOfBirth",
-		"maritalStatus",
-		"bloodGroup",
-		"mobileNumber",
-		"email",
-		"idNumber",
-		"passportNumber",
-		"designation",
-		"companyName"
-		
-		
+@JsonPropertyOrder(value = {
+
+		"firstName", "middleName", "lastName", "displayName", "gender", "dateOfBirth", "maritalStatus", "bloodGroup",
+		"mobileNumber", "email", "idNumber", "passportNumber", "designation", "companyName"
+
 })
 
 public class CreateMemberDetailsRequest {
@@ -53,7 +41,10 @@ public class CreateMemberDetailsRequest {
 	private String gender;
 
 	private String maritalStatus;
+	
 	private String bloodGroup;
+	
+	@NotEmpty()
 	private String email;
 
 	@ApiModelProperty(required = true)
@@ -67,10 +58,10 @@ public class CreateMemberDetailsRequest {
 	@ApiModelProperty(required = true)
 	@NotEmpty
 	private String idNumber;
+	
 	private String passportNumber;
 
-	private String companyName;
-	private String designation;
+
 	// Address details
 	@NotEmpty
 	@ApiModelProperty(required = true)
@@ -85,13 +76,13 @@ public class CreateMemberDetailsRequest {
 	private String state;
 
 	@NotEmpty()
-	@ApiModelProperty(required = true, example = "IND,USA", allowableValues = "Any valid country code. It should be available in the system")
-	private String country;
+	@ApiModelProperty(required = true, example = "QAT", allowableValues = "Any valid country code. It should be available in the system")
+	private String countryCode;
 
 	@ApiModelProperty(required = true)
-	@NotEmpty
-	private String companyOrBusinessUnit;
-	
+	@NotNull
+	private Long companyOrBusinessUnit;
+
 	private EmergencyContactRequest emergencyContactDetails;
 
 	public String getFirstName() {
@@ -206,21 +197,6 @@ public class CreateMemberDetailsRequest {
 		this.passportNumber = passportNumber;
 	}
 
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-	public String getDesignation() {
-		return designation;
-	}
-
-	public void setDesignation(String designation) {
-		this.designation = designation;
-	}
 
 	public String getAddressLine1() {
 		return addressLine1;
@@ -262,20 +238,13 @@ public class CreateMemberDetailsRequest {
 		this.state = state;
 	}
 
-	public String getCountry() {
-		return country;
+	
+	public String getCountryCode() {
+		return countryCode;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getCompanyOrBusinessUnit() {
-		return companyOrBusinessUnit;
-	}
-
-	public void setCompanyOrBusinessUnit(String companyOrBusinessUnit) {
-		this.companyOrBusinessUnit = companyOrBusinessUnit;
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
 
 	public EmergencyContactRequest getEmergencyContactDetails() {
@@ -286,19 +255,12 @@ public class CreateMemberDetailsRequest {
 		this.emergencyContactDetails = emergencyContactDetails;
 	}
 
-	@Override
-	public String toString() {
-		return "CreateMemberDetailsRequest [firstName=" + firstName + ", middleName=" + middleName + ", lastName="
-				+ lastName + ", displayName=" + displayName + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender
-				+ ", maritalStatus=" + maritalStatus + ", bloodGroup=" + bloodGroup + ", email=" + email
-				+ ", mobileNumber=" + mobileNumber + ", height=" + height + ", weight=" + weight + ", idNumber="
-				+ idNumber + ", passportNumber=" + passportNumber + ", companyName=" + companyName + ", designation="
-				+ designation + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", poBoxNumber="
-				+ poBoxNumber + ", city=" + city + ", state=" + state + ", country=" + country
-				+ ", companyOrBusinessUnit=" + companyOrBusinessUnit + ", emergencyContactDetails="
-				+ emergencyContactDetails + "]";
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
 	}
 
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
+	}
 	
-
 }

@@ -10,48 +10,43 @@ public class MembershipDetailsResponse {
 
 	private Long id;
 
-	private String membershipType;
-
 	private String source;
-
-	private String introducedMemberCode;
 
 	private String registrationType;
 
-	private String membershipTypeCode;
+	private Long membershipType;
+	
+	private String membershipTypeName;
 
 	private Float duration;
 
-	private String corporateCode;
-
-	private String corporateName;
-
-	private String packageCode;
-
-	private String packageName;
-
 	@ApiModelProperty(required = true)
+	private Long advisorId;
 	private String advisorName;
-
-	@ApiModelProperty(required = true)
-	private String advisorCode;
 
 	private String accessCardNumber;
 
-	@ApiModelProperty(required = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date registrationDate;
 
-	@ApiModelProperty(required = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date joiningDate;
 
-	@ApiModelProperty(required = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date startDate;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date expireDate;
+
+	private String corporateCode;
+
+	private String corporateName;
+
+	// Fee Details
+	private Float joiningFee;
+	private Float subscriptionFee;
+	private Float discount;
+	private Float totalFee;
 
 	public Long getId() {
 		return id;
@@ -59,14 +54,6 @@ public class MembershipDetailsResponse {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getMembershipType() {
-		return membershipType;
-	}
-
-	public void setMembershipType(String membershipType) {
-		this.membershipType = membershipType;
 	}
 
 	public String getSource() {
@@ -77,14 +64,6 @@ public class MembershipDetailsResponse {
 		this.source = source;
 	}
 
-	public String getIntroducedMemberCode() {
-		return introducedMemberCode;
-	}
-
-	public void setIntroducedMemberCode(String introducedMemberCode) {
-		this.introducedMemberCode = introducedMemberCode;
-	}
-
 	public String getRegistrationType() {
 		return registrationType;
 	}
@@ -93,12 +72,12 @@ public class MembershipDetailsResponse {
 		this.registrationType = registrationType;
 	}
 
-	public String getMembershipTypeCode() {
-		return membershipTypeCode;
+	public Long getMembershipType() {
+		return membershipType;
 	}
 
-	public void setMembershipTypeCode(String membershipTypeCode) {
-		this.membershipTypeCode = membershipTypeCode;
+	public void setMembershipType(Long membershipType) {
+		this.membershipType = membershipType;
 	}
 
 	public Float getDuration() {
@@ -109,52 +88,12 @@ public class MembershipDetailsResponse {
 		this.duration = duration;
 	}
 
-	public String getCorporateCode() {
-		return corporateCode;
+	public Long getAdvisorId() {
+		return advisorId;
 	}
 
-	public void setCorporateCode(String corporateCode) {
-		this.corporateCode = corporateCode;
-	}
-
-	public String getCorporateName() {
-		return corporateName;
-	}
-
-	public void setCorporateName(String corporateName) {
-		this.corporateName = corporateName;
-	}
-
-	public String getPackageCode() {
-		return packageCode;
-	}
-
-	public void setPackageCode(String packageCode) {
-		this.packageCode = packageCode;
-	}
-
-	public String getPackageName() {
-		return packageName;
-	}
-
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
-
-	public String getAdvisorName() {
-		return advisorName;
-	}
-
-	public void setAdvisorName(String advisorName) {
-		this.advisorName = advisorName;
-	}
-
-	public String getAdvisorCode() {
-		return advisorCode;
-	}
-
-	public void setAdvisorCode(String advisorCode) {
-		this.advisorCode = advisorCode;
+	public void setAdvisorId(Long advisorId) {
+		this.advisorId = advisorId;
 	}
 
 	public String getAccessCardNumber() {
@@ -197,15 +136,70 @@ public class MembershipDetailsResponse {
 		this.expireDate = expireDate;
 	}
 
-	@Override
-	public String toString() {
-		return "MembershipDetailsResponse [id=" + id + ", membershipType=" + membershipType + ", source=" + source
-				+ ", introducedMemberCode=" + introducedMemberCode + ", registrationType=" + registrationType
-				+ ", membershipTypeCode=" + membershipTypeCode + ", duration=" + duration + ", corporateCode="
-				+ corporateCode + ", corporateName=" + corporateName + ", packageCode=" + packageCode + ", packageName="
-				+ packageName + ", advisorName=" + advisorName + ", advisorCode=" + advisorCode + ", accessCardNumber="
-				+ accessCardNumber + ", registrationDate=" + registrationDate + ", joiningDate=" + joiningDate
-				+ ", startDate=" + startDate + ", expireDate=" + expireDate + "]";
+	public String getCorporateCode() {
+		return corporateCode;
 	}
+
+	public void setCorporateCode(String corporateCode) {
+		this.corporateCode = corporateCode;
+	}
+
+	public String getCorporateName() {
+		return corporateName;
+	}
+
+	public void setCorporateName(String corporateName) {
+		this.corporateName = corporateName;
+	}
+
+	public Float getJoiningFee() {
+		return joiningFee;
+	}
+
+	public void setJoiningFee(Float joiningFee) {
+		this.joiningFee = joiningFee;
+	}
+
+	public Float getSubscriptionFee() {
+		return subscriptionFee;
+	}
+
+	public void setSubscriptionFee(Float subscriptionFee) {
+		this.subscriptionFee = subscriptionFee;
+	}
+
+	public Float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Float discount) {
+		this.discount = discount;
+	}
+
+	public Float getTotalFee() {
+		return totalFee;
+	}
+
+	public void setTotalFee(Float totalFee) {
+		this.totalFee = totalFee;
+	}
+
+	public String getMembershipTypeName() {
+		return membershipTypeName;
+	}
+
+	public void setMembershipTypeName(String membershipTypeName) {
+		this.membershipTypeName = membershipTypeName;
+	}
+
+	public String getAdvisorName() {
+		return advisorName;
+	}
+
+	public void setAdvisorName(String advisorName) {
+		this.advisorName = advisorName;
+	}
+
+	
 
 }

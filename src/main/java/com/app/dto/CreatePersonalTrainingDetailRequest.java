@@ -2,62 +2,60 @@ package com.app.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class PersonalTrainingDetailsResponse {
-
-	private Long id;
+public class CreatePersonalTrainingDetailRequest {
 
 	private String description;
-
 	private Float duration;
-
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date startDate;
-
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date endDate;
-
+	
 	private Integer extraSessions;
-
+	
 	private Integer totalSessions;
 
 	private Float joiningFee;
-
+	
 	private Float subscriptionFee;
-
+	
 	private Float discount;
-
+	
 	private Float totalFee;
 
 	private String corporateCode;
-
+	
 	private String corporateName;
 
 	private String notes;
 
-	/*
-	 * @ApiModelProperty(required = true) private Long personalTrainingType;
-	 * 
-	 * @ApiModelProperty(required = true) private Long membershipId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long trainerId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long advisorId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long companyOrBusinessUnit;
-	 * 
-	 */
+	@NotNull
+	@ApiModelProperty(required = true)
+	private Long personalTrainingType;
 
-	public Long getId() {
-		return id;
-	}
+	@NotNull
+	@ApiModelProperty(required = true)
+	private Long membershipId;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	@NotNull
+	@ApiModelProperty(required = true)
+	private Long trainerId;
+
+	@NotNull
+	@ApiModelProperty(required = true)
+	private Long advisorId;
+
+	@NotNull
+	@ApiModelProperty(required = true)
+	private Long companyOrBusinessUnit;
 
 	public String getDescription() {
 		return description;
@@ -162,7 +160,45 @@ public class PersonalTrainingDetailsResponse {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
-	
+
+	public Long getPersonalTrainingType() {
+		return personalTrainingType;
+	}
+
+	public void setPersonalTrainingType(Long personalTrainingType) {
+		this.personalTrainingType = personalTrainingType;
+	}
+
+	public Long getMembershipId() {
+		return membershipId;
+	}
+
+	public void setMembershipId(Long membershipId) {
+		this.membershipId = membershipId;
+	}
+
+	public Long getTrainerId() {
+		return trainerId;
+	}
+
+	public void setTrainerId(Long trainerId) {
+		this.trainerId = trainerId;
+	}
+
+	public Long getAdvisorId() {
+		return advisorId;
+	}
+
+	public void setAdvisorId(Long advisorId) {
+		this.advisorId = advisorId;
+	}
+
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
+	}
+
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
+	}
 
 }

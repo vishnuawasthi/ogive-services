@@ -6,7 +6,7 @@ public class MembershipResponse {
 
 	private MemberDetailsResponse memeberDetails;
 
-	private EmergencyContactRequest emergencyContactDetails;
+	
 
 	public MembershipDetailsResponse getMembershipDetails() {
 		return membershipDetails;
@@ -24,12 +24,5 @@ public class MembershipResponse {
 		this.memeberDetails = memeberDetails;
 	}
 
-	public EmergencyContactRequest getEmergencyContactDetails() {
-		return emergencyContactDetails;
-	}
-
-	public void setEmergencyContactDetails(EmergencyContactRequest emergencyContactDetails) {
-		this.emergencyContactDetails = emergencyContactDetails;
-	}
-
+	
 }

@@ -1,55 +1,63 @@
-package com.app.dto;
+package com.app.entities;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
-import io.swagger.annotations.ApiModelProperty;
+@Entity
+@Table(name = "PERSONAL_TRAINING_DTL")
+@SequenceGenerator(sequenceName = "SEQ_PERSONAL_TRAINING_DTL", initialValue = 1, allocationSize = 1, name = "SEQ_PERSONAL_TRAINING_DTL")
+public class PersonalTrainingDetail {
 
-public class PersonalTrainingDetailsResponse {
-
+	@Id
+	@GeneratedValue(generator = "SEQ_PERSONAL_TRAINING_DTL", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
+	/** ############### PERSONAL TRAINING DETAILS ####################### */
 	private String description;
-
 	private Float duration;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date startDate;
-
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date endDate;
-
 	private Integer extraSessions;
-
 	private Integer totalSessions;
 
 	private Float joiningFee;
-
 	private Float subscriptionFee;
-
 	private Float discount;
-
 	private Float totalFee;
 
 	private String corporateCode;
-
 	private String corporateName;
 
 	private String notes;
 
-	/*
-	 * @ApiModelProperty(required = true) private Long personalTrainingType;
-	 * 
-	 * @ApiModelProperty(required = true) private Long membershipId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long trainerId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long advisorId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long companyOrBusinessUnit;
-	 * 
-	 */
+	@ManyToOne
+	@JoinColumn(name = "PERSONAL_TRAINING_TYPE_ID", referencedColumnName = "ID")
+	private PersonalTrainingType personalTrainingType;
+
+	@ManyToOne
+	@JoinColumn(name = "MEMBERSHIP_DETAILS_ID", referencedColumnName = "ID")
+	private MembershipDetails membershipDetails;
+
+	@ManyToOne
+	@JoinColumn(name = "TRAINER_ID", referencedColumnName = "ID")
+	private StaffDetails trainerDetails;
+
+	@ManyToOne
+	@JoinColumn(name = "ADVISOR_ID", referencedColumnName = "ID")
+	private StaffDetails advisorDetails;
+
+	@ManyToOne
+	@JoinColumn(name = "BUSINESS_UNIT_DETAILS_ID", referencedColumnName = "ID")
+	private BusinessUnitDetails businessUnitDetails;
 
 	public Long getId() {
 		return id;
@@ -162,7 +170,45 @@ public class PersonalTrainingDetailsResponse {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
-	
+
+	public PersonalTrainingType getPersonalTrainingType() {
+		return personalTrainingType;
+	}
+
+	public void setPersonalTrainingType(PersonalTrainingType personalTrainingType) {
+		this.personalTrainingType = personalTrainingType;
+	}
+
+	public MembershipDetails getMembershipDetails() {
+		return membershipDetails;
+	}
+
+	public void setMembershipDetails(MembershipDetails membershipDetails) {
+		this.membershipDetails = membershipDetails;
+	}
+
+	public StaffDetails getTrainerDetails() {
+		return trainerDetails;
+	}
+
+	public void setTrainerDetails(StaffDetails trainerDetails) {
+		this.trainerDetails = trainerDetails;
+	}
+
+	public StaffDetails getAdvisorDetails() {
+		return advisorDetails;
+	}
+
+	public void setAdvisorDetails(StaffDetails advisorDetails) {
+		this.advisorDetails = advisorDetails;
+	}
+
+	public BusinessUnitDetails getBusinessUnitDetails() {
+		return businessUnitDetails;
+	}
+
+	public void setBusinessUnitDetails(BusinessUnitDetails businessUnitDetails) {
+		this.businessUnitDetails = businessUnitDetails;
+	}
 
 }

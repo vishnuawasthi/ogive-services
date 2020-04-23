@@ -41,7 +41,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests(authorizeRequests -> {
-			authorizeRequests.antMatchers("/api/**").hasAnyAuthority("USER", "ADMIN");
+			authorizeRequests.antMatchers("/api/**").hasAnyAuthority("OPERATOR", "ADMIN");
+			authorizeRequests.antMatchers("/members-api/**").hasAnyAuthority("MEMBER");
 			authorizeRequests.antMatchers("/admin-api/**").hasAnyAuthority("ADMIN");
 		})
 		.exceptionHandling().accessDeniedHandler(unauthorizedUserAccessDeniedHandler)

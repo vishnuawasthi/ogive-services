@@ -16,6 +16,7 @@ import com.app.constants.Authorities;
 import com.app.dto.BusinessUnitDetailsResponse;
 import com.app.dto.CountryDetailsResponse;
 import com.app.dto.PortalUserDetailsResponse;
+import com.app.dto.ResetPasswordRequest;
 import com.app.entities.BusinessUnitDetails;
 import com.app.entities.PortalUserDetails;
 import com.app.exception.UserNotFoundException;
@@ -109,5 +110,17 @@ public class LoginServiceImpl implements LoginService {
 		}
 		log.info("loadAllBusinessUnits() - end");
 		return CompletableFuture.completedFuture(businessUnitsDetails);
+	}
+
+	@Override
+	public void resetPassword(ResetPasswordRequest request) {
+		log.info("resetPassword() - start");
+		PortalUserDetails entity = portalUserRepository.findByUsername(request.getUsername());
+		if (Objects.isNull(entity) || !passwordEncoder.matches(entity.getPassword(), entity.getPassword())) {
+			throw new UserNotFoundException("Invalid username or password");
+		}
+		entity.setPassword(passwordEncoder.encode(request.getNewPassword()));
+		portalUserRepository.save(entity);
+		log.info("resetPassword() - end");
 	}
 }

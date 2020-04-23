@@ -24,20 +24,20 @@ public class PortalUserDetails extends AuditDetails {
 	@GeneratedValue(generator = "SEQ_USER_DETAILS", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@Column(name = "USER_NAME")
+	@Column(name = "USER_NAME",unique=true,nullable=false)
 	private String username;
 
-	@Column(name = "PASSWORD")
+	@Column(name = "PASSWORD",nullable=false)
 	private String password;
 
-	@Column(name = "EMAIL")
+	@Column(name = "EMAIL",unique=true)
 	private String email;
 
 	@Column(name = "IS_ACCOUNT_LOCKED", length = 1, nullable = false)
 	private String isAcccountLocked = "N";
 
 	@Column(name = "IS_ENABLED", length = 1, nullable = false)
-	private String isEnabled = "N";
+	private String isEnabled = "Y";
 
 	@Column(name = "FIRST_NAME")
 	private String firstname;
@@ -54,7 +54,7 @@ public class PortalUserDetails extends AuditDetails {
 	@Column(name = "DATE_OF_BIRTH")
 	private Date dateOfBirth;
 
-	@Column(name = "CONTACT_NO")
+	@Column(name = "CONTACT_NO",unique=true)
 	private String contactNumber;
 
 	@Column(name = "ALT_CONTACT_NO")

@@ -5,7 +5,7 @@ import java.util.List;
 import com.app.dto.CreateFreezeRequest;
 import com.app.dto.CreateMemberTransferRequest;
 import com.app.dto.CreateMembershipRequest;
-import com.app.dto.CreatePersonalTrainingDetailsRequest;
+import com.app.dto.CreatePersonalTrainingDetailRequest;
 import com.app.dto.CreateProspectDetailsRequest;
 import com.app.dto.MembershipResponse;
 import com.app.dto.PersonalTrainingDetailsResponse;
@@ -34,9 +34,9 @@ public interface PortalUserOperationService {
 	/** ############# PERSONAL TRAINING DETAILS SERVICE ########## */
 	
 	
-	Long createPersonalTrainingDetails(CreatePersonalTrainingDetailsRequest CreatePersonalTrainingDetailsRequest);
+	Long createPersonalTrainingDetails(CreatePersonalTrainingDetailRequest CreatePersonalTrainingDetailsRequest);
 	
-	PersonalTrainingDetailsResponse updatePersonalTrainingDetails(Long id,CreatePersonalTrainingDetailsRequest createPersonalTrainingDetailsRequest);
+	PersonalTrainingDetailsResponse updatePersonalTrainingDetails(Long id,CreatePersonalTrainingDetailRequest createPersonalTrainingDetailsRequest);
 	
 	PersonalTrainingDetailsResponse getPersonalTrainingDetailsById(Long id);
 	
