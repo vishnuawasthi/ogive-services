@@ -26,6 +26,7 @@ import com.app.dto.CreatePaymentRequest;
 import com.app.dto.CreatePersonalTrainingDetailRequest;
 import com.app.dto.CreateProspectDetailsRequest;
 import com.app.dto.ErrorResponseEntity;
+import com.app.dto.GetMembershipDetail;
 import com.app.dto.MembershipPaymentDetailResponse;
 import com.app.dto.MembershipResponse;
 import com.app.dto.PersonalTrainingDetailsResponse;
@@ -45,9 +46,9 @@ import io.swagger.annotations.ApiResponses;
 		@ApiResponse(code = 401, message = "You are not authorized to perform the operation"),
 		@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
 		@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
-public class WellnessManagementUserOperationController {
+public class WellnessManagementOperatorOperationController {
 
-	private static final Logger log = LoggerFactory.getLogger(WellnessManagementUserOperationController.class);
+	private static final Logger log = LoggerFactory.getLogger(WellnessManagementOperatorOperationController.class);
 
 	@Autowired
 	private PortalAdminOperationService loginService;
@@ -61,15 +62,6 @@ public class WellnessManagementUserOperationController {
 	@Autowired
 	private PaymentService paymentService;
 
-	@GetMapping(value = "/v1/users/accessDenied", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object accessDeniedHandler(@RequestParam("authentication") Authentication authentication) {
-		ErrorResponseEntity errorEntity = new ErrorResponseEntity();
-		if (Objects.nonNull(authentication)) {
-			errorEntity.setDescription(authentication.getName() + " is not allowed to access the resource");
-			errorEntity.setStatus("403- Access Denied");
-		}
-		return new ResponseEntity<ErrorResponseEntity>(errorEntity, HttpStatus.OK);
-	}
 	
 	/** ##################### PROSPECT SERVICES ####################################### */
 	
@@ -104,14 +96,14 @@ public class WellnessManagementUserOperationController {
 	
 	
 	/** *#################### MEMBERSHIP OPERATION ################################### */
-	@ApiOperation(value = "Enroll for membership.", tags = "User Operations - Membershp", response = Long.class)
+	@ApiOperation(value = "Enroll for membership.", tags = "User Operations - Membershp", response = GetMembershipDetail.class)
 	@PostMapping(value = "/v1/memberships", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createMembership(@RequestBody @Valid CreateMembershipRequest createMembershipRequest) {
 		log.info("createMembership ()- start");
 		log.info("Request Body :  {} " + createMembershipRequest);
-		Long id = portalUserOperationService.createMembership(createMembershipRequest);
+		GetMembershipDetail getMembershipDetail = portalUserOperationService.createMembership(createMembershipRequest);
 		log.info("createMembership ()- end");
-		return new ResponseEntity<Long>(id, HttpStatus.OK);
+		return new ResponseEntity<GetMembershipDetail>(getMembershipDetail, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "Get membership details by member id.", tags = "User Operations - Membershp", response = MembershipResponse.class)

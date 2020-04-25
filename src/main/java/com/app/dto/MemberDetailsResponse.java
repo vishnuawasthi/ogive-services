@@ -1,13 +1,17 @@
 package com.app.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import io.swagger.annotations.ApiModelProperty;
 
+@JsonInclude(value=Include.NON_NULL)
 public class MemberDetailsResponse {
 
 	private Long id;
@@ -64,6 +68,8 @@ public class MemberDetailsResponse {
 	private Long companyOrBusinessUnit;
 
 	private EmergencyContactRequest emergencyContactDetails;
+	
+	private List<MembershipDetailsResponse> membershipDetails;
 
 	public Long getId() {
 		return id;
@@ -249,4 +255,13 @@ public class MemberDetailsResponse {
 		this.emergencyContactDetails = emergencyContactDetails;
 	}
 
+	public List<MembershipDetailsResponse> getMembershipDetails() {
+		return membershipDetails;
+	}
+
+	public void setMembershipDetails(List<MembershipDetailsResponse> membershipDetails) {
+		this.membershipDetails = membershipDetails;
+	}
+
+	
 }

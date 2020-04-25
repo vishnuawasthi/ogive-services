@@ -19,10 +19,20 @@ public class SwaggerConfig {
 	@Bean
 	public Docket userApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
-				.groupName("User Api")
+				.groupName("Operator Api")
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.app.controller"))
 				.paths(regex("/api.*"))
+				.build().apiInfo(metaData());
+	}
+	
+	@Bean
+	public Docket memberApi() {
+		return new Docket(DocumentationType.SWAGGER_2)
+				.groupName("Member Api")
+				.select()
+				.apis(RequestHandlerSelectors.basePackage("com.app.controller"))
+				.paths(regex("/members-api.*"))
 				.build().apiInfo(metaData());
 	}
 	

@@ -7,6 +7,7 @@ import com.app.dto.CreateMemberTransferRequest;
 import com.app.dto.CreateMembershipRequest;
 import com.app.dto.CreatePersonalTrainingDetailRequest;
 import com.app.dto.CreateProspectDetailsRequest;
+import com.app.dto.GetMembershipDetail;
 import com.app.dto.MembershipResponse;
 import com.app.dto.PersonalTrainingDetailsResponse;
 import com.app.dto.ProspectDetailsResponse;
@@ -25,7 +26,7 @@ public interface PortalUserOperationService {
 	
 	/** #################  MEMBERSHIP  SERVICES ##################### */
 	
-	Long createMembership(CreateMembershipRequest createMembershipRequest);
+	GetMembershipDetail createMembership(CreateMembershipRequest createMembershipRequest);
 	
 	MembershipResponse getMembershipDetailsById(Long id);
 	

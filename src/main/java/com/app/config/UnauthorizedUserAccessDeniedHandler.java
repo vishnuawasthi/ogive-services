@@ -26,7 +26,7 @@ public class UnauthorizedUserAccessDeniedHandler implements AccessDeniedHandler 
 		}
 		request.setAttribute("authentication", auth);
 		
-		response.sendRedirect(request.getContextPath() + "/v1/users/accessDenied");
+		response.sendRedirect(request.getContextPath() + "/users/accessDenied");
 	}
 
 }

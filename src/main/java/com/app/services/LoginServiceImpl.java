@@ -15,13 +15,15 @@ import org.springframework.stereotype.Service;
 import com.app.constants.Authorities;
 import com.app.dto.BusinessUnitDetailsResponse;
 import com.app.dto.CountryDetailsResponse;
+import com.app.dto.MembershipDetailsResponse;
 import com.app.dto.PortalUserDetailsResponse;
 import com.app.dto.ResetPasswordRequest;
-import com.app.entities.BusinessUnitDetails;
+import com.app.entities.MembershipDetails;
 import com.app.entities.PortalUserDetails;
 import com.app.exception.UserNotFoundException;
 import com.app.repositories.BusinessUnitDetailsRepository;
 import com.app.repositories.CountryDetailsRepository;
+import com.app.repositories.MembershipDetailsRepository;
 import com.app.repositories.MembershipTypeRepository;
 import com.app.repositories.PersonalTrainingTypeRepository;
 import com.app.repositories.PortalUserRepository;
@@ -48,6 +50,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private MembershipDetailsRepository membershipDetailsRepository;
 
 	@Override
 	public PortalUserDetailsResponse findUserByUsernameAndPassword(String username, String rawPassword) {
@@ -104,7 +109,7 @@ public class LoginServiceImpl implements LoginService {
 		for (Object[] row : dbContents) {
 			BusinessUnitDetailsResponse entity = new BusinessUnitDetailsResponse();
 			entity.setId((Long) row[0]);
-			entity.setBusinessUnitCode((String) row[1]);
+			//entity.setBusinessUnitCode((String) row[1]);
 			entity.setBusinessUnitName((String) row[2]);
 			businessUnitsDetails.add(entity);
 		}
@@ -123,4 +128,20 @@ public class LoginServiceImpl implements LoginService {
 		portalUserRepository.save(entity);
 		log.info("resetPassword() - end");
 	}
+
+	@Override
+	public CompletableFuture<List<MembershipDetailsResponse>> loadMembershipDetailByMemberId(Long memberId) {
+		log.info("loadMembershipDetailByMemberId() - start");
+		List<MembershipDetailsResponse> membershipsList = new ArrayList<MembershipDetailsResponse>();
+
+		List<MembershipDetails> dbContents = membershipDetailsRepository.loadMembershipDetailByMemberId(memberId);
+		dbContents.stream().forEach(membership -> {
+			MembershipDetailsResponse responseObject = new MembershipDetailsResponse();
+			BeanUtils.copyProperties(membership, responseObject);
+			membershipsList.add(responseObject);
+		});
+		log.info("loadMembershipDetailByMemberId() - start");
+		return CompletableFuture.completedFuture(membershipsList);
+	}
+	
 }

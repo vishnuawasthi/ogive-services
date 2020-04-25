@@ -22,6 +22,7 @@ import com.app.dto.CreateMembershipRequest;
 import com.app.dto.CreatePersonalTrainingDetailRequest;
 import com.app.dto.CreateProspectDetailsRequest;
 import com.app.dto.EmergencyContactRequest;
+import com.app.dto.GetMembershipDetail;
 import com.app.dto.MemberDetailsResponse;
 import com.app.dto.MembershipDetailsRequest;
 import com.app.dto.MembershipDetailsResponse;
@@ -173,7 +174,7 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public Long createMembership(CreateMembershipRequest createMembershipRequest) {
+	public GetMembershipDetail createMembership(CreateMembershipRequest createMembershipRequest) {
 		log.info("createMembership() - start");
 
 		CreateMemberDetailsRequest memberDetails = createMembershipRequest.getMemberDetails();
@@ -242,7 +243,7 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		portalUserDetails.setLastname(memberDetailsEntity.getLastName());
 		portalUserDetails.setEmail(memberDetailsEntity.getEmail());
 		
-		portalUserDetails.setUsername(String.valueOf(membershipDetailsEntity.getId()));
+		portalUserDetails.setUsername(String.valueOf(memberDetailsEntity.getId()));
 		String encodedPassword =  passwordEncoder.encode(memberDefaultPassword);
 		portalUserDetails.setPassword(encodedPassword);
 		portalUserDetails.setGender(memberDetailsEntity.getGender());
@@ -255,8 +256,11 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		auth.setPortalUserDetails(portalUserDetails);
 		authoritiesRepository.save(auth);
 		
+		GetMembershipDetail  getMembershipDetail = new GetMembershipDetail();
+		getMembershipDetail.setMemberId(memberDetailsEntity.getId());
+		getMembershipDetail.setMembershipId(membershipDetailsEntity.getId());
 		log.info("createMembership() - end");
-		return membershipDetailsEntity.getId();
+		return getMembershipDetail;
 	}
 
 	@Override

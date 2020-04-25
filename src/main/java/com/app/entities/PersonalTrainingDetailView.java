@@ -1,62 +1,69 @@
-package com.app.dto;
+package com.app.entities;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class PersonalTrainingDetailsResponse {
+@Entity
+@Table(name = "PERSONAL_TRAINING_VIEW")
+public class PersonalTrainingDetailView {
 
+	@Id
 	private Long id;
 
+	@Column(name = "MEMBER_ID")
+	private Long memberId;
+
+	@Column(name = "description")
 	private String description;
 
+	@Column(name = "duration")
 	private Float duration;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@Column(name = "start_date")
 	private Date startDate;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@Column(name = "end_date")
 	private Date endDate;
 
+	@Column(name = "extra_sessions")
 	private Integer extraSessions;
 
+	@Column(name = "total_sessions")
 	private Integer totalSessions;
 
+	@Column(name = "joining_fee")
 	private Float joiningFee;
 
+	@Column(name = "subscription_fee")
 	private Float subscriptionFee;
 
+	@Column(name = "discount")
 	private Float discount;
 
+	@Column(name = "total_fee")
 	private Float totalFee;
 
+	@Column(name = "corporate_code")
 	private String corporateCode;
 
+	@Column(name = "corporate_name")
 	private String corporateName;
 
+	@Column(name = "notes")
 	private String notes;
-	
-	private Long memberId;
-	
+
+	@Column(name = "trainer_id")
 	private Long trainerId;
 
+	@Column(name = "TRAINER_FIRST_NAME")
 	private String trainerFirstName;
 
+	@Column(name = "TRAINER_LAST_NAME")
 	private String trainerLastName;
-
-
-	/*
-	 * @ApiModelProperty(required = true) private Long personalTrainingType;
-	 * 
-	 * @ApiModelProperty(required = true) private Long membershipId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long trainerId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long advisorId;
-	 * 
-	 * @ApiModelProperty(required = true) private Long companyOrBusinessUnit;
-	 * 
-	 */
 
 	public Long getId() {
 		return id;
@@ -170,14 +177,6 @@ public class PersonalTrainingDetailsResponse {
 		this.notes = notes;
 	}
 
-	public Long getMemberId() {
-		return memberId;
-	}
-
-	public void setMemberId(Long memberId) {
-		this.memberId = memberId;
-	}
-
 	public Long getTrainerId() {
 		return trainerId;
 	}
@@ -202,8 +201,12 @@ public class PersonalTrainingDetailsResponse {
 		this.trainerLastName = trainerLastName;
 	}
 
-	
-	
-	
+	public Long getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(Long memberId) {
+		this.memberId = memberId;
+	}
 
 }

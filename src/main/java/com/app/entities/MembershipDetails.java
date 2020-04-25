@@ -214,6 +214,8 @@ public class MembershipDetails {
 	public void setTotalFee(Float totalFee) {
 		this.totalFee = totalFee;
 	}
+	
+	
 
 	@Override
 	public String toString() {
