@@ -1,31 +1,40 @@
-package com.app.dto;
+package com.app.entities;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import com.app.constants.MembershipTypeStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-import io.swagger.annotations.ApiModelProperty;
+@Entity
+@Table(name = "MEMBERSHIP_TYPES")
+@SequenceGenerator(sequenceName = "SEQ_MEMBERSHIP_TYPES", initialValue = 1, allocationSize = 1, name = "SEQ_MEMBERSHIP_TYPES")
+public class MembershipType {
 
-public class MembershipTypeResponse {
-
+	@Id
+	@GeneratedValue(generator = "SEQ_MEMBERSHIP_TYPES", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
-	@ApiModelProperty(required = true)
 	private String membershipTypeName;
 
-	@ApiModelProperty(required = true)
 	private String description;
 
-	@ApiModelProperty(required = true, example = "Duration in days")
 	private Float duration;
 
 	private Float minimuHours;
 
 	private Float maximumHours;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	@ApiModelProperty(required = false, allowableValues = "yyyy-MM-dd")
 	private Date effectiveDate;
 
 	private Float joiningFees;
@@ -36,14 +45,16 @@ public class MembershipTypeResponse {
 
 	private String notes;
 
+	@Enumerated(EnumType.STRING)
 	private MembershipTypeStatus status;
 
-	private Long companyOrBusinessUnit;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name = "BUSINESS_UNIT_DETAILS_ID", referencedColumnName = "ID")
+	private BusinessUnitDetails businessUnitDetails;
 
-	private PackageDetailsResponse packageDetails;
-
-	public MembershipTypeResponse() {
-	}
+	@OneToOne
+	@JoinColumn(name = "MBR_PKG_DTLS_ID", referencedColumnName = "ID")
+	private PackageDetails membershipPackageDetails;
 
 	public Long getId() {
 		return id;
@@ -51,6 +62,14 @@ public class MembershipTypeResponse {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getMembershipTypeName() {
+		return membershipTypeName;
+	}
+
+	public void setMembershipTypeName(String membershipTypeName) {
+		this.membershipTypeName = membershipTypeName;
 	}
 
 	public String getDescription() {
@@ -83,14 +102,6 @@ public class MembershipTypeResponse {
 
 	public void setMaximumHours(Float maximumHours) {
 		this.maximumHours = maximumHours;
-	}
-
-	public String getMembershipTypeName() {
-		return membershipTypeName;
-	}
-
-	public void setMembershipTypeName(String membershipTypeName) {
-		this.membershipTypeName = membershipTypeName;
 	}
 
 	public Date getEffectiveDate() {
@@ -133,20 +144,20 @@ public class MembershipTypeResponse {
 		this.notes = notes;
 	}
 
-	public Long getCompanyOrBusinessUnit() {
-		return companyOrBusinessUnit;
+	public BusinessUnitDetails getBusinessUnitDetails() {
+		return businessUnitDetails;
 	}
 
-	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
-		this.companyOrBusinessUnit = companyOrBusinessUnit;
+	public void setBusinessUnitDetails(BusinessUnitDetails businessUnitDetails) {
+		this.businessUnitDetails = businessUnitDetails;
 	}
 
-	public PackageDetailsResponse getPackageDetails() {
-		return packageDetails;
+	public PackageDetails getMembershipPackageDetails() {
+		return membershipPackageDetails;
 	}
 
-	public void setPackageDetails(PackageDetailsResponse packageDetails) {
-		this.packageDetails = packageDetails;
+	public void setMembershipPackageDetails(PackageDetails membershipPackageDetails) {
+		this.membershipPackageDetails = membershipPackageDetails;
 	}
 
 	public MembershipTypeStatus getStatus() {
@@ -157,5 +168,4 @@ public class MembershipTypeResponse {
 		this.status = status;
 	}
 
-	
 }

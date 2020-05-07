@@ -1,24 +1,12 @@
-package com.app.entities;
+package com.app.dto;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Entity
-@Table(name = "MEMBERSHIP_TYPES")
-@SequenceGenerator(sequenceName = "SEQ_MEMBERSHIP_TYPES", initialValue = 1, allocationSize = 1, name = "SEQ_MEMBERSHIP_TYPES")
-public class MembershipTypes {
+import io.swagger.annotations.ApiModelProperty;
 
-	@Id
-	@GeneratedValue(generator = "SEQ_MEMBERSHIP_TYPES", strategy = GenerationType.SEQUENCE)
-	private Long id;
+public class UpdateMembershipTypeRequest {
 
 	private String membershipTypeName;
 
@@ -30,6 +18,8 @@ public class MembershipTypes {
 
 	private Float maximumHours;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@ApiModelProperty(required = false, allowableValues = "yyyy-MM-dd")
 	private Date effectiveDate;
 
 	private Float joiningFees;
@@ -38,23 +28,9 @@ public class MembershipTypes {
 
 	private Float allowedDiscount;
 
+	private Long companyOrBusinessUnit;
+
 	private String notes;
-
-	@OneToOne
-	@JoinColumn(name = "BUSINESS_UNIT_DETAILS_ID", referencedColumnName = "ID")
-	private BusinessUnitDetails businessUnitDetails;
-
-	@OneToOne
-	@JoinColumn(name = "MBR_PKG_DTLS_ID", referencedColumnName = "ID")
-	private PackageDetails membershipPackageDetails;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getMembershipTypeName() {
 		return membershipTypeName;
@@ -128,28 +104,20 @@ public class MembershipTypes {
 		this.allowedDiscount = allowedDiscount;
 	}
 
+	public Long getCompanyOrBusinessUnit() {
+		return companyOrBusinessUnit;
+	}
+
+	public void setCompanyOrBusinessUnit(Long companyOrBusinessUnit) {
+		this.companyOrBusinessUnit = companyOrBusinessUnit;
+	}
+
 	public String getNotes() {
 		return notes;
 	}
 
 	public void setNotes(String notes) {
 		this.notes = notes;
-	}
-
-	public BusinessUnitDetails getBusinessUnitDetails() {
-		return businessUnitDetails;
-	}
-
-	public void setBusinessUnitDetails(BusinessUnitDetails businessUnitDetails) {
-		this.businessUnitDetails = businessUnitDetails;
-	}
-
-	public PackageDetails getMembershipPackageDetails() {
-		return membershipPackageDetails;
-	}
-
-	public void setMembershipPackageDetails(PackageDetails membershipPackageDetails) {
-		this.membershipPackageDetails = membershipPackageDetails;
 	}
 
 }

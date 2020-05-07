@@ -1,6 +1,7 @@
 package com.app.dto;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,6 +13,7 @@ public class PackageSpecificationDetailsRequest {
 
 	private Integer periodNumber;
 
+	@NotNull
 	private Float unit;
 
 	public String getSpecificationName() {

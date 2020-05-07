@@ -3,6 +3,7 @@ package com.app.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,15 +60,15 @@ public class MembershipDetails {
 	private Float discount;
 	private Float totalFee;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "MEMBER_DETAILS_ID", referencedColumnName = "ID")
 	private MemberDetails memberDetails;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "MEMBERSHIP_TYPE_ID", referencedColumnName = "ID")
-	private MembershipTypes membershipTypes;
+	private MembershipType membershipTypes;
 
-	@OneToOne
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "STAFF_DETAILS_ID", referencedColumnName = "ID")
 	private StaffDetails staffDetails;
 
@@ -167,11 +168,11 @@ public class MembershipDetails {
 		this.memberDetails = memberDetails;
 	}
 
-	public MembershipTypes getMembershipTypes() {
+	public MembershipType getMembershipTypes() {
 		return membershipTypes;
 	}
 
-	public void setMembershipTypes(MembershipTypes membershipTypes) {
+	public void setMembershipTypes(MembershipType membershipTypes) {
 		this.membershipTypes = membershipTypes;
 	}
 

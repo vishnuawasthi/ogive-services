@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.constants.Authorities;
 import com.app.dto.BusinessUnitDetailsResponse;
@@ -54,6 +56,7 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private MembershipDetailsRepository membershipDetailsRepository;
 
+	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
 	public PortalUserDetailsResponse findUserByUsernameAndPassword(String username, String rawPassword) {
 		log.info("findUserByUsernameAndPassword() - start");
@@ -117,6 +120,7 @@ public class LoginServiceImpl implements LoginService {
 		return CompletableFuture.completedFuture(businessUnitsDetails);
 	}
 
+	@Transactional(propagation=Propagation.REQUIRED)
 	@Override
 	public void resetPassword(ResetPasswordRequest request) {
 		log.info("resetPassword() - start");

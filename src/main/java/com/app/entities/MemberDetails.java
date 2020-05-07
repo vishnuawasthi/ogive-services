@@ -53,7 +53,7 @@ public class MemberDetails {
 
 	private String passportNumber;
 
-	@OneToMany(mappedBy = "memberDetails", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "memberDetails", fetch = FetchType.LAZY)
 	private Set<MembershipDetails> membershipDetails = new HashSet<MembershipDetails>();
 
 	@OneToOne

@@ -1,7 +1,6 @@
 package com.app.controller;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,12 +23,13 @@ import com.app.dto.CreateMembershipRequest;
 import com.app.dto.CreatePaymentRequest;
 import com.app.dto.CreatePersonalTrainingDetailRequest;
 import com.app.dto.CreateProspectDetailsRequest;
-import com.app.dto.ErrorResponseEntity;
 import com.app.dto.GetMembershipDetail;
 import com.app.dto.MembershipPaymentDetailResponse;
 import com.app.dto.MembershipResponse;
 import com.app.dto.PersonalTrainingDetailsResponse;
 import com.app.dto.ProspectDetailsResponse;
+import com.app.filter.criteria.MemberSearchCriteria;
+import com.app.filter.criteria.MembershipFilterCriteria;
 import com.app.services.EmailService;
 import com.app.services.PaymentService;
 import com.app.services.PortalAdminOperationService;
@@ -65,8 +64,8 @@ public class WellnessManagementOperatorOperationController {
 	
 	/** ##################### PROSPECT SERVICES ####################################### */
 	
-	@ApiOperation(value = "This api allow to create prospect.", tags = "User Operations - Prospect", response = Long.class)
-	@PostMapping(value = "/v1/prospects", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "This api allow to create member or prospect. It will store member details into system.", tags = "User Operations - Prospect", response = Long.class)
+	@PostMapping(value = "/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createProspects(@RequestBody @Valid CreateProspectDetailsRequest createProspectDetailsRequest) {
 		log.info("createProspects ()- start");
 		log.info("Request Body :  {} " + createProspectDetailsRequest);
@@ -75,17 +74,26 @@ public class WellnessManagementOperatorOperationController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "This api gives all the prospect available in the system", tags = "User Operations - Prospect", response = List.class)
-	@GetMapping(value = "/v1/prospects", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object getAllProspects() {
+	@ApiOperation(value = "This api would we used to search member details.", tags = "User Operations - Prospect", response = List.class)
+	@GetMapping(value = "/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getAllProspects(
+			@RequestParam (required=false) Long memberId,
+			@RequestParam (required=false) String firstName,
+			@RequestParam (required=false) String lastName,
+			@RequestParam (required=false) String mobileNumber,
+			@RequestParam (required=false) String email
+			) {
 		log.info("getAllProspects ()- start");
-		List<ProspectDetailsResponse> allProspects = portalUserOperationService.getAllProspects();
+		MemberSearchCriteria criteria = new MemberSearchCriteria(memberId,firstName,lastName,email,mobileNumber);
+		
+		List<ProspectDetailsResponse> allProspects = portalUserOperationService.getAllProspects(criteria);
+		
 		log.info("getAllProspects ()- end");
 		return new ResponseEntity<List<ProspectDetailsResponse>>(allProspects, HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "This api give prospect by id", tags = "User Operations - Prospect", response = ProspectDetailsResponse.class)
-	@GetMapping(value = "/v1/prospects/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "This api give member details by id", tags = "User Operations - Prospect", response = ProspectDetailsResponse.class)
+	@GetMapping(value = "/v1/members/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getProspectById(@PathVariable("id") Long id) {
 		log.info("getProspectById ()- start");
 		ProspectDetailsResponse responseObject = portalUserOperationService.getProspectById(id);
@@ -117,12 +125,25 @@ public class WellnessManagementOperatorOperationController {
 		return new ResponseEntity<MembershipResponse>(responseObject, HttpStatus.OK);
 	}
 	
-	
+	//https://www.roytuts.com/spring-data-jpa-specification-criteria-query/
 	@ApiOperation(value = "Get all membership availabe in the system", tags = "User Operations - Membershp", response = List.class)
 	@GetMapping(value = "/v1/memberships", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object getAllMembershipDetails() {
+	public Object getAllMembershipDetails(
+			@RequestParam(required=false,name="memberId") Long memberId,
+			@RequestParam(required=false,name="membershipId") Long membershipId,
+			@RequestParam(required=false,name="firstName") String firstName,
+			@RequestParam(required=false,name="lastName") String lastName,
+			@RequestParam(required=false,name="sortBy") String fieldName,
+			@RequestParam(required=false,name="sortOrder") String sortOrder
+			) {
 		log.info("getAllMembershipDetails ()- start");
-		List<MembershipResponse> allMemberships = portalUserOperationService.getAllMembershipDetails();
+		//List<MembershipResponse> allMemberships = portalUserOperationService.getAllMembershipDetails();
+		log.info("getAllMembershipDetails ()- end");
+		//return new ResponseEntity<List<MembershipResponse>>(allMemberships, HttpStatus.OK);
+		
+		MembershipFilterCriteria criteria = new MembershipFilterCriteria(memberId, membershipId, firstName, lastName,fieldName, sortOrder);
+		
+		List<MembershipResponse> allMemberships = 	 portalUserOperationService.getAllMembershipDetailWithFilter(criteria);
 		log.info("getAllMembershipDetails ()- end");
 		return new ResponseEntity<List<MembershipResponse>>(allMemberships, HttpStatus.OK);
 	}
@@ -173,6 +194,7 @@ public class WellnessManagementOperatorOperationController {
 	}
 	
 	/** #################### CREATE FREEZE REQUEST SERVICE ########################## */
+	
 	
 
 	/** #################### PULL PENDING PAYMENTS SERVICE - START ########################## */

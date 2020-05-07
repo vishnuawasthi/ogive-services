@@ -11,6 +11,8 @@ import com.app.dto.GetMembershipDetail;
 import com.app.dto.MembershipResponse;
 import com.app.dto.PersonalTrainingDetailsResponse;
 import com.app.dto.ProspectDetailsResponse;
+import com.app.filter.criteria.MemberSearchCriteria;
+import com.app.filter.criteria.MembershipFilterCriteria;
 
 public interface PortalUserOperationService {
 	
@@ -20,7 +22,7 @@ public interface PortalUserOperationService {
 
 	ProspectDetailsResponse updateCreateProspectDetails(Long id,CreateProspectDetailsRequest createProspectDetailsRequest);
 	
-	List<ProspectDetailsResponse> getAllProspects();
+	List<ProspectDetailsResponse> getAllProspects(MemberSearchCriteria criteria);
 	
 	ProspectDetailsResponse getProspectById(Long id);
 	
@@ -31,6 +33,8 @@ public interface PortalUserOperationService {
 	MembershipResponse getMembershipDetailsById(Long id);
 	
 	List<MembershipResponse> getAllMembershipDetails();
+	
+	List<MembershipResponse> getAllMembershipDetailWithFilter(MembershipFilterCriteria criteria);
 	
 	/** ############# PERSONAL TRAINING DETAILS SERVICE ########## */
 	

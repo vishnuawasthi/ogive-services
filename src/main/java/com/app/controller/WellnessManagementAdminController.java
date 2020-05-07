@@ -23,22 +23,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.constants.Authorities;
+import com.app.constants.MembershipTypeStatus;
 import com.app.dto.BusinessUnitDetailsResponse;
 import com.app.dto.CountryDetailsResponse;
 import com.app.dto.CreateBusinessUnitDetailsRequest;
 import com.app.dto.CreateCountryDetailsRequest;
-import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreateMembershipTypeRequest;
+import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreatePersonalTrainingTypeRequest;
 import com.app.dto.CreatePortalUserDetailsRequest;
 import com.app.dto.CreateSourceDetailsRequest;
 import com.app.dto.CreateStaffDetailsRequest;
-import com.app.dto.PackageDetailsResponse;
 import com.app.dto.MembershipTypeResponse;
+import com.app.dto.PackageDetailsResponse;
 import com.app.dto.PersonalTrainingTypeResponse;
 import com.app.dto.PortalUserDetailsResponse;
 import com.app.dto.SourceDetailsResponse;
 import com.app.dto.StaffDetailsResponse;
+import com.app.dto.UpdateMembershipTypeRequest;
 import com.app.exception.RecordNotFoundException;
 import com.app.services.MembershipService;
 import com.app.services.PortalAdminOperationService;
@@ -158,16 +160,17 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 
-/*	@ApiOperation(value = "This api allow to create membership type", tags = "Admin operations - Membership Type")
+	@ApiOperation(value = "This api allow to update  membership type details and updatable properties are duration,minimuHours,maximumHours,effectiveDate,joiningFees,subscriptionFees,allowedDiscount,companyOrBusinessUnit", tags = "Admin operations - Membership Type")
 	@PutMapping(value = "/v1/membership-type/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object updateMembershipType(@PathVariable("id") Long id,
-			@RequestBody @Valid CreateMembershipTypeRequest createMembershipTypeRequest) {
-		log.info("createMembershipType ()- start");
-		log.info("Request Body :  {} " + createMembershipTypeRequest);
-		MembershipTypeResponse responseObject = null;
-		log.info("createMembershipType ()- end");
+	public Object updateMembershipType(
+			@PathVariable("id") Long id,
+			@RequestBody @Valid UpdateMembershipTypeRequest request) {
+		log.info("updateMembershipType ()- start");
+		log.info("Request Body :  {} " + request);
+		MembershipTypeResponse responseObject = membershipService.updateMembershipType(id,request);
+		log.info("updateMembershipType ()- end");
 		return new ResponseEntity<MembershipTypeResponse>(responseObject, HttpStatus.OK);
-	}*/
+	}
 
 	@ApiOperation(value = "This api gives membership type queried against the id", response = MembershipTypeResponse.class, tags = "Admin operations - Membership Type")
 	@GetMapping(value = "/v1/membership-type/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -178,14 +181,7 @@ public class WellnessManagementAdminController {
 		return new ResponseEntity<MembershipTypeResponse>(responseObject, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "This api gives pageable list of all the membership type available in the system"
-			/*+ "Some Examples -: "
-			+ "/v1/membership-type?pageSize=5\r\n" + 
-			"/v1/membership-type?pageSize=5&pageNo=1\r\n" + 
-			"/v1/membership-type?pageSize=5&pageNo=2\r\n" + 
-			"/v1/membership-type?pageSize=5&pageNo=1&sortBy=email\r\n" + 
-			"/v1/membership-type?pageSize=5&pageNo=1&sortBy=firstName"*/
-			+ "", response = List.class, tags = "Admin operations - Membership Type")
+	@ApiOperation(value = "This api gives pageable list of all the membership type available in the system", response = List.class, tags = "Admin operations - Membership Type")
 	@GetMapping(value = "/v1/membership-type", produces = MediaType.APPLICATION_JSON_VALUE)
 	public HttpEntity<Page<MembershipTypeResponse>> getAllMembershipTypesAsPageable(Pageable pageRequest) {
 		log.info("getAllMembershipTgetAllMembershipTypesAsPageableypes ()- start");
@@ -193,6 +189,20 @@ public class WellnessManagementAdminController {
 		log.info("getAllMembershipTypesAsPageable ()- end");
 		return new ResponseEntity<Page<MembershipTypeResponse>>(getAllMembershipTypes, HttpStatus.OK);
 	}
+	
+	@ApiOperation(value = "This api allow to mark mebership type ACTIVE/INACTIVE against the passed id", response = MembershipTypeResponse.class, tags = "Admin operations - Membership Type")
+	@PutMapping(value = "/v1/membership-type/{id}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object updateMembershipTypeStatus(
+			@PathVariable("id") Long id,
+			@PathVariable("status") MembershipTypeStatus status) {
+		
+		log.info("suspendMembershipType ()- start");
+		membershipService.updateMembershipTypeStatus(id, status);
+		log.info("suspendMembershipType ()- end");
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	
 
 	/** #################### BUSINESS UNIT ########################### */
 	
@@ -319,10 +329,10 @@ public class WellnessManagementAdminController {
 	@ApiResponse(response=Long.class, code=200,message ="Return ID of the created package.")
 	@ApiOperation(value = "This api allow to create membership package details", response = Long.class, tags = "Admin operations - Membership Package Details")
 	@PostMapping(value = "/v1/membership-pkg-details", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object createMembershipPkgDtls(@RequestBody @Valid CreatePackageDetailsRequest createMembershipPackageDetailsRequest) {
+	public Object createMembershipPkgDtls(@RequestBody @Valid CreatePackageDetailsRequest request) {
 		log.info("createMembershipPkgDtls ()- start");
-		log.info("Request Body :  {} " + createMembershipPackageDetailsRequest);
-		Long id = membershipService.createMembershipPackageDetails(createMembershipPackageDetailsRequest);
+		log.info("Request Body :  {} " + request);
+		Long id = membershipService.createMembershipPackageDetails(request);
 		log.info("createMembershipPkgDtls ()- end");
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}

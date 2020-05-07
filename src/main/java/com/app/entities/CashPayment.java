@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "PAYMENT_DETAILS")
+//@Table(name = "PAYMENT_DETAILS")
 @DiscriminatorValue("CASH")
 public class CashPayment  extends PaymentDetails{
 

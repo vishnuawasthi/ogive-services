@@ -3,6 +3,7 @@ package com.app.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,23 +40,23 @@ public class PersonalTrainingDetail {
 
 	private String notes;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "PERSONAL_TRAINING_TYPE_ID", referencedColumnName = "ID")
 	private PersonalTrainingType personalTrainingType;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "MEMBERSHIP_DETAILS_ID", referencedColumnName = "ID")
 	private MembershipDetails membershipDetails;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "TRAINER_ID", referencedColumnName = "ID")
 	private StaffDetails trainerDetails;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "ADVISOR_ID", referencedColumnName = "ID")
 	private StaffDetails advisorDetails;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "BUSINESS_UNIT_DETAILS_ID", referencedColumnName = "ID")
 	private BusinessUnitDetails businessUnitDetails;
 

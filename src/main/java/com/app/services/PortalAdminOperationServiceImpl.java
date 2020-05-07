@@ -94,6 +94,7 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		return entity.getId();
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public List<PortalUserDetailsResponse> getAllPortalUsers() {
 		log.info("getAllPortalUsers() - start");
@@ -111,6 +112,7 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 		return responseList;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public PortalUserDetailsResponse getPortalUserById(Long id) {
 		log.info("getPortalUserById() - start");

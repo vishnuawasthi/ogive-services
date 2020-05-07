@@ -14,7 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.app.config.StaffType;
+import com.app.constants.StaffType;
 
 @Entity
 @Table(name = "STAFF_DETAILS")

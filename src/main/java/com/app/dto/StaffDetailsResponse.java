@@ -2,7 +2,7 @@ package com.app.dto;
 
 import java.util.Date;
 
-import com.app.config.StaffType;
+import com.app.constants.StaffType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class StaffDetailsResponse {

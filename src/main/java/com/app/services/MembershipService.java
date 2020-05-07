@@ -5,29 +5,33 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.app.constants.MembershipTypeStatus;
 import com.app.dto.BusinessUnitDetailsResponse;
 import com.app.dto.CreateBusinessUnitDetailsRequest;
-import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreateMembershipTypeRequest;
+import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreatePersonalTrainingTypeRequest;
 import com.app.dto.CreateStaffDetailsRequest;
-import com.app.dto.PackageDetailsResponse;
 import com.app.dto.MembershipTypeResponse;
+import com.app.dto.PackageDetailsResponse;
 import com.app.dto.PersonalTrainingTypeResponse;
 import com.app.dto.StaffDetailsResponse;
+import com.app.dto.UpdateMembershipTypeRequest;
 
 public interface MembershipService {
 
 	 /** ######################## MEMBERSHIP TYPE SERVICE ############################ */
 	 Long createMembershipType(CreateMembershipTypeRequest createMembershipTypeRequest);
 
-	 MembershipTypeResponse updateMembershipType(Long id, CreateMembershipTypeRequest createMembershipTypeRequest);
+	 MembershipTypeResponse updateMembershipType(Long id, UpdateMembershipTypeRequest request);
 
 	 MembershipTypeResponse getMembershipTypeById(Long id);
 	
 	 Page<MembershipTypeResponse> getAllMembershipTypes(String membershipTypeCode,Pageable pageRequest);
 	 
 	 Page<MembershipTypeResponse> getAllMembershipTypesAsPageable(Pageable pageRequest);
+	 
+	 void updateMembershipTypeStatus(Long id, MembershipTypeStatus status);
 	 
 	 /** ######################## COMAPY OR BUSINESS ENTITY ############################ */
 	  

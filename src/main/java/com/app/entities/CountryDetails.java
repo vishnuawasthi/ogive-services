@@ -33,9 +33,6 @@ public class CountryDetails {
 
 	private String nationality;
 
-	/*@OneToMany(mappedBy = "countryDetails", fetch = FetchType.LAZY)
-	Set<MemberDetails> memberDetails = new HashSet<MemberDetails>();*/
-
 	public Long getId() {
 		return id;
 	}

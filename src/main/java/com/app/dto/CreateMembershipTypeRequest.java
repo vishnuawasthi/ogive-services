@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.app.constants.MembershipTypeStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -20,7 +21,7 @@ public class CreateMembershipTypeRequest {
 	private String description;
 
 	@NotNull
-	@ApiModelProperty(required = true, example = "Duration in months")
+	@ApiModelProperty(required = true, example = "Duration in days")
 	private Float duration;
 
 	private Float minimuHours;
@@ -45,6 +46,8 @@ public class CreateMembershipTypeRequest {
 	private Long packageNumber;
 
 	private String notes;
+
+	private MembershipTypeStatus status;
 
 	public CreateMembershipTypeRequest() {
 		super();
@@ -144,6 +147,14 @@ public class CreateMembershipTypeRequest {
 
 	public void setPackageNumber(Long packageNumber) {
 		this.packageNumber = packageNumber;
+	}
+
+	public MembershipTypeStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(MembershipTypeStatus status) {
+		this.status = status;
 	}
 
 }

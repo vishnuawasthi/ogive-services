@@ -1,12 +1,9 @@
 package com.app.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import javax.persistence.Column;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -19,22 +16,25 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.app.constants.ApplicationConstants;
+import com.app.constants.MembershipTypeStatus;
 import com.app.dto.BusinessUnitDetailsResponse;
 import com.app.dto.CreateBusinessUnitDetailsRequest;
-import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreateMembershipTypeRequest;
+import com.app.dto.CreatePackageDetailsRequest;
 import com.app.dto.CreatePersonalTrainingTypeRequest;
 import com.app.dto.CreateStaffDetailsRequest;
-import com.app.dto.PackageDetailsResponse;
 import com.app.dto.MembershipTypeResponse;
+import com.app.dto.PackageDetailsResponse;
 import com.app.dto.PackageSpecificationDetailsRequest;
 import com.app.dto.PackageSpecificationDetailsResponse;
 import com.app.dto.PersonalTrainingTypeResponse;
 import com.app.dto.StaffDetailsResponse;
+import com.app.dto.UpdateMembershipTypeRequest;
 import com.app.entities.BusinessUnitDetails;
 import com.app.entities.CountryDetails;
+import com.app.entities.MembershipType;
 import com.app.entities.PackageDetails;
-import com.app.entities.MembershipTypes;
 import com.app.entities.PackageSpecificationDetails;
 import com.app.entities.PersonalTrainingType;
 import com.app.entities.StaffDetails;
@@ -77,7 +77,7 @@ public class MembershipServiceImpl implements MembershipService {
 	@Override
 	public Long createMembershipType(CreateMembershipTypeRequest createMembershipTypeRequest) {
 		log.info("createMembershipType() - start");
-		MembershipTypes entity = new MembershipTypes();
+		MembershipType entity = new MembershipType();
 
 		BusinessUnitDetails businessUnitDetails = businessUnitDetailsRepository.findById(createMembershipTypeRequest.getCompanyOrBusinessUnit()).orElse(null);
 
@@ -104,21 +104,110 @@ public class MembershipServiceImpl implements MembershipService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public MembershipTypeResponse updateMembershipType(Long id,
-			CreateMembershipTypeRequest createMembershipTypeRequest) {
+	public MembershipTypeResponse updateMembershipType(Long id, UpdateMembershipTypeRequest request) {
 		log.info("updateMembershipType() - start");
-		MembershipTypes entity = membershipTypeRepository.findById(id).orElse(null);
+		
+		MembershipType entity = membershipTypeRepository.findById(id).orElse(null);
+
 		if (Objects.isNull(entity)) {
-			throw new RecordNotFoundException("No such record exist with given id " + id);
+			throw new RecordNotFoundException("No such MembershipType record exist with given id " + id);
 		}
+		
+		if (!StringUtils.isEmpty(request.getDescription())) {
+			entity.setDescription(request.getDescription());
+		}
+		
+		if (!StringUtils.isEmpty(request.getMembershipTypeName())) {
+			entity.setMembershipTypeName(request.getMembershipTypeName());
+		}
+
+		if (Objects.nonNull(request.getDuration())) {
+			entity.setDuration(request.getDuration());
+		}
+
+		if (Objects.nonNull(request.getJoiningFees())) {
+			entity.setJoiningFees(request.getJoiningFees());
+		}
+
+		if (Objects.nonNull(request.getSubscriptionFees())) {
+			entity.setSubscriptionFees(request.getSubscriptionFees());
+		}
+
+		if (Objects.nonNull(request.getMaximumHours())) {
+			entity.setMaximumHours(request.getMaximumHours());
+		}
+
+		if (Objects.nonNull(request.getMinimuHours())) {
+			entity.setMinimuHours(request.getMinimuHours());
+		}
+
+		if (Objects.nonNull(request.getAllowedDiscount())) {
+			entity.setAllowedDiscount(request.getAllowedDiscount());
+		}
+
+		if (Objects.nonNull(request.getCompanyOrBusinessUnit())) {
+
+			BusinessUnitDetails businessUnitDetails = businessUnitDetailsRepository
+					.findById(request.getCompanyOrBusinessUnit()).orElse(null);
+
+			if (Objects.isNull(businessUnitDetails)) {
+				throw new RecordNotFoundException(
+						"No BusinessUnitDetails record exist with given companyOrBusinessUnit "
+								+ request.getCompanyOrBusinessUnit());
+			}
+
+			entity.setBusinessUnitDetails(businessUnitDetails);
+		}
+		MembershipTypeResponse responseObject = new MembershipTypeResponse();
+		membershipTypeRepository.save(entity);
+		BeanUtils.copyProperties(entity, responseObject);
+
+		Long companyOrBusinessUnit = Objects.nonNull(entity.getBusinessUnitDetails())
+				? entity.getBusinessUnitDetails().getId()
+				: null;
+				
+		responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
+		
+		PackageDetails packageDetails = Objects.nonNull(entity.getMembershipPackageDetails())
+				? entity.getMembershipPackageDetails()
+				: null;
+
+		if (Objects.nonNull(packageDetails)) {
+			PackageDetailsResponse packageDetailsResponse = new PackageDetailsResponse();
+			BeanUtils.copyProperties(packageDetails, packageDetailsResponse);
+
+			Set<PackageSpecificationDetails> packageSpecificationDetails = packageDetails
+					.getPackageSpecificationDetails();
+			List<PackageSpecificationDetailsResponse> packageSpecificationResList = new ArrayList<PackageSpecificationDetailsResponse>();
+
+			packageSpecificationDetails.forEach(specificationEntity -> {
+				PackageSpecificationDetailsResponse specificationResObject = new PackageSpecificationDetailsResponse();
+				BeanUtils.copyProperties(specificationEntity, specificationResObject);
+				packageSpecificationResList.add(specificationResObject);
+			});
+
+			packageDetailsResponse.setPackageSpecificationDetails(packageSpecificationResList);
+			responseObject.setPackageDetails(packageDetailsResponse);
+		}
+		
+		responseObject.setCompanyOrBusinessUnit(companyOrBusinessUnit);
+		
 		log.info("updateMembershipType() - end");
-		return null;
+		return responseObject;
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void updateMembershipTypeStatus(Long id, MembershipTypeStatus status) {
+		log.info("suspendMembershipType() - start");
+		membershipTypeRepository.updateMembershipTypeStatus(id,status);
+		log.info("suspendMembershipType() - end");
 	}
 
 	@Override
 	public MembershipTypeResponse getMembershipTypeById(Long id) {
 		log.info("getMembershipTypeById() - start");
-		MembershipTypes entity = membershipTypeRepository.findById(id).orElse(null);
+		MembershipType entity = membershipTypeRepository.findById(id).orElse(null);
 		MembershipTypeResponse responseObject = null;
 
 		if (Objects.nonNull(entity)) {
@@ -134,20 +223,23 @@ public class MembershipServiceImpl implements MembershipService {
 					? entity.getMembershipPackageDetails()
 					: null;
 
-			PackageDetailsResponse packageDetailsResponse = new PackageDetailsResponse();
-			BeanUtils.copyProperties(packageDetails, packageDetailsResponse);
+			if (Objects.nonNull(packageDetails)) {
+				PackageDetailsResponse packageDetailsResponse = new PackageDetailsResponse();
+				BeanUtils.copyProperties(packageDetails, packageDetailsResponse);
 
-			Set<PackageSpecificationDetails> packageSpecificationDetails = packageDetails.getPackageSpecificationDetails();
-			List<PackageSpecificationDetailsResponse> packageSpecificationResList = new ArrayList<PackageSpecificationDetailsResponse>();
+				Set<PackageSpecificationDetails> packageSpecificationDetails = packageDetails
+						.getPackageSpecificationDetails();
+				List<PackageSpecificationDetailsResponse> packageSpecificationResList = new ArrayList<PackageSpecificationDetailsResponse>();
 
-			packageSpecificationDetails.forEach(specificationEntity -> {
-				PackageSpecificationDetailsResponse specificationResObject = new PackageSpecificationDetailsResponse();
-				BeanUtils.copyProperties(specificationEntity, specificationResObject);
-				packageSpecificationResList.add(specificationResObject);
-			});
-			
-			packageDetailsResponse.setPackageSpecificationDetails(packageSpecificationResList);
-			responseObject.setPackageDetails(packageDetailsResponse);
+				packageSpecificationDetails.forEach(specificationEntity -> {
+					PackageSpecificationDetailsResponse specificationResObject = new PackageSpecificationDetailsResponse();
+					BeanUtils.copyProperties(specificationEntity, specificationResObject);
+					packageSpecificationResList.add(specificationResObject);
+				});
+
+				packageDetailsResponse.setPackageSpecificationDetails(packageSpecificationResList);
+				responseObject.setPackageDetails(packageDetailsResponse);
+			}
 		}
 
 		log.info("getMembershipTypeById() - start");
@@ -162,7 +254,7 @@ public class MembershipServiceImpl implements MembershipService {
 		// membershipTypeRepository.findByMembershipTypeCodeAllIgnoreCase(membershipTypeCode,
 		// pageRequest);
 
-		Page<MembershipTypes> pagedMembershipData = membershipTypeRepository.findAll(pageRequest);
+		Page<MembershipType> pagedMembershipData = membershipTypeRepository.findAll(pageRequest);
 
 		Page<MembershipTypeResponse> dtoPage = pagedMembershipData.map(entity -> {
 			MembershipTypeResponse responseObject = new MembershipTypeResponse();
@@ -202,7 +294,7 @@ public class MembershipServiceImpl implements MembershipService {
 	@Override
 	public Page<MembershipTypeResponse> getAllMembershipTypesAsPageable(Pageable pageRequest) {
 		log.info("getAllMembershipTypesAsPagable() - start");
-		Page<MembershipTypes> pageableMembershipDetails = membershipTypeRepository.findAll(pageRequest);
+		Page<MembershipType> pageableMembershipDetails = membershipTypeRepository.findAll(pageRequest);
 
 		Page<MembershipTypeResponse> pageableMembershipResponses = pageableMembershipDetails.map(entity -> {
 			MembershipTypeResponse responseObject = new MembershipTypeResponse();
