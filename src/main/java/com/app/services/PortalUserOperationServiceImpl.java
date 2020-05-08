@@ -39,6 +39,7 @@ import com.app.entities.MemberTransferDetails;
 import com.app.entities.MembershipDetails;
 import com.app.entities.MembershipType;
 import com.app.entities.PersonalTrainingDetail;
+import com.app.entities.PersonalTrainingDetailView;
 import com.app.entities.PersonalTrainingType;
 import com.app.entities.PortalUserDetails;
 import com.app.entities.ProspectDetails;
@@ -57,6 +58,7 @@ import com.app.repositories.MemberDetailsRepository;
 import com.app.repositories.MemberTransferDetailsRepository;
 import com.app.repositories.MembershipDetailsRepository;
 import com.app.repositories.MembershipTypeRepository;
+import com.app.repositories.PersonalTrainingDetailViewRepository;
 import com.app.repositories.PersonalTrainingDetailsRepository;
 import com.app.repositories.PersonalTrainingTypeRepository;
 import com.app.repositories.PortalUserRepository;
@@ -122,31 +124,58 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 
 	@Autowired
 	private UserAuthoritiesRepository authoritiesRepository;
+	
+	@Autowired
+	private PersonalTrainingDetailViewRepository personalTrainingDetailViewRepository;
 
 	/** ######################### PROSPECT SERVICES ###################### */
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public Long createProspectDetails(CreateProspectDetailsRequest createProspectDetailsRequest) {
+	public Long createProspectDetails(CreateProspectDetailsRequest request) {
 		log.info("createProspectDetails() - start");
 		MemberDetails entity = new MemberDetails();
-		BeanUtils.copyProperties(createProspectDetailsRequest, entity);
-		memberDetailsRepository.save(entity);
-		EmergencyContactRequest emergencyContactRequest = createProspectDetailsRequest.getEmergencyContactDetails();
+		BeanUtils.copyProperties(request, entity);
+		
+		BusinessUnitDetails businessUnitDetails   = businessUnitDetailsRepository.findById(request.getCompanyOrBusinessUnit()).orElse(null);
+		
+		if (Objects.isNull(businessUnitDetails)) {
+			throw new RecordNotFoundException("No BusinessUnitDetails exist with given companyOrBusinessUnit "+request.getCompanyOrBusinessUnit());
+		}
+		
+		CountryDetails countryDetails  = countryDetailsRepository.findCountryDetailsByCountryCodeIgnoreCase(request.getCountryCode());	
+		
+		if (Objects.isNull(countryDetails)) {
+			throw new RecordNotFoundException("No CountryDetails exist with given countryCode "+request.getCountryCode());
+		}
+
+		AddressDetails addressDetails = new AddressDetails();
+		BeanUtils.copyProperties(request, addressDetails);
+		addressDetailsRepository.save(addressDetails);
+		
+		
+		entity.setBusinessUnitDetails(businessUnitDetails);
+		entity.setCountryDetails(countryDetails);
+		entity.setAddressDetails(addressDetails);
+		
+		
+		EmergencyContactRequest emergencyContactRequest = request.getEmergencyContactDetails();
 
 		if (Objects.nonNull(emergencyContactRequest)) {
 			EmergencyContactDetails emergencyContactEntity = new EmergencyContactDetails();
 			BeanUtils.copyProperties(emergencyContactRequest, emergencyContactEntity);
 			emergencyContactDetailsRepository.save(emergencyContactEntity);
+			entity.setEmergencyContactDetails(emergencyContactEntity);
 		}
+		
+		memberDetailsRepository.save(entity);
 		log.info("createProspectDetails() - end");
 		return entity.getId();
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public ProspectDetailsResponse updateCreateProspectDetails(Long id,
-			CreateProspectDetailsRequest createProspectDetailsRequest) {
+	public ProspectDetailsResponse updateCreateProspectDetails(Long id,CreateProspectDetailsRequest createProspectDetailsRequest) {
 		log.info("updateCreateProspectDetails() - start");
 		ProspectDetails entity = prospectDetailsRepository.findById(id).orElse(null);
 
@@ -542,8 +571,8 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 	@Override
 	public PersonalTrainingDetailsResponse getPersonalTrainingDetailsById(Long id) {
 		log.info("getPersonalTrainingDetailsById() - start");
-		PersonalTrainingDetail entity = personalTrainingDetailsRepository.findById(id).orElse(null);
-
+		//PersonalTrainingDetail entity = personalTrainingDetailsRepository.findById(id).orElse(null);
+		PersonalTrainingDetailView entity =personalTrainingDetailViewRepository.findById(id).orElse(null);
 		PersonalTrainingDetailsResponse responseObject = null;
 		if (entity != null) {
 			responseObject = new PersonalTrainingDetailsResponse();
@@ -553,14 +582,12 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		return responseObject;
 	}
 
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public List<PersonalTrainingDetailsResponse> getAllPersonalTrainingDetails() {
 		log.info("getAllPersonalTrainingDetails() - start");
 		List<PersonalTrainingDetailsResponse> responseList = new ArrayList<PersonalTrainingDetailsResponse>();
-
-		Iterable<PersonalTrainingDetail> dbContents = personalTrainingDetailsRepository.findAll();
-
+		Iterable<PersonalTrainingDetailView> dbContents = personalTrainingDetailViewRepository.findAll();
 		dbContents.forEach(entity -> {
 			PersonalTrainingDetailsResponse responseObject = new PersonalTrainingDetailsResponse();
 			BeanUtils.copyProperties(entity, responseObject);

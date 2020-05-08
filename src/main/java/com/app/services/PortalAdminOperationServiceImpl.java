@@ -105,6 +105,12 @@ public class PortalAdminOperationServiceImpl implements PortalAdminOperationServ
 				PortalUserDetailsResponse responseObj = new PortalUserDetailsResponse();
 				BeanUtils.copyProperties(entity, responseObj);
 				responseObj.setPassword("");
+				
+				List<Authorities> authorities = new ArrayList<Authorities>();
+				entity.getAuthorities().forEach(auth -> {
+					authorities.add(auth.getAuthority());
+				});
+				responseObj.setAuthorities(authorities);
 				responseList.add(responseObj);
 			});
 		}

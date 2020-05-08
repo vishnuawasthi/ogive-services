@@ -3,8 +3,11 @@ package com.app.dto;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import io.swagger.annotations.ApiModelProperty;
 
+@JsonPropertyOrder(alphabetic=true)
 public class CreateMembershipRequest {
 
 	@ApiModelProperty(required = true)

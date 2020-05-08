@@ -62,9 +62,9 @@ public class WellnessManagementOperatorOperationController {
 	private PaymentService paymentService;
 
 	
-	/** ##################### PROSPECT SERVICES ####################################### */
+	/** ##################### MEMBER SERVICES ####################################### */
 	
-	@ApiOperation(value = "This api allow to create member or prospect. It will store member details into system.", tags = "User Operations - Prospect", response = Long.class)
+	@ApiOperation(value = "This api allow to create member or prospect. It will store member details into system.", tags = "User Operations - Membershp", response = Long.class)
 	@PostMapping(value = "/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object createProspects(@RequestBody @Valid CreateProspectDetailsRequest createProspectDetailsRequest) {
 		log.info("createProspects ()- start");
@@ -74,7 +74,7 @@ public class WellnessManagementOperatorOperationController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "This api would we used to search member details.", tags = "User Operations - Prospect", response = List.class)
+	@ApiOperation(value = "This api would we used to search member details.", tags = "User Operations - Membershp", response = List.class)
 	@GetMapping(value = "/v1/members", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getAllProspects(
 			@RequestParam (required=false) Long memberId,
@@ -92,7 +92,7 @@ public class WellnessManagementOperatorOperationController {
 		return new ResponseEntity<List<ProspectDetailsResponse>>(allProspects, HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "This api give member details by id", tags = "User Operations - Prospect", response = ProspectDetailsResponse.class)
+	@ApiOperation(value = "This api give member details by id", tags = "User Operations - Membershp", response = ProspectDetailsResponse.class)
 	@GetMapping(value = "/v1/members/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getProspectById(@PathVariable("id") Long id) {
 		log.info("getProspectById ()- start");
@@ -174,8 +174,7 @@ public class WellnessManagementOperatorOperationController {
 	@GetMapping(value = "/v1/personal-trainings/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getPersonalTraingById(@PathVariable("id") Long id) {
 		log.info("getAllPersonalTraining ()- start");
-		PersonalTrainingDetailsResponse personalTraining = portalUserOperationService
-				.getPersonalTrainingDetailsById(id);
+		PersonalTrainingDetailsResponse personalTraining = portalUserOperationService.getPersonalTrainingDetailsById(id);
 		
 		log.info("getAllPersonalTraining ()- end");
 		return new ResponseEntity<PersonalTrainingDetailsResponse>(personalTraining, HttpStatus.OK);

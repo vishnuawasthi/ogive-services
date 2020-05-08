@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class PortalUserDetailsResponse {
 
+	private Long id;
+	
 	@ApiModelProperty(required = true)
 	private String username;
 
@@ -142,6 +144,14 @@ public class PortalUserDetailsResponse {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public PortalUserDetailsResponse(String username, String password, String isAcccountLocked, String isEnabled,
 			String firstname, String lastname, String middlename, String gender, Date dateOfBirth, String email,
 			String contactNumber, String alternateContactNumber) {
@@ -168,13 +178,5 @@ public class PortalUserDetailsResponse {
 		this.authorities = authorities;
 	}
 
-	@Override
-	public String toString() {
-		return "PortalUserDetailsResponse [username=" + username + ", password=" + password + ", isAcccountLocked="
-				+ isAcccountLocked + ", isEnabled=" + isEnabled + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", middlename=" + middlename + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", email="
-				+ email + ", contactNumber=" + contactNumber + ", alternateContactNumber=" + alternateContactNumber
-				+ ", authorities=" + authorities + "]";
-	}
-
+	
 }

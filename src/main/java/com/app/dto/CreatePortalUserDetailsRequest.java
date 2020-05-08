@@ -50,7 +50,7 @@ public class CreatePortalUserDetailsRequest {
 
 	private String alternateContactNumber;
 
-	@ApiModelProperty(example = "['ADMIN','USER']", required = true)
+	@ApiModelProperty(example = "['ADMIN','OPERATOR','MEMBER']", required = true)
 	private List<Authorities> authorities;
 
 	public String getUsername() {

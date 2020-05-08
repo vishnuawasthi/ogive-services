@@ -7,16 +7,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.swagger.annotations.ApiModelProperty;
 
-@JsonPropertyOrder(value = {
+/*@JsonPropertyOrder(value = {
 
 		"firstName", "middleName", "lastName", "displayName", "gender", "dateOfBirth", "maritalStatus", "bloodGroup",
 		"mobileNumber", "email", "idNumber", "passportNumber", "designation", "companyName"
 
-})
+})*/
 
 public class CreateMemberDetailsRequest {
 
