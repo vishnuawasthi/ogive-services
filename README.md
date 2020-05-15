@@ -109,4 +109,12 @@ DROP SEQUENCE IF EXISTS SEQ_PACKAGE_DTLS  CASCADE ;
 DROP TABLE  IF EXISTS MEMBERSHIP_TYPES  CASCADE ;
 
 DROP TABLE  IF EXISTS MEMBERSHIP_DETAILS  CASCADE ;
+
+# Messaging service details
+1. Dash board 
+	https://control.textlocal.in/
+	
+2. API integration 
+	https://www.textlocal.in/free-developer-sms-api/
+	
  		            

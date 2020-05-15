@@ -12,14 +12,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.EmailDetailDTO;
 import com.app.services.EmailService;
 import com.app.services.PortalAdminOperationService;
+import com.app.services.SMSService;
+
+import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/dummy")
+@RequestMapping(value = "/api")
 public class ResearchAndDevelopmentController {
 
 	private static final Logger log = Logger.getLogger(ResearchAndDevelopmentController.class);
@@ -29,13 +33,18 @@ public class ResearchAndDevelopmentController {
 
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private SMSService smsService;
 
-	@GetMapping(value = "/")
+	@ApiOperation(value="Print Hello", tags = "Research And Development")
+	@GetMapping(value = "/v1/hello")
 	public Object hellowWorld() {
 		return "Hello world!!!!!!!!!!!!!!!";
 	}
 
-	@GetMapping(value = "/v1/users/xxxxx", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value="Send Email", tags = "Research And Development")
+	@GetMapping(value = "/v1/users/send-email", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Object getUserDetails() {
 
 		EmailDetailDTO emailDetailDTO = new EmailDetailDTO();
@@ -71,4 +80,15 @@ public class ResearchAndDevelopmentController {
 		return new ResponseEntity<String>("Email send successfully", HttpStatus.OK);
 
 	}
+	
+	@ApiOperation(value = "Send Message", tags = "Research And Development")
+	@GetMapping(value = "/v1/messages", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object sendMessage(
+			@RequestParam(required = true, name = "message") String message,
+			@RequestParam(required = true, name = "number") String number) {
+		String responseBody = smsService.sendSMS(number, message);
+		return new ResponseEntity<String>(responseBody, HttpStatus.OK);
+
+	}
+	
 }
