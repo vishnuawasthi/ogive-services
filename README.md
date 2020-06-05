@@ -117,4 +117,23 @@ DROP TABLE  IF EXISTS MEMBERSHIP_DETAILS  CASCADE ;
 2. API integration 
 	https://www.textlocal.in/free-developer-sms-api/
 	
+# SSL certificate installation and integration with client application  	
+1. How to generate self signed certificate using keytool
+genkeypair: generates a key pair;
+alias: the alias name for the item we are generating;
+keyalg: the cryptographic algorithm to generate the key pair;
+keysize: the size of the key. We have used 2048 bits, but 4096 would be a better choice for production;
+storetype: the type of keystore;
+keystore: the name of the keystore;
+validity: validity number of days;
+storepass: a password for the keystore.
+
+Reference material 
+	https://www.thomasvitale.com/https-spring-boot-ssl-certificate/
+	
+2. How to add subject alternate name while creating ssl certificate using keytool
+Reference material : https://community.wegalvanize.com/s/article/How-to-create-a-certificate-with-a-subject-alternate-name?language=en_US
+
+
+keytool -genkey -alias appAdmin -keyalg RSA -keystore keystore.jks -keyalg RSA -validity 9999 -dname "CN=localhost, O=NA, L=Awasthi, S=NA, C=NA, OU=NA" -ext san=dns:localhost
  		            

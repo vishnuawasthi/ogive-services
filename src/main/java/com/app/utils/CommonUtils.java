@@ -1,10 +1,16 @@
 package com.app.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.app.dto.OpportuityDetails;
 
 public class CommonUtils {
 	
@@ -28,21 +34,47 @@ public class CommonUtils {
 
 	}
 	
-	/*public static void main (String ...strings) {
-		String caseNamesMapping = "Community Support Program:bh community support program outreach,\r\n" + 
-				"BH Autism:bh autism outreach,\r\n" + 
-				"BH Eating Disorders:bh eating disorder outreach,\r\n" + 
-				"BH CLIMB:bh climb outreach,\r\n" + 
-				"BH Parents & Families:bh parents and families outreach,\r\n" + 
-				"BH Intensive Behavioral Case Management:bh intensive case management outreach,\r\n" + 
-				"BH Substance Use:bh substance use disorder outreach,\r\n" + 
-				"BH High Risk Opioid:bh high risk opioid outreach,\r\n" + 
-				"BH Morphine Milligram Equivalent Outreach:bh morphine milligram equivalent outreach";
-		Map <String, String> map = caseOpportunityNameMap(caseNamesMapping);
-		map.entrySet().forEach(entry ->{
-			System.out.println(entry.getKey() + " | " +entry.getValue());
-		});
+	
+	public static Map<String ,OpportuityDetails> prepareMap(){
+		
+		List<OpportuityDetails> list = new ArrayList<OpportuityDetails>();
+		
+		OpportuityDetails autism = new OpportuityDetails();
+		autism.setOpportunityName("bh autism");
+		autism.setRank(4);
+		
+		OpportuityDetails climb = new OpportuityDetails();
+		climb.setOpportunityName("bh climb");
+		climb.setRank(8);
+		
+		OpportuityDetails eatingDisorder = new OpportuityDetails();
+		eatingDisorder.setOpportunityName("bh eating disorders");
+		eatingDisorder.setRank(3);
+		
+		OpportuityDetails commuitySupportProgram = new OpportuityDetails();
+		commuitySupportProgram.setOpportunityName("bh community support program");
+		commuitySupportProgram.setRank(1);
 		
 		
-	}*/
+		list.add(eatingDisorder);
+		list.add(commuitySupportProgram);
+		list.add(climb);
+		list.add(autism);
+		
+		Map <String ,OpportuityDetails >  map = list.stream()
+				.collect(Collectors.toMap(OpportuityDetails::getOpportunityName, opportunityDetails->{
+			return  opportunityDetails ;
+		}));
+		
+		
+		//Map <String ,OpportuityDetails >  map2 = list.stream().collect(Collectors.toMap());
+		
+		
+		return map;
+	}
+	
+	public static void main (String ...strings) {
+		
+		System.out.println("prepareMap() -> "+prepareMap());
+	}
 }
