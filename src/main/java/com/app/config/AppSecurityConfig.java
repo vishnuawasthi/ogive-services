@@ -40,9 +40,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.requiresChannel()
+	// Uncomment below piece of code in order to enable SSL
+		/*	http.requiresChannel()
 		.anyRequest()
-		.requiresSecure();
+		.requiresSecure();*/
 		
 		
 		http.authorizeRequests(authorizeRequests -> {
