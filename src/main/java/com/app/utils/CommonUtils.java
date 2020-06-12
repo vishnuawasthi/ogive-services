@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.app.dto.OpportuityDetails;
 
 public class CommonUtils {
 	
@@ -35,46 +34,9 @@ public class CommonUtils {
 	}
 	
 	
-	public static Map<String ,OpportuityDetails> prepareMap(){
-		
-		List<OpportuityDetails> list = new ArrayList<OpportuityDetails>();
-		
-		OpportuityDetails autism = new OpportuityDetails();
-		autism.setOpportunityName("bh autism");
-		autism.setRank(4);
-		
-		OpportuityDetails climb = new OpportuityDetails();
-		climb.setOpportunityName("bh climb");
-		climb.setRank(8);
-		
-		OpportuityDetails eatingDisorder = new OpportuityDetails();
-		eatingDisorder.setOpportunityName("bh eating disorders");
-		eatingDisorder.setRank(3);
-		
-		OpportuityDetails commuitySupportProgram = new OpportuityDetails();
-		commuitySupportProgram.setOpportunityName("bh community support program");
-		commuitySupportProgram.setRank(1);
-		
-		
-		list.add(eatingDisorder);
-		list.add(commuitySupportProgram);
-		list.add(climb);
-		list.add(autism);
-		
-		Map <String ,OpportuityDetails >  map = list.stream()
-				.collect(Collectors.toMap(OpportuityDetails::getOpportunityName, opportunityDetails->{
-			return  opportunityDetails ;
-		}));
-		
-		
-		//Map <String ,OpportuityDetails >  map2 = list.stream().collect(Collectors.toMap());
-		
-		
-		return map;
-	}
+	
 	
 	public static void main (String ...strings) {
 		
-		System.out.println("prepareMap() -> "+prepareMap());
 	}
 }
