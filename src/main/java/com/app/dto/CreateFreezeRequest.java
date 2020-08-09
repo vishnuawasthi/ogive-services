@@ -15,17 +15,17 @@ public class CreateFreezeRequest {
 	@NotNull
 	private Long membershipId;
 
-	@ApiModelProperty(required = true)
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date requestDate;
 
-	@ApiModelProperty(required = true)
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date startDate;
 
-	@ApiModelProperty(required = true)
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date endDate;

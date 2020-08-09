@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dto.CreateFreezeRequest;
 import com.app.dto.CreateMemberTransferRequest;
 import com.app.dto.CreateMembershipRequest;
 import com.app.dto.CreatePaymentRequest;
@@ -192,7 +193,20 @@ public class WellnessManagementOperatorOperationController {
 		return new ResponseEntity<Long>(id, HttpStatus.OK);
 	}
 	
-	/** #################### CREATE FREEZE REQUEST SERVICE ########################## */
+	/** #################### CREATE FREEZE REQUEST SERVICE - START ########################## */
+	
+	@ApiOperation(value = "This api is to create membership freeze request", tags = "User Operations - Freeze Request", response = Long.class)
+	@PostMapping(value = "/v1/membership-freeze", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object freezeMembership(@RequestBody @Valid CreateFreezeRequest createFreezeRequest) {
+		log.info("freezeMembership ()- start");
+		log.info("Request Body :  {} " + createFreezeRequest);
+		Long id = portalUserOperationService.createFreezeRequest(createFreezeRequest);
+		log.info("freezeMembership ()- end");
+		return new ResponseEntity<Long>(id, HttpStatus.OK);
+	}
+	
+	
+	/** #################### CREATE FREEZE REQUEST SERVICE -END ########################## */
 	
 	
 

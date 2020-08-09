@@ -643,9 +643,9 @@ public class PortalUserOperationServiceImpl implements PortalUserOperationServic
 		if (Objects.isNull(membershipDetails)) {
 			throw new RecordNotFoundException("No MembershipDetails exist with given membershipId " + membershioNumber);
 		}
-		boolean isExpiryDateBeforFreezeStartDate = membershipDetails.getExpireDate().before(createFreezeRequest.getStartDate());
+		boolean isExpiryDateBeforeFreezeStartDate = membershipDetails.getExpireDate().before(createFreezeRequest.getStartDate());
 
-		if (isExpiryDateBeforFreezeStartDate) {
+		if (isExpiryDateBeforeFreezeStartDate) {
 			String message = "This action can not be performed because expiry Date is before the freeze start date";
 			throw new OperationNotSupportedException(message);
 		}

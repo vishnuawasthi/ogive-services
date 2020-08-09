@@ -14,9 +14,11 @@ public class CreatePersonalTrainingDetailRequest {
 	private Float duration;
 	
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
 	private Date startDate;
 	
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@ApiModelProperty(required = true, allowableValues = "yyyy-MM-dd")
 	private Date endDate;
 	
 	private Integer extraSessions;
